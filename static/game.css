@@ -17,15 +17,18 @@ body {
 #scoreboard>div {
     width:inherit;
     padding-bottom:1em;
-    padding-left:1.5em;
-    padding-right:1.5em;
+    padding-left:1em;
+    padding-right:1em;
     display:grid;
     grid-template-rows: auto;
 }
 
 #scoreboard #red {
     text-align: left;
-    background-color: var(--red-primary);
+    background: 
+        linear-gradient(0deg, var(--red-accent) 3em, #ffffff00 0%),
+        linear-gradient(45deg, var(--red-accent) 40%, #ffffff00 0%),
+        linear-gradient(0deg, var(--red-primary) 80%, #ffffff00 0%);
     grid-template-columns: 1em 3em 50% auto;
     grid-template-areas: 
         "score score . ."
@@ -34,7 +37,10 @@ body {
 
 #scoreboard #blue {
     text-align: right;
-    background-color: var(--blue-primary);
+    background: 
+    linear-gradient(0deg, var(--blue-accent) 3em, #ffffff00 0%),
+    linear-gradient(-45deg, var(--blue-accent) 40%, #ffffff00 0%),
+    linear-gradient(0deg, var(--blue-primary) 80%, #ffffff00 0%);
     grid-template-columns: auto 50% 3em 1em;
     grid-template-areas: 
         ". . score score"
@@ -72,8 +78,8 @@ body {
 }
 
 #scoreboard #middle {
-    width:25%;
-    background-color: white;
+    width:35%;
+    background: linear-gradient(var(--white-primary) 2em, var(--white-accent) 0%);
     color: black;
     text-align: center;
     height:3em;
