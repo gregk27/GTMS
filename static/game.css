@@ -1,0 +1,84 @@
+@import url("/common.css");
+
+body {
+    background-color: lime;
+    height:100%
+}
+
+#scoreboard {
+    position:absolute;
+    bottom:0px;
+    width:100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+#scoreboard>div {
+    width:inherit;
+    padding-bottom:1em;
+    padding-left:1.5em;
+    padding-right:1.5em;
+    display:grid;
+    grid-template-rows: auto;
+}
+
+#scoreboard #red {
+    text-align: left;
+    background-color: var(--red-primary);
+    grid-template-columns: 1em 3em 50% auto;
+    grid-template-areas: 
+        "score score . ."
+        ". num name .";
+}
+
+#scoreboard #blue {
+    text-align: right;
+    background-color: var(--blue-primary);
+    grid-template-columns: auto 50% 3em 1em;
+    grid-template-areas: 
+        ". . score score"
+        ". name num .";
+}
+
+#scoreboard .score {
+    grid-area: score;
+    font-size: 2.5em;
+}
+
+#scoreboard .teamNum {
+    grid-area: num;
+}
+
+#scoreboard #red .teamNum {
+    text-align:right;
+}
+#scoreboard #red .teamNum::after {
+    content: "-";
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+#scoreboard #blue .teamNum {
+    text-align:left;
+}
+#scoreboard #blue .teamNum::before {
+    content: "-";
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+#scoreboard .teamName {
+    grid-area: name;
+}
+
+#scoreboard #middle {
+    width:25%;
+    background-color: white;
+    color: black;
+    text-align: center;
+    height:3em;
+}
+
+#scoreboard #middle #time {
+    font-size: 2em;
+}
