@@ -11,16 +11,17 @@
 <body>
     <section>
         <div id="teamNum">1234</div>
-        <div id="round">Match 99</div>
+        <div id="matchNum">Match 99</div>
+        <div id="time">999</div>
         <div id="score">999</div>
         <br/>
         <div id="buttons">
-            <button>+1</button>
-            <button>+3</button>
-            <button>+5</button>
+            <button onclick="addScore(1)">+1</button>
+            <button onclick="addScore(3)">+3</button>
+            <button onclick="addScore(5)">+5</button>
         </div>
         <br/><br/>
-        <button>-1</button>
+        <button onclick="addScore(-1)">-1</button>
     </section>
 </body>
 </html>
