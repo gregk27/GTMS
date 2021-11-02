@@ -39,6 +39,12 @@ app.get('/teams/list', (req, res)=>{
   res.json(manager.getTeams());
 })
 
+app.get('/teams/scoreboard', (req, res)=>{
+  manager.getScoreboard().then((dat)=>{
+    res.json(dat);
+  })
+})
+
 app.get('/matches/list', (req, res)=>{
   if(req.query['dat']=='all'){
     res.json(manager.getCombindMatchData());

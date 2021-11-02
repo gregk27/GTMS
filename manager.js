@@ -55,6 +55,36 @@ function getSchedule(){
     return stmt.all();
 }
 
+async function getScoreboard(){
+    let teams = getTeamsStmt.all();
+    out = []
+    for(let t of teams){
+        let stmt = db.prepare(`
+        select number, name, sum(wins) AS wins, sum(losses) AS losses, sum(ties) AS ties, sum(score) AS score from (
+            SELECT COUNT(scores.id) AS wins, 0 as ties, 0 as losses, 0 AS score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)
+            UNION
+            SELECT 0 as wins, COUNT(scores.id) AS ties, 0 as losses, 0 AS score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)
+            UNION
+            SELECT 0 as wins, 0 as ties, COUNT(scores.id) AS losses, 0 AS score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)
+            UNION
+            SELECT 0 as wins, 0 as ties, 0 AS losses, SUM(redScore) as score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (redTeam = ?)
+            UNION
+            SELECT 0 as wins, 0 as ties, 0 AS losses, SUM(blueScore) as score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (blueTeam = ?)
+            ) left join teams t on number=?;`)
+        stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
+        out.push(stmt.get());
+    }
+    out.sort((a, b)=>{
+        return b.wins*2+b.ties*1 - a.wins*2+a.ties*1;
+    })
+    return out;
+}
+
 function loadMatch(id=-1){
     if(id == -1){
       id = (currentMatch == null) ? 1 : currentMatch.id+1;  
@@ -116,5 +146,5 @@ function saveGame(){
 }
 
 module.exports = {
-    getSchedule, startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch
+    getSchedule, startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch, getScoreboard
 }
