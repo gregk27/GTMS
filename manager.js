@@ -15,6 +15,7 @@
  * @typedef {{
  *   name: string,
  *   endTime: number,
+ *   running: false,
  *   id: number,
  *   red: {
  *       num: number,
@@ -40,9 +41,7 @@ if(needInit){
 }
 
 const getSchedule = db.prepare("SELECT * FROM schedule");
-const getScheduledMatch = db.prepare("SELECT * FROM schedule WHERE id=?")
 const getTeamsStmt = db.prepare("SELECT * FROM teams");
-const addTeamStmt = db.prepare("INSERT INTO teams (number, name) VALUES (?, ?)");
 const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, blueTeam, scores.blueScore AS blueScore FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
 var currentMatchIdx = 0;
@@ -53,15 +52,17 @@ var currentMatch = null;
 var schedule = [];
 schedule = getSchedule.all();
 
-function startMatch(id=-1){
+function loadMatch(id=-1){
     if(id == -1){
       id = (currentMatch == null) ? 1 : currentMatch.id+1;  
     }
+    const getScheduledMatch = db.prepare("SELECT * FROM schedule WHERE id=?")
     getScheduledMatch.bind(id);
     /** @type Match */
     let sch = getScheduledMatch.get();
     currentMatch = {
         id: sch.id,
+        running: false,
         endTime: Date.now() + 5*60*1000,
         name: sch.type + " " + sch.number,
         red: {
@@ -77,7 +78,17 @@ function startMatch(id=-1){
     }
 }
 
+function startMatch(){
+    if(!currentMatch.running){
+        currentMatch.running = true;
+        currentMatch.endTime = Date.now() + 0.5*60*1000;
+    }
+}
+
 function getCurrentMatch(){
+    if(!currentMatch.running){
+        currentMatch.endTime = Date.now() + 5*60*1000 + 1000;
+    }
     return currentMatch;
 }
 
@@ -89,6 +100,18 @@ function getCombindMatchData(){
     return getCombinedMatchDataStmt.all();
 }
 
+function saveGame(){
+    try {
+        const stmt = db.prepare("INSERT INTO scores (id, redScore, blueScore) VALUES (?, ?, ?)")
+        stmt.bind(currentMatch.id, currentMatch.red.score, currentMatch.blue.score);
+        stmt.run()
+    } catch (e){
+        const stmt = db.prepare("UPDATE scores SET redScore=?, blueScore=? WHERE id=?")
+        stmt.bind(currentMatch.red.score, currentMatch.blue.score, currentMatch.id);
+        stmt.run()
+    }
+}
+
 module.exports = {
-    startMatch, getCurrentMatch, getTeams, getCombindMatchData
+    startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch
 }

@@ -31,7 +31,48 @@ async function updateCurrent(){
     document.getElementById("currentNum").innerText = data.name;
     document.getElementById("currentTeams").innerText = `${data.red.num} v ${data.blue.num}`;
     document.getElementById("currentScore").innerText = `${data.red.score} - ${data.blue.score}`;
-    document.getElementById("currentTime").innerText = toMMSS(data.endTime - Date.now())
+    let time = data.endTime - Date.now();
+    document.getElementById("currentTime").innerText = toMMSS(time)
+    if(!data.running){
+        document.getElementById("saveScore").style.display='none';
+        document.getElementById("startMatch").style.display='inline';
+        document.getElementById("loadNext").style.display='none';
+        document.getElementById("startMatch").disabled = false;
+    } else if (time >= 0){
+        document.getElementById("saveScore").style.display='none';
+        document.getElementById("startMatch").style.display='inline';
+        document.getElementById("loadNext").style.display='none';
+        document.getElementById("startMatch").disabled = true;
+    } else if (document.getElementById('startMatch').disabled){
+        document.getElementById("saveScore").style.display='inline';
+        document.getElementById("startMatch").style.display='none';
+        document.getElementById("loadNext").style.display='none';
+        document.getElementById("startMatch").disabled = false;
+    }
+}
+
+async function saveScore(){
+    document.getElementById('saveScore').disabled = true;
+    let res = await (await fetch("/game/save")).json();
+    if(res.result){
+        document.getElementById("saveScore").style.display='none';
+        document.getElementById("startMatch").style.display='none';
+        document.getElementById("loadNext").style.display='inline';
+    }
+    document.getElementById('saveScore').disabled = false;
+    update();
+}
+
+async function startMatch(){
+    await fetch("/game/start")
+}
+
+async function loadNext(id=-1){
+    if(id == -1){
+        await fetch('/matches/load')
+    } else {
+        await fetch('/matches/load?id='+id)
+    }
 }
 
 window.onload = ()=>{

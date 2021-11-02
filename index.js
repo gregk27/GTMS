@@ -13,6 +13,11 @@ app.get('/game/data', (req, res) => {
     res.json(manager.getCurrentMatch());
 })
 
+app.get('/game/start', (req, res)=>{
+  manager.startMatch();
+  res.send("");
+})
+
 app.get('/game/addScore/:alliance', (req, res) => {
     let currentGame = manager.getCurrentMatch();
     if(req.params["alliance"] == 'red'){
@@ -23,6 +28,11 @@ app.get('/game/addScore/:alliance', (req, res) => {
         console.log(currentGame.red.score);
     }
     res.send("");
+})
+
+app.get('/game/save', (req, res)=>{
+  manager.saveGame();
+  res.json({result:true})
 })
 
 app.get('/teams/list', (req, res)=>{
@@ -37,9 +47,18 @@ app.get('/matches/list', (req, res)=>{
   }
 })
 
+app.get('/matches/load', (req, res)=>{
+  if(req.query['id'] == null){
+    manager.loadMatch(-1)
+  } else {
+    manager.loadMatch(parseInt(req.query['id']));
+  }
+  res.send("");
+})
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
-manager.startMatch();
+manager.loadMatch();
