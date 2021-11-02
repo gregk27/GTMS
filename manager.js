@@ -7,7 +7,6 @@
  *  id: number,
  *  type: string,
  *  number: number,
- *  played: boolean,
  *  redTeam: number,
  *  redScore: number,
  *  blueTeam: number,
@@ -42,6 +41,9 @@ if(needInit){
 
 const getSchedule = db.prepare("SELECT * FROM schedule");
 const getScheduledMatch = db.prepare("SELECT * FROM schedule WHERE id=?")
+const getTeamsStmt = db.prepare("SELECT * FROM teams");
+const addTeamStmt = db.prepare("INSERT INTO teams (number, name) VALUES (?, ?)");
+const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, blueTeam, scores.blueScore AS blueScore FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
 var currentMatchIdx = 0;
 /** @type ActiveMatch */
@@ -79,6 +81,14 @@ function getCurrentMatch(){
     return currentMatch;
 }
 
+function getTeams(){
+    return getTeamsStmt.all();
+}
+
+function getCombindMatchData(){
+    return getCombinedMatchDataStmt.all();
+}
+
 module.exports = {
-    startMatch, getCurrentMatch
+    startMatch, getCurrentMatch, getTeams, getCombindMatchData
 }

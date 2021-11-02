@@ -25,6 +25,19 @@ app.get('/game/addScore/:alliance', (req, res) => {
     res.send("");
 })
 
+app.get('/teams/list', (req, res)=>{
+  res.json(manager.getTeams());
+})
+
+app.get('/matches/list', (req, res)=>{
+  if(req.query['dat']=='all'){
+    res.json(manager.getCombindMatchData());
+  } else {
+    res.json(manager.getSchedule());
+  }
+})
+
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
