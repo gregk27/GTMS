@@ -10,10 +10,10 @@ function toMMSS (unix) {
 }
 
 async function update(){
-    let teams = await (await fetch("/teams/list")).json();
-    let html = "<tr><th>Number</th><th>Name</th></tr>\n";
+    let teams = await (await fetch("/teams/scoreboard")).json();
+    let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>Score</th></tr>\n";
     for(let t of teams){
-        html += `<tr><td>${t.number}</td><td>${t.name}</td></tr>\n`;
+        html += `<tr><td>${t.number}</td><td>${t.name}</td><td class='number'>${t.wins}</td><td class='number'>${t.losses}</td><td class='number'>${t.ties}</td><td class='number'>${t.score}</td></tr>\n`;
     }
     document.querySelector("#teams > table").innerHTML = html;3
 
