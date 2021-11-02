@@ -42,6 +42,8 @@ app.get('/teams/list', (req, res)=>{
 app.get('/matches/list', (req, res)=>{
   if(req.query['dat']=='all'){
     res.json(manager.getCombindMatchData());
+  } else if (req.query['dat']=='sch'){
+    res.json(manager.getSchedule());
   } else {
     res.json(manager.getSchedule());
   }

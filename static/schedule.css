@@ -1,0 +1,36 @@
+@import url("/common.css");
+
+body {
+    font-size: 4vh;
+}
+
+#schedule {    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+}
+
+.match {
+    color: black;
+    display: grid;
+    grid-template-columns: auto 7% 37% 7% 37%;
+    background-color: white;
+    padding: 0.25em 5%;
+    margin: 0.25em;
+    width: 80%;
+    box-shadow: 0 0.25em var(--purple-accent);
+}
+
+.redName, .blueName {
+    overflow:hidden;
+}
+
+.redNum, .redName {
+    color: var(--red-accent)
+}
+
+.blueNum, .blueName {
+    color: var(--blue-accent)
+}

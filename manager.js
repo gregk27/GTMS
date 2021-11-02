@@ -9,8 +9,10 @@
  *  number: number,
  *  redTeam: number,
  *  redScore: number,
+ *  redName?: number
  *  blueTeam: number,
  *  blueScore: number,
+ *  blueName?: number
  * }} Match
  * @typedef {{
  *   name: string,
@@ -40,23 +42,24 @@ if(needInit){
     db.exec(fs.readFileSync("./tables.sql").toString())
 }
 
-const getSchedule = db.prepare("SELECT * FROM schedule");
 const getTeamsStmt = db.prepare("SELECT * FROM teams");
 const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, blueTeam, scores.blueScore AS blueScore FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
-var currentMatchIdx = 0;
 /** @type ActiveMatch */
 var currentMatch = null;
 
-/** @type Match[] */
-var schedule = [];
-schedule = getSchedule.all();
+function getSchedule(){
+    const stmt = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
+    // Show current match if it hasn't started yet
+    stmt.bind(currentMatch.running ? currentMatch.id : currentMatch.id-1);
+    return stmt.all();
+}
 
 function loadMatch(id=-1){
     if(id == -1){
       id = (currentMatch == null) ? 1 : currentMatch.id+1;  
     }
-    const getScheduledMatch = db.prepare("SELECT * FROM schedule WHERE id=?")
+    const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
     getScheduledMatch.bind(id);
     /** @type Match */
     let sch = getScheduledMatch.get();
@@ -66,12 +69,12 @@ function loadMatch(id=-1){
         endTime: Date.now() + 5*60*1000,
         name: sch.type + " " + sch.number,
         red: {
-            name:"R",
+            name: sch.redName,
             num: sch.redTeam,
             score: 0
         },        
         blue: {
-            name:"B",
+            name: sch.blueName,
             num: sch.blueTeam,
             score: 0
         }
@@ -113,5 +116,5 @@ function saveGame(){
 }
 
 module.exports = {
-    startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch
+    getSchedule, startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch
 }
