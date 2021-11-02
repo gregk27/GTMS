@@ -18,9 +18,9 @@ async function update(){
     document.querySelector("#teams > table").innerHTML = html;3
 
     let matches = await(await fetch("/matches/list?dat=all")).json();
-    html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Blue Team</th><th>Blue Score</th></tr>";
+    html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Blue Team</th><th>Blue Score</th><th></th></tr>";
     for(let m of matches){
-        html += `<tr><td>${m.id}</td><td>${m.type} ${m.number}</td><td class='number'>${m.redTeam}</td><td class='number'>${m.redScore ?? "-"}</td><td class='number'>${m.blueTeam}</td><td class='number'>${m.blueScore ??  '-'}</td></tr>`
+        html += `<tr><td>${m.id}</td><td>${m.type} ${m.number}</td><td class='number'>${m.redTeam}</td><td class='number'>${m.redScore ?? "-"}</td><td class='number'>${m.blueTeam}</td><td class='number'>${m.blueScore ??  '-'}</td><td><button onclick="loadNext(${m.id})">Load</button></td></tr>`
     }
     document.querySelector("#schedule > table").innerHTML = html;
 }
