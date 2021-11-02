@@ -15,7 +15,8 @@ body {
 .match {
     color: black;
     display: grid;
-    grid-template-columns: auto 7% 37% 7% 37%;
+    grid-template-columns: auto 40% 40%;
+    grid-gap:1em;
     background-color: white;
     padding: 0.25em 5%;
     margin: 0.25em;
@@ -23,14 +24,14 @@ body {
     box-shadow: 0 0.25em var(--purple-accent);
 }
 
-.redName, .blueName {
-    overflow:hidden;
+.redTeam {
+    color: var(--red-accent);
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-.redNum, .redName {
-    color: var(--red-accent)
-}
-
-.blueNum, .blueName {
-    color: var(--blue-accent)
+.blueTeam {
+    color: var(--blue-accent);
+    overflow: hidden;
+    white-space: nowrap;
 }
