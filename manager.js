@@ -81,7 +81,10 @@ async function getScoreboard(){
         out.push(stmt.get());
     }
     out.sort((a, b)=>{
-        return b.wins*2+b.ties*1 - a.wins*2+a.ties*1;
+        let delta = b.wins*2+b.ties*1 - a.wins*2+a.ties*1;
+        if(delta == 0)
+            return b.score - a.score;
+        return delta;
     })
     return out;
 }
