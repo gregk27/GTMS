@@ -23,12 +23,16 @@
  *   red: {
  *       num: number,
  *       name: string,
- *       score: number
+ *       score: number,
+ *       metA: number,
+ *       metB: number
  *   },
  *   blue: {
  *       num: number,
  *       name: string,
- *       score: number
+ *       score: number,
+ *       metA: number,
+ *       metB: number
  *   }
  * }} ActiveMatch
  */
@@ -44,7 +48,7 @@ if(needInit){
 }
 
 const getTeamsStmt = db.prepare("SELECT * FROM teams");
-const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, blueTeam, scores.blueScore AS blueScore FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
+const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
 /** @type ActiveMatch */
 var currentMatch = null;
@@ -110,12 +114,16 @@ function loadMatch(id=-1){
         red: {
             name: sch.redName,
             num: sch.redTeam,
-            score: 0
+            score: 0,
+            metA: 0,
+            metB: 0
         },        
         blue: {
             name: sch.blueName,
             num: sch.blueTeam,
-            score: 0
+            score: 0,
+            metA: 0,
+            metB: 0
         }
     }
 }
@@ -145,12 +153,12 @@ function getCombindMatchData(){
 function saveGame(){
     currentMatch.saved = true;
     try {
-        const stmt = db.prepare("INSERT INTO scores (id, redScore, blueScore) VALUES (?, ?, ?)")
-        stmt.bind(currentMatch.id, currentMatch.red.score, currentMatch.blue.score);
+        const stmt = db.prepare("INSERT INTO scores (id, redScore, redMetA, redMetB, blueScore, blueMetA, blueMetB) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        stmt.bind(currentMatch.id, currentMatch.red.score, currentMatch.red.metA, currentMatch.red.metB, currentMatch.blue.score, currentMatch.blue.metA, currentMatch.blue.metB);
         stmt.run()
     } catch (e){
-        const stmt = db.prepare("UPDATE scores SET redScore=?, blueScore=? WHERE id=?")
-        stmt.bind(currentMatch.red.score, currentMatch.blue.score, currentMatch.id);
+        const stmt = db.prepare("UPDATE scores SET redScore=?, redMetA=?, redMetB=?, blueScore=?, blueMetA=?, blueMetB=?, WHERE id=?")
+        stmt.bind(currentMatch.red.score, currentMatch.red.metA, currentMatch.red.metB, currentMatch.blue.score, currentMatch.blue.metA, currentMatch.blue.metB, currentMatch.id);
         stmt.run()
     }
 }

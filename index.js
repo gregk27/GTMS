@@ -21,11 +21,13 @@ app.get('/game/start', (req, res)=>{
 app.get('/game/addScore/:alliance', (req, res) => {
     let currentGame = manager.getCurrentMatch();
     if(req.params["alliance"] == 'red'){
-        currentGame.red.score += parseInt(req.query['d']);
-        console.log(currentGame.red.score);
+        currentGame.red.score += parseInt(req.query['d'] ?? '0');
+        currentGame.red.metA  += parseInt(req.query['a'] ?? '0');
+        currentGame.red.metB  += parseInt(req.query['b'] ?? '0');
     } else if (req.params["alliance"] == 'blue'){
-        currentGame.blue.score += parseInt(req.query['d']);
-        console.log(currentGame.red.score);
+        currentGame.blue.score += parseInt(req.query['d'] ?? '0');
+        currentGame.blue.metA  += parseInt(req.query['a'] ?? '0');
+        currentGame.blue.metB  += parseInt(req.query['b'] ?? '0');
     }
     res.send("");
 })

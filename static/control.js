@@ -13,14 +13,33 @@ async function update(){
     let teams = await (await fetch("/teams/scoreboard")).json();
     let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>Score</th></tr>\n";
     for(let t of teams){
-        html += `<tr><td>${t.number}</td><td>${t.name}</td><td class='number'>${t.wins}</td><td class='number'>${t.losses}</td><td class='number'>${t.ties}</td><td class='number'>${t.score}</td></tr>\n`;
+        html += `<tr>
+        <td>${t.number}</td>
+        <td>${t.name}</td>
+        <td class='number'>${t.wins}</td>
+        <td class='number'>${t.losses}</td>
+        <td class='number'>${t.ties}</td>
+        <td class='number'>${t.score}</td>
+        </tr>\n`;
     }
     document.querySelector("#teams > table").innerHTML = html;3
 
     let matches = await(await fetch("/matches/list?dat=all")).json();
-    html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Blue Team</th><th>Blue Score</th><th></th></tr>";
+    html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
     for(let m of matches){
-        html += `<tr><td>${m.id}</td><td>${m.type} ${m.number}</td><td class='number'>${m.redTeam}</td><td class='number'>${m.redScore ?? "-"}</td><td class='number'>${m.blueTeam}</td><td class='number'>${m.blueScore ??  '-'}</td><td><button onclick="loadNext(${m.id})">Load</button></td></tr>`
+        html += `<tr>
+        <td>${m.id}</td>
+        <td>${m.type} ${m.number}</td>
+        <td class='number'>${m.redTeam}</td>
+        <td class='number'>${m.redScore ?? "-"}</td>
+        <td class='number'>${m.redMetA ?? "-"}</td>
+        <td class='number'>${m.redMetB ?? "-"}</td>
+        <td class='number'>${m.blueTeam}</td>
+        <td class='number'>${m.blueScore ??  '-'}</td>
+        <td class='number'>${m.blueMetA ??  '-'}</td>
+        <td class='number'>${m.blueMetB ??  '-'}</td>
+        <td><button onclick="loadNext(${m.id})">Load</button></td>
+        </tr>\n`
     }
     document.querySelector("#schedule > table").innerHTML = html;
 }

@@ -21,7 +21,11 @@ CREATE TABLE schedule (
 CREATE TABLE scores (
     id          INTEGER PRIMARY KEY,
     redScore    INTEGER NOT NULL,
+    redMetA     INTEGER NOT NULL,
+    redMetB     INTEGER NOT NULL,
     blueScore   INTEGER NOT NULL,
+    blueMetA    INTEGER NOT NULL,
+    blueMetB    INTEGER NOT NULL,
 
     FOREIGN KEY (id)
         REFERENCES schedule(id)
