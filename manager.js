@@ -87,7 +87,11 @@ async function getScoreboard(){
 
 function loadMatch(id=-1){
     if(id == -1){
-      id = (currentMatch == null) ? 1 : currentMatch.id+1;  
+        if(currentMatch == null){
+            id = db.prepare("SELECT MIN(id) AS id FROM schedule").get().id;
+        } else {
+            id = currentMatch.id+1; 
+        } 
     }
     const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
     getScheduledMatch.bind(id);
