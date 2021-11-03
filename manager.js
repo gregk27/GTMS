@@ -17,7 +17,8 @@
  * @typedef {{
  *   name: string,
  *   endTime: number,
- *   running: false,
+ *   running: boolean,
+ *   saved: boolean,
  *   id: number,
  *   red: {
  *       num: number,
@@ -100,6 +101,7 @@ function loadMatch(id=-1){
     currentMatch = {
         id: sch.id,
         running: false,
+        saved: false,
         endTime: Date.now() + 5*60*1000,
         name: sch.type + " " + sch.number,
         red: {
@@ -138,6 +140,7 @@ function getCombindMatchData(){
 }
 
 function saveGame(){
+    currentMatch.saved = true;
     try {
         const stmt = db.prepare("INSERT INTO scores (id, redScore, blueScore) VALUES (?, ?, ?)")
         stmt.bind(currentMatch.id, currentMatch.red.score, currentMatch.blue.score);

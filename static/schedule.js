@@ -1,3 +1,5 @@
+lastMatch = -1;
+
 async function update(){
     let schedule = await (await fetch("/matches/list?dat=sch")).json();
     let html = "";
@@ -13,9 +15,19 @@ async function update(){
     document.getElementById("schedule").innerHTML = html;
 }
 
+// Check if match id has changed, if it has then update
+async function checkMatch(){
+    match = await(await fetch("/game/data")).json();
+    if(match.id != lastMatch){
+        lastMatch = match.id;
+        update();
+    }
+}
+
 window.onload = ()=>{
     setInterval(() => {
-        update();
-    }, 60000);
+        checkMatch();
+    }, 5000);
+    checkMatch();
     update();
 };

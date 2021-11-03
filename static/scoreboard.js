@@ -1,3 +1,5 @@
+var lastMatch = -1;
+
 async function update(){
     let teams = await (await fetch("/teams/scoreboard")).json();
     console.log(teams);
@@ -16,9 +18,19 @@ async function update(){
     document.getElementById("schedule").innerHTML = html;
 }
 
+// Check if match id has changed, if it has then update
+async function checkMatch(){
+    match = await(await fetch("/game/data")).json();
+    if(match.saved && match.id != lastMatch){
+        lastMatch = match.id;
+        update();
+    }
+}
+
 window.onload = ()=>{
     setInterval(() => {
-        update();
-    }, 60000);
+        checkMatch();
+    }, 5000);
+    checkMatch();
     update();
 };
