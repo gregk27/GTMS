@@ -65,23 +65,35 @@ async function getScoreboard(){
     out = []
     for(let t of teams){
         let stmt = db.prepare(`
-        select number, name, sum(wins) AS wins, sum(losses) AS losses, sum(ties) AS ties, sum(score) AS score from (
-            SELECT COUNT(scores.id) AS wins, 0 as ties, 0 as losses, 0 AS score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+        select number, name, sum(wins) AS wins, sum(losses) AS losses, sum(ties) AS ties, sum(score) AS score, sum(metA) as metA, sum(metB) as metB from (
+            SELECT COUNT(scores.id) AS wins, 0 as ties, 0 as losses, 0 as score, 0 as metA, 0 as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
             WHERE (redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)
-            UNION
-            SELECT 0 as wins, COUNT(scores.id) AS ties, 0 as losses, 0 AS score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            UNION ALL
+            SELECT 0, COUNT(scores.id) AS ties, 0, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
             WHERE (redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)
-            UNION
-            SELECT 0 as wins, 0 as ties, COUNT(scores.id) AS losses, 0 AS score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            UNION ALL
+            SELECT 0, 0, COUNT(scores.id) AS losses, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
             WHERE (redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)
-            UNION
-            SELECT 0 as wins, 0 as ties, 0 AS losses, SUM(redScore) as score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            UNION ALL
+            SELECT 0, 0, 0, SUM(redScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
             WHERE (redTeam = ?)
-            UNION
-            SELECT 0 as wins, 0 as ties, 0 AS losses, SUM(blueScore) as score from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            UNION ALL
+            SELECT 0, 0, 0, SUM(blueScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (blueTeam = ?)
+            UNION ALL
+            SELECT 0, 0, 0, 0, SUM(redMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (redTeam = ?)
+            UNION ALL
+            SELECT 0, 0, 0, 0, SUM(blueMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (blueTeam = ?)
+            UNION ALL
+            SELECT 0, 0, 0, 0, 0, SUM(redMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
+            WHERE (redTeam = ?)
+            UNION ALL
+            SELECT 0, 0, 0, 0, 0, SUM(blueMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
             WHERE (blueTeam = ?)
             ) left join teams t on number=?;`)
-        stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
+        stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
         out.push(stmt.get());
     }
     out.sort((a, b)=>{

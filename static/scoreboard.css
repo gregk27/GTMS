@@ -15,8 +15,8 @@ body {
 .team {
     color: black;
     display: grid;
-    grid-template-columns: auto 4em 4em 4em 6em;
-    grid-gap:2em;
+    grid-template-columns: auto 0 2em 2em 2em 0 6em 3em 3em;
+    grid-gap:1em;
     background-color: white;
     padding: 0.25em 5%;
     margin: 0.25em;

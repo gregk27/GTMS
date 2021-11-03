@@ -8,10 +8,14 @@ async function update(){
         html += `
         <div class="team">
             <div>${t.name}<span style="float:right">${t.number}</span></div>
+            <div></div>
             <div>${t.wins}</div>
             <div>${t.losses}</div>
             <div>${t.ties}</div>
+            <div></div>
             <div>${t.score}</div>
+            <div>${t.metA}</div>
+            <div>${t.metB}</div>
         </div>
         `
     }

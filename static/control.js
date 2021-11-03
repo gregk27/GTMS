@@ -11,7 +11,7 @@ function toMMSS (unix) {
 
 async function update(){
     let teams = await (await fetch("/teams/scoreboard")).json();
-    let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>Score</th></tr>\n";
+    let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>Score</th><th>MetA</th><th>MetB</th></tr>\n";
     for(let t of teams){
         html += `<tr>
         <td>${t.number}</td>
@@ -20,6 +20,8 @@ async function update(){
         <td class='number'>${t.losses}</td>
         <td class='number'>${t.ties}</td>
         <td class='number'>${t.score}</td>
+        <td class='number'>${t.metA}</td>
+        <td class='number'>${t.metB}</td>
         </tr>\n`;
     }
     document.querySelector("#teams > table").innerHTML = html;3
