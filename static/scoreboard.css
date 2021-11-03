@@ -1,0 +1,29 @@
+@import url("/common.css");
+
+body {
+    font-size: 4vh;
+}
+
+#schedule {    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: nowrap;
+}
+
+.team {
+    color: black;
+    display: grid;
+    grid-template-columns: auto 4em 4em 4em 6em;
+    grid-gap:2em;
+    background-color: white;
+    padding: 0.25em 5%;
+    margin: 0.25em;
+    width: 80%;
+    box-shadow: 0 0.25em var(--purple-accent);
+}
+
+.team div~div {
+    text-align: center;
+}
