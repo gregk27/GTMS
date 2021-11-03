@@ -151,6 +151,7 @@ function getCombindMatchData(){
 }
 
 function saveGame(){
+    console.log(currentMatch);
     currentMatch.saved = true;
     try {
         const stmt = db.prepare("INSERT INTO scores (id, redScore, redMetA, redMetB, blueScore, blueMetA, blueMetB) VALUES (?, ?, ?, ?, ?, ?, ?)")

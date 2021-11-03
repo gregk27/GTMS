@@ -25,8 +25,8 @@ async function update(){
     document.querySelector("#time").innerText = toMMSS(data.endTime - Date.now())
 }
 
-function addScore(delta){
-    fetch(`/game/addScore/${alliance}?d=${delta}`);
+function addScore(delta, dA=0, dB=0){
+    fetch(`/game/addScore/${alliance}?d=${delta}&a=${dA}&b=${dB}`);
     document.querySelector("#score").innerText = parseInt(document.querySelector("#score").innerText) + delta;
 }
 
