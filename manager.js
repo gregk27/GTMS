@@ -147,7 +147,7 @@ function loadMatch(id=-1){
 function startMatch(){
     if(!currentMatch.running){
         currentMatch.running = true;
-        currentMatch.endTime = Date.now() + 0.5*60*1000;
+        currentMatch.endTime = Date.now() + 5*60*1000;
     }
 }
 

@@ -5,8 +5,9 @@ async function update(){
     console.log(teams);
     let html0 = "";
     let html1 = "";
-    for(let i=0; i<teams.length; i++){
-        t = teams[i];
+    // NOTE: Loops for 1 to n, since rank is used more than index
+    for(let i=1; i<=teams.length; i++){
+        t = teams[i-1];
         html0 += `
         <div class="team">
             <div>${i}</div>
