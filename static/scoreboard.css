@@ -4,7 +4,7 @@ body {
     font-size: 4vh;
 }
 
-#schedule {    
+.schedule {    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,7 +15,6 @@ body {
 .team {
     color: black;
     display: grid;
-    grid-template-columns: auto 0 1em 1em 1em 2em 0 6em 3em 3em;
     grid-gap:1em;
     background-color: white;
     padding: 0.25em 5%;
@@ -24,6 +23,29 @@ body {
     box-shadow: 0 0.25em var(--purple-accent);
 }
 
-.team div~div {
+#layer-0 .team {
+    grid-template-columns: 2em 40% 0 2em auto 3em 3em 3em auto;
+}
+
+#layer-1 .team {
+    grid-template-columns: 2em 40% 0 2em auto 6em 3em 3em auto;
+}
+
+.layer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.5s;
+    opacity: 0;
+}
+
+.team div {
     text-align: center;
+}
+
+.team div:nth-child(2){
+    text-align: left;
 }

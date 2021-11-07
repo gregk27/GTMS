@@ -9,19 +9,35 @@
     <script src='scoreboard.js'></script>
 </head>
 <body>
-    <div class="team" style="margin:1em auto">
-        <div>Team</div>
-        <div></div>
-        <div>W</div>
-        <div>L</div>
-        <div>T</div>
-        <div>RPA</div>
-        <div></div>
-        <div>Total Score</div>
-        <div>MetA</div>
-        <div>MetB</div>
+    <div class="layer" id="layer-0" style="opacity: 100%;">
+        <div class="team" style="margin:1em auto">
+            <div>Rank</div>
+            <div>Team</div>
+            <div></div>
+            <div>RPA</div>
+            <div></div>
+            <div>Wins</div>
+            <div>Losses</div>
+            <div>Ties</div>
+            <div></div>
+        </div>
+        <section class="schedule">
+        </section>
     </div>
-    <section id="schedule">
-    </section>
+    <div class="layer" id="layer-1">
+        <div class="team" style="margin:1em auto">
+            <div>Rank</div>
+            <div>Team</div>
+            <div></div>
+            <div>RPA</div>
+            <div></div>
+            <div>Score</div>
+            <div>MetA</div>
+            <div>MetB</div>
+            <div></div>
+        </div>
+        <section class="schedule">
+        </section>
+    </div>
 </body>
 </html>
