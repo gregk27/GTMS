@@ -12,6 +12,7 @@ async function update(){
             <div>${t.wins}</div>
             <div>${t.losses}</div>
             <div>${t.ties}</div>
+            <div>${t.rpa.toFixed(2)}</div>
             <div></div>
             <div>${t.score}</div>
             <div>${t.metA}</div>

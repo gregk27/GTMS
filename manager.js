@@ -96,8 +96,12 @@ async function getScoreboard(){
         stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
         out.push(stmt.get());
     }
+    for(let t of out){
+        t.rp = (t.wins*2+t.ties*1);
+        t.rpa = t.rp/(t.wins+t.ties+t.losses);
+    }
     out.sort((a, b)=>{
-        let delta = b.wins*2+b.ties*1 - a.wins*2+a.ties*1;
+        let delta = b.rpa - a.rpa;
         if(delta == 0)
             return b.score - a.score;
         return delta;

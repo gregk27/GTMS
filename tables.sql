@@ -37,8 +37,8 @@ INSERT INTO teams (number, name) VALUES
     (5678, 'Test 2');
 
 INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-    ('Practice', 1, 1234, 5678),
-    ('Practice', 2, 5678, 1234);
+    ('Test', 1, 1234, 5678),
+    ('Test', 2, 5678, 1234);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;
