@@ -5,7 +5,8 @@ module.exports = {
     authString: "password",
     initScript: "./setup.sql",
     metrics: {
-        scoreName: "Total Score",
+        scoreName: "Avg. Score",
+        showScoreAvg: true,
         metAName: "Total Goals",
         showMetA: true,
         metBName: "MetB",
@@ -37,12 +38,12 @@ module.exports = {
         }
     ],
     sortFunction: (a, b)=>{
-        // Sort by ranking point average, then balls scored, then total points
+        // Sort by ranking point average, in event of tie sort by average score then metA
         let delta = b.rpa - a.rpa;
         if(delta == 0)
-            delta = b.metA - a.metA;
+            delta = b.metA/b.numMatches - a.metA/b.numMatches;
         if(delta == 0)
-            delta = b.score - a.score;
+            delta = b.scoreAvg - a.scoreAvg;
         return delta;
     },
 }

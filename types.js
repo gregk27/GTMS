@@ -47,8 +47,10 @@
  *  score: number,
  *  metA: number,
  *  metB: number,
+ *  numMatches: number,
  *  rp: number,
- *  rpa: number
+ *  rpa: number,
+ *  scoreAvg: number,
  * }} TeamScore
  * 
  * @typedef {{
@@ -66,6 +68,7 @@
  *  initScript: string,
  *  metrics: {
  *    scoreName: string,
+ *    showScoreAvg: bool,
  *    metAName: string,
  *    showMetA: boolean,
  *    metBName: string,
