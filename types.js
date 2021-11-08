@@ -37,4 +37,37 @@
  *       metB: number
  *   }
  * }} ActiveMatch
+ * 
+ * @typedef {{
+ *  number: number,
+ *  name: string,
+ *  wins: number,
+ *  losses: number,
+ *  ties: number,
+ *  score: number,
+ *  metA: number,
+ *  metB: number,
+ *  rp: number,
+ *  rpa: number
+ * }} TeamScore
+ * 
+ * @typedef {{
+ *  text: string,
+ *  score: number,
+ *  metA: number,
+ *  metB: number
+ * }} Button
+ * 
+ * @typedef {{
+ *  port:number,
+ *  initScript: string,
+ *  metrics: {
+ *    metAName: string,
+ *    showMetA: boolean,
+ *    metBName: string,
+ *    showMetB: boolean,
+ *  }
+ *  buttons: (Button | Button[])[],
+ *  sortFunction: (a:TeamScore, b:TeamScore) => number,
+ * }} Config
  */
