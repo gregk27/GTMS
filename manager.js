@@ -98,7 +98,10 @@ async function getScoreboard(){
     }
     for(let t of out){
         t.rp = (t.wins*2+t.ties*1);
-        t.rpa = t.rp/(t.wins+t.ties+t.losses);
+        if(t.wins+t.ties+t.losses > 0)
+            t.rpa = t.rp/(t.wins+t.ties+t.losses);
+        else
+            t.rpa = 0
     }
     out.sort((a, b)=>{
         let delta = b.rpa - a.rpa;
