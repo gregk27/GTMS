@@ -47,8 +47,9 @@
  *  score: number,
  *  metA: number,
  *  metB: number,
+ *  numMatches: number,
  *  rp: number,
- *  rpa: number
+ *  rpa: number,
  *  scoreAvg: number,
  * }} TeamScore
  * 
