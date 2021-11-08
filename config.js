@@ -5,7 +5,8 @@ module.exports = {
     authString: "password",
     initScript: "./setup.sql",
     metrics: {
-        metAName: "Total Balls",
+        scoreName: "Total Score",
+        metAName: "Total Goals",
         showMetA: true,
         metBName: "MetB",
         showMetB: false,

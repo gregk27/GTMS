@@ -71,7 +71,7 @@ async function buildHeader(){
         <div></div>
         <div>RPA</div>
         <div></div>
-        <div>Score</div>
+        <div>${config.scoreName ?? "Score"}</div>
         ${config.showMetA ? `<div>${config.metAName}</div>` : ''}
         ${config.showMetB ? `<div>${config.metBName}</div>` : ''}
         <div></div>`;
