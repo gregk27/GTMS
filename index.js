@@ -1,8 +1,10 @@
+require("./types");
+
 const express = require('express')
 const ip = require('ip');
 const manager = require('./manager');
+const config = require("./config")
 const app = express()
-const port = 3000
 
 app.use(express.static('static',{index:false,extensions:['html']}));
 
@@ -11,7 +13,11 @@ app.get('/', (req, res) => {
 })
 
 app.get('/hostname', (req, res) => {
-  res.send(ip.address() + ":" + port);
+  res.send(ip.address() + ":" + config.port);
+})
+
+app.get('/config/:entry', (req, res)=>{
+  res.json(config[req.params.entry]);
 })
 
 app.get('/game/data', (req, res) => {
@@ -72,8 +78,8 @@ app.get('/matches/load', (req, res)=>{
 })
 
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+app.listen(config.port, () => {
+  console.log(`Example app listening at http://localhost:${config.port}`)
 })
 
 manager.loadMatch();

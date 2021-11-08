@@ -1,4 +1,7 @@
+require("./types");
+
 const fs = require('fs');
+const config = require('./config');
 
 let needInit = !fs.existsSync("./db.sqlite");
 const db = require('better-sqlite3')('db.sqlite');
@@ -6,6 +9,7 @@ const db = require('better-sqlite3')('db.sqlite');
 // Create tables if the file didn't already exist
 if(needInit){
     db.exec(fs.readFileSync("./tables.sql").toString())
+    db.exec(fs.readFileSync(config.initScript).toString())
 }
 
 const getTeamsStmt = db.prepare("SELECT * FROM teams");
@@ -64,12 +68,7 @@ async function getScoreboard(){
         else
             t.rpa = 0
     }
-    out.sort((a, b)=>{
-        let delta = b.rpa - a.rpa;
-        if(delta == 0)
-            return b.score - a.score;
-        return delta;
-    })
+    out.sort(config.sortFunction);
     return out;
 }
 
