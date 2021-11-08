@@ -63,10 +63,15 @@ async function getScoreboard(){
     }
     for(let t of out){
         t.rp = (t.wins*2+t.ties*1);
-        if(t.wins+t.ties+t.losses > 0)
-            t.rpa = t.rp/(t.wins+t.ties+t.losses);
-        else
-            t.rpa = 0
+        t.numMatches = (t.wins+t.ties+t.losses);
+        if(t.numMatches > 0){
+            t.rpa = t.rp/t.numMatches;
+            t.scoreAvg = t.score/t.numMatches;
+        }
+        else{
+            t.rpa = 0;
+            t.scoreAvg = 0;
+        }
     }
     out.sort(config.sortFunction);
     return out;

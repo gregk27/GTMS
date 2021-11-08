@@ -29,7 +29,7 @@ async function update(){
             <div></div>
             <div>${t.rpa.toFixed(2)}</div>
             <div></div>
-            <div>${t.score}</div>
+            <div>${config.showScoreAvg ? t.score : t.scoreAvg}</div>
             ${config.showMetA ? `<div>${t.metA}</div>` : ''}
             ${config.showMetB ? `<div>${t.metA}</div>` : ''}
             <div></div>

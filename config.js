@@ -37,10 +37,10 @@ module.exports = {
         }
     ],
     sortFunction: (a, b)=>{
-        // Sort by ranking point average, in event of tie sort by total score then metA
+        // Sort by ranking point average, in event of tie sort by average score then metA
         let delta = b.rpa - a.rpa;
         if(delta == 0)
-            delta = b.score - a.score;
+            delta = b.scoreAvg - a.scoreAvg;
         if(delta == 0)
             delta = b.metA - a.metA;
         return delta;
