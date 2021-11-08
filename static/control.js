@@ -104,4 +104,10 @@ window.onload = ()=>{
         updateCurrent();
     }, 2000);
     updateCurrent();
+    fetch("/hostname").then((res) => {
+        res.text().then((hostname) => {
+            new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red`, width:128, height:128});
+            new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue`, width:128, height:128});
+        })
+    })
 }

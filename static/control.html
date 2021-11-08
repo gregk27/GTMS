@@ -8,6 +8,7 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='control.css'>
     <script src='control.js'></script>
+    <script src='qrcode.min.js'></script>
 </head>
 
 <body>
@@ -44,6 +45,15 @@
         <table>
             <tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Blue Team</th><th>Blue Score</th></tr>
         </table>
+    </section>
+    <br/>
+    <br/>
+    <section id="qr">
+        <h2 style="grid-area: title;">Input pages</h2>
+        <h3 style="grid-area: redTitle;">Red</h3>
+        <h3 style="grid-area: blueTitle;">Blue</h3>
+        <div id="redInputCode" style="grid-area: redCode;"></div>
+        <div id="blueInputCode" style="grid-area: blueCode;"></div>
     </section>
 </body>
 

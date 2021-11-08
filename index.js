@@ -1,4 +1,5 @@
 const express = require('express')
+const ip = require('ip');
 const manager = require('./manager');
 const app = express()
 const port = 3000
@@ -7,6 +8,10 @@ app.use(express.static('static',{index:false,extensions:['html']}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
+})
+
+app.get('/hostname', (req, res) => {
+  res.send(ip.address() + ":" + port);
 })
 
 app.get('/game/data', (req, res) => {

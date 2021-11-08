@@ -28,3 +28,21 @@ td.number {
     align-items: center;
     width:fit-content;
 }
+
+#qr {
+  display: grid;
+  grid-template-areas: 
+  "title title"
+  "redTitle blueTitle"
+  "redCode blueCode";
+  width: fit-content;
+}
+
+#qr h3 {
+  text-align: center;
+  margin: 0.25em;
+}
+
+#qr div {
+  margin: 0 1em;
+}
