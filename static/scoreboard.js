@@ -1,4 +1,6 @@
 var lastMatch = -1;
+var config;
+var cols = ""
 
 async function update(){
     let teams = await (await fetch("/teams/scoreboard")).json();
@@ -21,15 +23,15 @@ async function update(){
             <div></div>
         </div>`
         html1 += `
-        <div class="team">
+        <div class="team" style="grid-template-columns:${cols}">
             <div>${i}</div>
             <div>${t.name}<span style="float:right">${t.number}</span></div>
             <div></div>
             <div>${t.rpa.toFixed(2)}</div>
             <div></div>
             <div>${t.score}</div>
-            <div>${t.metA}</div>
-            <div>${t.metB}</div>
+            ${config.showMetA ? `<div>${t.metA}</div>` : ''}
+            ${config.showMetB ? `<div>${t.metA}</div>` : ''}
             <div></div>
         </div>`
     }
@@ -54,13 +56,37 @@ async function cycle(){
     document.getElementById(`layer-${currLayer}`).style.opacity = 100;
 }
 
-window.onload = ()=>{
+async function buildHeader(){
+    let elem = document.querySelector("#layer-1>.team");
+    if(config.showMetA && config.showMetB){
+        cols = '2em 40% 0 2em auto 6em 3em 3em auto';
+    } else if (config.showMetA || config.showMetB) {
+        cols = '2em 40% 0 2em auto 6em 6em auto';
+    } else {
+        cols = '2em 40% 0 2em auto 8em auto';
+    }
+    elem.innerHTML = `
+        <div>Rank</div>
+        <div>Team</div>
+        <div></div>
+        <div>RPA</div>
+        <div></div>
+        <div>Score</div>
+        ${config.showMetA ? `<div>${config.metAName}</div>` : ''}
+        ${config.showMetB ? `<div>${config.metBName}</div>` : ''}
+        <div></div>`;
+    elem.style['grid-template-columns'] = cols;
+}
+
+window.onload = async ()=>{
     setInterval(() => {
         checkMatch();
     }, 5000);
     setInterval(()=>{
         cycle();
-    }, 30000)
+    }, 30000);
+    config = await (await fetch("/config/metrics")).json();
+    buildHeader();
     checkMatch();
     update();
 };
