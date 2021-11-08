@@ -2,27 +2,20 @@ DELETE FROM scores WHERE 1=1;
 DELETE FROM schedule WHERE 1=1;
 DELETE FROM teams WHERE 1=1;
 
+
 INSERT INTO teams (number, name) VALUES
-	(1000, 'First Team'),
-	(2000, 'Second Team'),
-	(3000, 'Third Team'),
-	(4000, 'Fourth Team'),
-	(5000, 'Fifth Team'),
-	(6000, 'Sixth Team'),
-	(7000, 'Seventh Team'),
-	(8000, 'Eighth Team'),
-	(9000, 'Ninth Team');
+	(0001, "Golden Shooters"),
+	(2001, "Black Holes"),
+	(307, "The Garbage Men"),
+	(4708, "Fly Wings");
 
 INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-	('Match', 1, 1000, 2000),
-	('Match', 2, 3000, 4000),
-	('Match', 3, 5000, 6000),
-	('Match', 4, 7000, 8000),
-	('Match', 5, 9000, 1000),
-	('Match', 6, 2000, 3000),
-	('Match', 7, 4000, 5000),
-	('Match', 8, 6000, 7000),
-	('Match', 9, 8000, 2000);
+	("Match", 1, 0001, 2001),
+	("Match", 2, 307, 4708),
+	("Match", 3, 2001, 307),
+	("Match", 4, 4708, 0001), 
+	("Match", 5, 4708, 2001),
+	("Match", 6, 0001, 307);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;
