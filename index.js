@@ -17,6 +17,8 @@ app.get('/hostname', (req, res) => {
 })
 
 app.get('/config/:entry', (req, res)=>{
+  // Don't give the auth string
+  if(req.params.entry == "authString") res.send("");
   res.json(config[req.params.entry]);
 })
 
@@ -25,11 +27,19 @@ app.get('/game/data', (req, res) => {
 })
 
 app.get('/game/start', (req, res)=>{
+  if(req.query['auth'] != config.authString) { 
+    res.send("Unauthorized");
+    return;
+  }
   manager.startMatch();
   res.send("");
 })
 
 app.get('/game/addScore/:alliance', (req, res) => {
+    if(req.query['auth'] != config.authString){
+      res.send("Unauthorized");
+      return
+    }
     let currentGame = manager.getCurrentMatch();
     if(req.params["alliance"] == 'red'){
         currentGame.red.score += parseInt(req.query['d'] ?? '0');
@@ -44,6 +54,10 @@ app.get('/game/addScore/:alliance', (req, res) => {
 })
 
 app.get('/game/save', (req, res)=>{
+  if(req.query['auth'] != config.authString) {
+    res.send("Unauthorized");
+    return;
+  }
   manager.saveGame();
   res.json({result:true})
 })
@@ -69,6 +83,10 @@ app.get('/matches/list', (req, res)=>{
 })
 
 app.get('/matches/load', (req, res)=>{
+  if(req.query['auth'] != config.authString) {
+    res.send("Unauthorized");
+    return;
+  };
   if(req.query['id'] == null){
     manager.loadMatch(-1)
   } else {

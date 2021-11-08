@@ -2,6 +2,7 @@ require ('./types')
 /** @type Config */
 module.exports = {
     port: 3000,
+    authString: "password",
     initScript: "./setup.sql",
     metrics: {
         metAName: "MetA",

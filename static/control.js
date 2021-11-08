@@ -1,3 +1,5 @@
+var authString = new URLSearchParams(window.location.search).get('auth');
+
 function toMMSS (unix) {
     if(unix < 0) return "00:00";
     unix = Math.floor(unix/1000);
@@ -76,7 +78,7 @@ async function updateCurrent(){
 
 async function saveScore(){
     document.getElementById('saveScore').disabled = true;
-    let res = await (await fetch("/game/save")).json();
+    let res = await (await fetch(`/game/save?auth=${authString}`)).json();
     if(res.result){
         document.getElementById("saveScore").style.display='none';
         document.getElementById("startMatch").style.display='none';
@@ -87,14 +89,14 @@ async function saveScore(){
 }
 
 async function startMatch(){
-    await fetch("/game/start")
+    await fetch(`/game/start?auth=${authString}`)
 }
 
 async function loadNext(id=-1){
     if(id == -1){
-        await fetch('/matches/load')
+        await fetch(`/matches/load?auth=${authString}`)
     } else {
-        await fetch('/matches/load?id='+id)
+        await fetch(`/matches/load?id=${id}&auth=${authString}`)
     }
 }
 
@@ -106,8 +108,8 @@ window.onload = ()=>{
     updateCurrent();
     fetch("/hostname").then((res) => {
         res.text().then((hostname) => {
-            new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red`, width:128, height:128});
-            new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue`, width:128, height:128});
+            new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
+            new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue&auth=${authString}`, width:128, height:128});
         })
     })
 }

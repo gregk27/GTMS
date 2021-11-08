@@ -62,6 +62,7 @@
  * 
  * @typedef {{
  *  port:number,
+ *  authString: string,
  *  initScript: string,
  *  metrics: {
  *    metAName: string,

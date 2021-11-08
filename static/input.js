@@ -1,4 +1,5 @@
 let alliance = new URLSearchParams(window.location.search).get('a');
+let authString = new URLSearchParams(window.location.search).get('auth');
 
 function toMMSS (unix) {
     if(unix < 0) return "00:00";
@@ -26,7 +27,7 @@ async function update(){
 }
 
 function addScore(delta, dA=0, dB=0){
-    fetch(`/game/addScore/${alliance}?d=${delta}&a=${dA}&b=${dB}`);
+    fetch(`/game/addScore/${alliance}?d=${delta}&a=${dA}&b=${dB}&auth=${authString}`);
     document.querySelector("#score").innerText = parseInt(document.querySelector("#score").innerText) + delta;
 }
 
