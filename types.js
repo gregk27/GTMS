@@ -53,9 +53,11 @@
  * 
  * @typedef {{
  *  text: string,
- *  score: number,
- *  metA: number,
- *  metB: number
+ *  score?: number,
+ *  metA?: number,
+ *  metB?: number,
+ *  spaceBefore?: number,
+ *  spaceAfter?: number
  * }} Button
  * 
  * @typedef {{
