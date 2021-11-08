@@ -65,6 +65,7 @@
  *  authString: string,
  *  initScript: string,
  *  metrics: {
+ *    scoreName: string,
  *    metAName: string,
  *    showMetA: boolean,
  *    metBName: string,
