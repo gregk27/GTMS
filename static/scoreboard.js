@@ -6,13 +6,13 @@ async function update(){
     let teams = await (await fetch("/teams/scoreboard")).json();
     let html = new Array(teams.length).fill("");
     for(let [rank, team] of teams.entries()){
-        for(let [i, page] of config.entries()){
+        for(let [i, page] of config.data.entries()){
             html[i] += `
             <div class="team" style="grid-template-columns:${widths[i]}">        
             <div>${rank+1}</div>
             <div>${team.name}<span style="float:right">${team.number}</span></div>
             <div></div>
-            <div>${team.rpa.toFixed(2)}</div>
+            <div>${eval(config.rankCol.func)(team)}</div>
             <div></div>`;
             for(let col of page){
                 html[i] += `<div>${eval(col.func)(team)}</div>`
@@ -20,7 +20,7 @@ async function update(){
             html[i] += `<div></div></div>`;
         }
     }
-    for(let i in config){
+    for(let i in config.data){
         document.querySelector(`#layer-${i} .scores`).innerHTML = html[i];
     }
 }
@@ -46,9 +46,9 @@ async function buildTables(){
     let html = "";
     numLayer = 0;
     widths = [];
-    for(let [i, page] of config.entries()){
-        let cols = `<div>Rank</div>\n<div>Team</div>\n<div></div>\n<div>RPA</div><div></div>\n`;
-        let width = `2em 40% 0 2em auto`;
+    for(let [i, page] of config.data.entries()){
+        let cols = `<div>Rank</div>\n<div>Team</div>\n<div></div>\n<div>${config.rankCol.name}</div><div></div>\n`;
+        let width = `2em 40% 0 ${config.rankCol.width}em auto`;
         for(let col of page){
             cols += `<div>${col.name}</div>`;
             width += ` ${col.width}em `;
@@ -70,13 +70,13 @@ async function buildTables(){
 }
 
 window.onload = async ()=>{
+    config = await (await fetch("/config/scoreboard")).json();
     setInterval(() => {
         checkMatch();
     }, 5000);
     setInterval(()=>{
         cycle();
-    }, 15000);
-    config = await (await fetch("/config/scoreboard")).json();
+    }, config.duration*1000);
     buildTables();
     checkMatch();
     update();

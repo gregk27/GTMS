@@ -5,49 +5,57 @@ module.exports = {
     authString: "password",
     initScript: "./setup.sql",
     matchLength: 5*60,
-    scoreboard: [
-        [
-            {
-                name: "Wins",
-                width: 3,
-                func: (t) => t.wins
-            },
-            {
-                name: "Losses",
-                width: 3,
-                func: (t) => t.losses
-            },
-            {
-                name: "Ties",
-                width: 3,
-                func: (t) => t.ties
-            }
+    scoreboard: {
+        duration: 15,
+        rankCol: {
+            name: "RPA",
+            width: 2,
+            func: (t) => t.rpa.toFixed(2)
+        },
+        data: [
+            [
+                {
+                    name: "Wins",
+                    width: 3,
+                    func: (t) => t.wins
+                },
+                {
+                    name: "Losses",
+                    width: 3,
+                    func: (t) => t.losses
+                },
+                {
+                    name: "Ties",
+                    width: 3,
+                    func: (t) => t.ties
+                }
+            ],
+            [
+                {
+                    name: "Total Score",
+                    width: 6,
+                    func: (t) => t.score
+                },
+                {
+                    name: "Avg. Goals",
+                    width: 5,
+                    func: (t) => t.scoreAvg
+                },
+            ],
+            [
+                {
+                    name: "Total Balls",
+                    width: 5,
+                    func: (t) => t.metA
+                },
+                {
+                    name: "Avg. Balls",
+                    width: 5,
+                    func: (t) => t.numMatches > 0 ? t.metA/t.numMatches : 0
+                },
+            ]
         ],
-        [
-            {
-                name: "Total Score",
-                width: 6,
-                func: (t) => t.score
-            },
-            {
-                name: "Avg. Goals",
-                width: 5,
-                func: (t) => t.scoreAvg
-            },
-        ],
-        [
-            {
-                name: "Total Balls",
-                width: 5,
-                func: (t) => t.metA
-            },
-            {
-                name: "Avg. Balls",
-                width: 5,
-                func: (t) => t.numMatches > 0 ? t.metA/t.numMatches : 0
-            },
-        ]
-    ],
+    },
     buttons: [
         [
             {
