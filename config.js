@@ -8,30 +8,35 @@ module.exports = {
         [
             {
                 name: "Wins",
-                width: 2,
+                width: 3,
                 func: (t) => t.wins
             },
             {
                 name: "Losses",
-                width: 2,
+                width: 3,
                 func: (t) => t.losses
             },
             {
                 name: "Ties",
-                width: 2,
+                width: 3,
                 func: (t) => t.ties
             }
         ],
         [
             {
-                name: "Avg Score",
-                width: 3,
-                func: (t) => (t.scoreAvg).toFixed(2)
+                name: "Score",
+                width: 4,
+                func: (t) => t.score
             },
             {
-                name: "Avg Balls",
+                name: "MetA",
                 width: 3,
-                func: (t) => (t.metA/t.numMatches).toFixed(2)
+                func: (t) => t.metA
+            },
+            {
+                name: "MetB",
+                width: 3,
+                func: (t) => t.metB
             }
         ]
     ],

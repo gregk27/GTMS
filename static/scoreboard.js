@@ -1,42 +1,28 @@
 var lastMatch = -1;
 var config;
-var cols = ""
+var widths = [];
 
 async function update(){
     let teams = await (await fetch("/teams/scoreboard")).json();
-    console.log(teams);
-    let html0 = "";
-    let html1 = "";
-    // NOTE: Loops for 1 to n, since rank is used more than index
-    for(let i=1; i<=teams.length; i++){
-        t = teams[i-1];
-        html0 += `
-        <div class="team">
-            <div>${i}</div>
-            <div>${t.name}<span style="float:right">${t.number}</span></div>
+    let html = new Array(teams.length).fill("");
+    for(let [rank, team] of teams.entries()){
+        for(let [i, page] of config.entries()){
+            html[i] += `
+            <div class="team" style="grid-template-columns:${widths[i]}">        
+            <div>${rank+1}</div>
+            <div>${team.name}<span style="float:right">${team.number}</span></div>
             <div></div>
-            <div>${t.rpa.toFixed(2)}</div>
-            <div></div>
-            <div>${t.wins}</div>
-            <div>${t.losses}</div>
-            <div>${t.ties}</div>
-            <div></div>
-        </div>`
-        html1 += `
-        <div class="team" style="grid-template-columns:${cols}">
-            <div>${i}</div>
-            <div>${t.name}<span style="float:right">${t.number}</span></div>
-            <div></div>
-            <div>${t.rpa.toFixed(2)}</div>
-            <div></div>
-            <div>${config.showScoreAvg ? t.score : t.scoreAvg}</div>
-            ${config.showMetA ? `<div>${t.metA}</div>` : ''}
-            ${config.showMetB ? `<div>${t.metA}</div>` : ''}
-            <div></div>
-        </div>`
+            <div>${team.rpa.toFixed(2)}</div>
+            <div></div>`;
+            for(let col of page){
+                html[i] += `<div>${eval(col.func)(team)}</div>`
+            }
+            html[i] += `<div></div></div>`;
+        }
     }
-    document.querySelector("#layer-0 .schedule").innerHTML = html0;
-    document.querySelector("#layer-1 .schedule").innerHTML = html1;
+    for(let i in config){
+        document.querySelector(`#layer-${i} .scores`).innerHTML = html[i];
+    }
 }
 
 // Check if match id has changed, if it has then update
@@ -49,33 +35,38 @@ async function checkMatch(){
 }
 
 var currLayer = 0;
-var numLayer = 2;
+var numLayer = 0;
 async function cycle(){
     document.getElementById(`layer-${currLayer}`).style.opacity = 0;
     if(++currLayer >= numLayer) currLayer = 0;
     document.getElementById(`layer-${currLayer}`).style.opacity = 100;
 }
 
-async function buildHeader(){
-    let elem = document.querySelector("#layer-1>.team");
-    if(config.showMetA && config.showMetB){
-        cols = '2em 40% 0 2em auto 6em 3em 3em auto';
-    } else if (config.showMetA || config.showMetB) {
-        cols = '2em 40% 0 2em auto 6em 6em auto';
-    } else {
-        cols = '2em 40% 0 2em auto 8em auto';
+async function buildTables(){
+    let html = "";
+    numLayer = 0;
+    widths = [];
+    for(let [i, page] of config.entries()){
+        let cols = `<div>Rank</div>\n<div>Team</div>\n<div></div>\n<div>RPA</div><div></div>\n`;
+        let width = `2em 40% 0 2em auto`;
+        for(let col of page){
+            cols += `<div>${col.name}</div>`;
+            width += ` ${col.width}em `;
+        }
+        cols += "<div></div>";
+        width += "auto";
+        widths[i] = width;
+        html += `
+        <div class="layer" id="layer-${numLayer}">
+            <div class="team" style="margin:1em auto; grid-template-columns:${width}">
+            ${cols}
+            </div>
+            <secion class="scores"></section>
+        </div>`
+        numLayer ++
     }
-    elem.innerHTML = `
-        <div>Rank</div>
-        <div>Team</div>
-        <div></div>
-        <div>RPA</div>
-        <div></div>
-        <div>${config.scoreName ?? "Score"}</div>
-        ${config.showMetA ? `<div>${config.metAName}</div>` : ''}
-        ${config.showMetB ? `<div>${config.metBName}</div>` : ''}
-        <div></div>`;
-    elem.style['grid-template-columns'] = cols;
+    document.getElementById("body").innerHTML = html;
+    document.getElementById("layer-0").style.opacity = 100;
 }
 
 window.onload = async ()=>{
@@ -84,9 +75,9 @@ window.onload = async ()=>{
     }, 5000);
     setInterval(()=>{
         cycle();
-    }, 30000);
-    config = await (await fetch("/config/metrics")).json();
-    buildHeader();
+    }, 2000);
+    config = await (await fetch("/config/scoreboard")).json();
+    buildTables();
     checkMatch();
     update();
 };

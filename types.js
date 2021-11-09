@@ -74,7 +74,7 @@
  *  initScript: string,
  *  scoreboard: Column[][],
  *  buttons: (Button | Button[])[],
- *  rankPointFunction: (t:TeamScore) => number,
+ *  rankPointFunction: (t:TeamScore) => string,
  *  sortFunction: (a:TeamScore, b:TeamScore) => number,
  * }} Config
  */
