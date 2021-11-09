@@ -75,7 +75,7 @@ Each button has the following properties, only text is required:
  - **spaceAfter:** Space to be placed after button, in `em`
 
 ### Ranking calculation
-The equation used for ranking teams is provided by the configuration file. `sortFunction(a, b)` takes 2 TeamScore objects with the following parameters:
+The two functions used for ranking teams is provided by the configuration file. `rankPointFunction(t)` takes one TeamScore and returns their Ranking Points, and `sortFunction(a, b)` takes 2 TeamScores. A TeamScore object contains the following properties:
  - **number:** Team number
  - **name:** Team name
  - **wins:** Number of wins
@@ -86,20 +86,28 @@ The equation used for ranking teams is provided by the configuration file. `sort
  - **metB:** Sum of metB
  - **numMatches:** Number of matches the team has played
  - **rp:** Ranking Points, calculated as `2*wins + ties`
- - **rpa:** Ranking Point average, calculated as `rp/(wins+losses+ties)`
+ - **rpa:** Ranking Point Average, calculated as `rp/(wins+losses+ties)`
  - **scoreAvg:** Average match score, calculated as `score/(wins+losses+ties)`
-
-The function should -1 if `b` is ranked higher than `a`, and 1 if `a` is ranked higher than `b`. Any combination of the above data can be used in calculating the ranking order. The default sorting function shown below sorts by RPA, then average score, then MetA.
+#### rankPointFunction
+The rankPointFunction should return the number of ranking points earned by the team from their current stats. The number it returns will be averaged across the number of matches to obtain the Ranking Point Average. The default function shown below gives 2 RP for a win, and 1 for a tie.
 
 ```js
-(a, b)=>{
-        // Sort by ranking point average, in event of tie sort by average score then metA
-        let delta = b.rpa - a.rpa;
-        if(delta == 0)
-            delta = b.scoreAvg - a.scoreAvg;
-        if(delta == 0)
-            delta = b.metA - a.metA;
-        return delta;
+(t) => {
+	return 2*t.wins + 1*t.ties;
+}
+```
+#### sortFunction
+The sortFunction should should -1 if `b` is ranked higher than `a`, and 1 if `a` is ranked higher than `b`. Any combination of the above data can be used in calculating the ranking order. The default sorting function shown below sorts by RPA, then average score, then MetA.
+
+```js
+(a, b) => {
+	// Sort by ranking point average, in event of tie sort by average score then metA
+	let delta = b.rpa - a.rpa;
+	if(delta == 0)
+		delta = b.scoreAvg - a.scoreAvg;
+	if(delta == 0)
+		delta = b.metA - a.metA;
+	return delta;
 }
 ```
 ## Initialising Database
