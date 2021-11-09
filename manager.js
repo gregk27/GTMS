@@ -62,8 +62,8 @@ async function getScoreboard(){
         out.push(stmt.get());
     }
     for(let t of out){
-        t.rp = (t.wins*2+t.ties*1);
         t.numMatches = (t.wins+t.ties+t.losses);
+        t.rp = config.rankPointFunction(t);
         if(t.numMatches > 0){
             t.rpa = t.rp/t.numMatches;
             t.scoreAvg = t.score/t.numMatches;
@@ -93,7 +93,7 @@ function loadMatch(id=-1){
         id: sch.id,
         running: false,
         saved: false,
-        endTime: Date.now() + 5*60*1000,
+        endTime: Date.now() + config.matchLength*1000,
         name: sch.type + " " + sch.number,
         red: {
             name: sch.redName,
@@ -115,13 +115,13 @@ function loadMatch(id=-1){
 function startMatch(){
     if(!currentMatch.running){
         currentMatch.running = true;
-        currentMatch.endTime = Date.now() + 5*60*1000;
+        currentMatch.endTime = Date.now() + config.matchLength*1000;
     }
 }
 
 function getCurrentMatch(){
     if(!currentMatch.running){
-        currentMatch.endTime = Date.now() + 5*60*1000 + 1000;
+        currentMatch.endTime = Date.now() + config.matchLength*1000 + 750; // Add some time to allow for network latency
     }
     return currentMatch;
 }
