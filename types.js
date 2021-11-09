@@ -73,7 +73,10 @@
  *  authString: string,
  *  initScript: string,
  *  matchLength: number,
- *  scoreboard: Column[][],
+ *  scoreboard: {
+ *      duration: number,
+ *      data: Column[][]
+ *  }
  *  buttons: (Button | Button[])[],
  *  rankPointFunction: (t:TeamScore) => string,
  *  sortFunction: (a:TeamScore, b:TeamScore) => number,
