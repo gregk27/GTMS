@@ -29,7 +29,7 @@ The scoreboard page displays the cumulative scores from all played matches. It c
 ![](./.readmeImages/scoreboardPage.gif)
 
 ### Schedule Page (`/schedule`)
-The schedule page displays the list of upcoming matches.
+The schedule page displays the list of upcoming matches. The displayed columns can be configured to meet the application.
 
 
 ![](./.readmeImages/schedulePage.png)
@@ -46,22 +46,74 @@ The control page is the central point for operating the system. The `authString`
 
 ![](./.readmeImages/controlPage.png)
 
+## Tracked Data
+A wide variety of statitics about team performance are saved and calculated. These statis include team info, win/loss/tie stats, total score across matches, and sums for 2 user-defined metrics. The following information is provdided for each team at the `/teams/scoreboard` endpoint.
+- **number:** Team number
+- **name:** Team name
+- **wins:** Number of wins
+- **losses:** Number of losses
+- **ties:** Number of ties
+- **numMatches:** Number of matches the team has played, calculated as `wins+losses+ties`
+- **score:** Sum of match scores
+- **scoreAvg:** Average match score, calculated as `score/(numMatches)`
+- **metA:** Sum of metA
+- **metB:** Sum of metB
+- **rp:** Ranking Points, calculated by a [user-supplied function](#rankPointFunction)
+- **rpa:** Ranking Point Average, calculated as `rp/(numMatches)`
+
 ## Configuration
 There are various elements of the system which can be configured to meet user requirements. Configuration settings are placed in `config.js`.
 ### Server Settings
  - **port:** Set the port used by the webserver
  - **authString:** Set the string required to make changes
- - **initScript:** Set the sql script to be run on initialization, this should clear any existing data and insert values for teams and match schedule. Refer to [Initializing Database](#initializing-database) for details.
+ - **initScript:** Set the sql script to be run on initialization, this should clear any existing data and insert values for teams and match schedule. Refer to [Initializing Database](#initialising-database) for details.
 
-### Displayed Metrics
-The system is counts each team's total score, as well as 2 user-defined metrics to be counted. These metrics are refered to as `score`, `metA` and `metB` respectively.
+### Scoreboard
+The scoreboard can be configured to display any combination of statistics across a number of pages. Configuration is provided as a list of pages, each being a list of displayed columns. While the Rank, Team, and RPA columns are automatically shown, the remaining space is free for any user-defined columns. Each column has three properies:
+ - **name:** Name to be displayed in header
+ - **width:** Width of column, in em. This will need some tweaking to find sizes that work for target display
+ - **func:** Callback function used to get the column's value. Takes [team score data](#tracked-data) as input, and returns a string as output
 
- - **scoreName:** Name displayed in scoreboard for the total score
- - **showScoreAvg:** If true, score column will show average score instead of total score
- - **metAName:** Name displayed in scoreboard for metA
- - **showMetA:** If true a column for metA will be shown in the scoreboard
- - **metBName:** Name displayed in scoreboard for metB
- - **showMetB:** If true a column for metB will be shown in the scoreboard
+ The default scoreboard layout used to generate the screenshots is shown below. While the functions in this example just return an item from the data, more complex operations can be used.
+
+ ```js
+[
+	[
+        {
+            name: "Wins",
+            width: 3,
+            func: (t) => t.wins
+        },
+        {
+            name: "Losses",
+            width: 3,
+            func: (t) => t.losses
+        },
+        {
+            name: "Ties",
+            width: 3,
+            func: (t) => t.ties
+        }
+    ],
+    [
+        {
+            name: "Score",
+            width: 4,
+            func: (t) => t.score
+        },
+        {
+            name: "MetA",
+            width: 3,
+            func: (t) => t.metA
+        },
+        {
+            name: "MetB",
+            width: 3,
+            func: (t) => t.metB
+        }
+	]
+]
+ ```
 
 ### Input Buttons
 The buttons on the input page can be customized by providing a list of JSON objects. Singular buttons added to the list will be vertically spaced, if a list of buttons is added they will be grouped vertically and spaced horizontally.
@@ -74,20 +126,8 @@ Each button has the following properties, only text is required:
  - **spaceBefore:** Space to be placed before button, in `em`
  - **spaceAfter:** Space to be placed after button, in `em`
 
-### Ranking calculation
-The two functions used for ranking teams is provided by the configuration file. `rankPointFunction(t)` takes one TeamScore and returns their Ranking Points, and `sortFunction(a, b)` takes 2 TeamScores. A TeamScore object contains the following properties:
- - **number:** Team number
- - **name:** Team name
- - **wins:** Number of wins
- - **losses:** Number of losses
- - **ties:** Number of ties
- - **score:** Sum of match scores
- - **metA:** Sum of metA
- - **metB:** Sum of metB
- - **numMatches:** Number of matches the team has played
- - **rp:** Ranking Points, calculated as `2*wins + ties`
- - **rpa:** Ranking Point Average, calculated as `rp/(wins+losses+ties)`
- - **scoreAvg:** Average match score, calculated as `score/(wins+losses+ties)`
+### Ranking Calculation
+The two functions used for ranking teams is provided by the configuration file. `rankPointFunction(t)` takes [team score data](#tracked-data) for a team and returns their Ranking Points, `sortFunction(a, b)` takes data for 2 teams and returns sorting instructions.
 #### rankPointFunction
 The rankPointFunction should return the number of ranking points earned by the team from their current stats. The number it returns will be averaged across the number of matches to obtain the Ranking Point Average. The default function shown below gives 2 RP for a win, and 1 for a tie.
 
