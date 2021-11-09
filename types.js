@@ -75,6 +75,7 @@
  *    showMetB: boolean,
  *  }
  *  buttons: (Button | Button[])[],
+ *  rankPointFunction: (t:TeamScore) => number,
  *  sortFunction: (a:TeamScore, b:TeamScore) => number,
  * }} Config
  */

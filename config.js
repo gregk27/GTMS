@@ -36,6 +36,9 @@ module.exports = {
             spaceBefore: 2,
         }
     ],
+    rankPointFunction: (t) => {
+        return 2*t.wins + 1*t.ties;
+    },
     sortFunction: (a, b)=>{
         // Sort by ranking point average, in event of tie sort by average score then metA
         let delta = b.rpa - a.rpa;
