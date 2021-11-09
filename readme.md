@@ -16,15 +16,7 @@ The game page is the primary way displaying scores during gameplay. It is design
 ![](./.readmeImages/gamePage.png)
 
 ### Scoreboard Page (`/scoreboard`)
-The scoreboard page displays the cumulative scores from all played matches. It contains the following columns:
- - **Rank:** The team's current rank, calculated based on RPA
- - **RPA:** Ranking point average, calculated as `AVG(Wins*2 + Ties)`
- - **Wins:** Number of games won
- - **Losses:** Number of games lost
- - **Ties:** Number of games tied
- - **Score:** Cumulative score from matches
- - **MetA:** Cumulative value of custom metric A, heading should be changed to match application
- - **MetB:** Cumulative value of custom metric B, heading should be changed to match application
+The scoreboard page displays the cumulative scores from all played matches. The displayed columns can be configured to meet application requirements.
 
 ![](./.readmeImages/scoreboardPage.gif)
 
