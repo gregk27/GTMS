@@ -79,40 +79,40 @@ The scoreboard can be configured to display any combination of statistics across
 
  ```js
 [
-	[
-        {
-            name: "Wins",
-            width: 3,
-            func: (t) => t.wins
-        },
-        {
-            name: "Losses",
-            width: 3,
-            func: (t) => t.losses
-        },
-        {
-            name: "Ties",
-            width: 3,
-            func: (t) => t.ties
-        }
-    ],
-    [
-        {
-            name: "Score",
-            width: 4,
-            func: (t) => t.score
-        },
-        {
-            name: "MetA",
-            width: 3,
-            func: (t) => t.metA
-        },
-        {
-            name: "MetB",
-            width: 3,
-            func: (t) => t.metB
-        }
-	]
+  [
+    {
+      name: "Wins",
+      width: 3,
+      func: (t) => t.wins
+    },
+    {
+      name: "Losses",
+      width: 3,
+      func: (t) => t.losses
+    },
+    {
+      name: "Ties",
+      width: 3,
+      func: (t) => t.ties
+    }
+  ],
+  [
+    {
+      name: "Score",
+      width: 4,
+      func: (t) => t.score
+    },
+    {
+      name: "MetA",
+      width: 3,
+      func: (t) => t.metA
+    },
+    {
+      name: "MetB",
+      width: 3,
+      func: (t) => t.metB
+    }
+  ]
 ]
  ```
 
@@ -134,7 +134,7 @@ The rankPointFunction should return the number of ranking points earned by the t
 
 ```js
 (t) => {
-	return 2*t.wins + 1*t.ties;
+  return 2*t.wins + 1*t.ties;
 }
 ```
 #### sortFunction
@@ -142,13 +142,13 @@ The sortFunction should should -1 if `b` is ranked higher than `a`, and 1 if `a`
 
 ```js
 (a, b) => {
-	// Sort by ranking point average, in event of tie sort by average score then metA
-	let delta = b.rpa - a.rpa;
-	if(delta == 0)
-		delta = b.scoreAvg - a.scoreAvg;
-	if(delta == 0)
-		delta = b.metA - a.metA;
-	return delta;
+  // Sort by ranking point average, in event of tie sort by average score then metA
+  let delta = b.rpa - a.rpa;
+  if(delta == 0)
+    delta = b.scoreAvg - a.scoreAvg;
+  if(delta == 0)
+    delta = b.metA - a.metA;
+  return delta;
 }
 ```
 ## Initialising Database
@@ -161,26 +161,26 @@ DELETE FROM teams WHERE 1=1;
 
 
 INSERT INTO teams (number, name) VALUES
-	(1000, "First Team"),
-	(2000, "Second Team"),
-	(3000, "Third Team"),
-	(4000, "Fourth Team"),
-	(5000, "Fifth Team"),
-	(6000, "Sixth Team"),
-	(7000, "Seventh Team"),
-	(8000, "Eighth Team"),
-	(9000, "Ninth Team");
+    (1000, "First Team"),
+    (2000, "Second Team"),
+    (3000, "Third Team"),
+    (4000, "Fourth Team"),
+    (5000, "Fifth Team"),
+    (6000, "Sixth Team"),
+    (7000, "Seventh Team"),
+    (8000, "Eighth Team"),
+    (9000, "Ninth Team");
 
 INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-	("Match", 1, 1000, 2000),
-	("Match", 2, 3000, 4000),
-	("Match", 3, 5000, 6000),
-	("Match", 4, 7000, 8000),
-	("Match", 5, 9000, 1000),
-	("Match", 6, 2000, 3000),
-	("Match", 7, 4000, 5000),
-	("Match", 8, 6000, 7000),
-	("Match", 9, 8000, 2000);
+    ("Match", 1, 1000, 2000),
+    ("Match", 2, 3000, 4000),
+    ("Match", 3, 5000, 6000),
+    ("Match", 4, 7000, 8000),
+    ("Match", 5, 9000, 1000),
+    ("Match", 6, 2000, 3000),
+    ("Match", 7, 4000, 5000),
+    ("Match", 8, 6000, 7000),
+    ("Match", 9, 8000, 2000);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;
