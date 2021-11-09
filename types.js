@@ -63,19 +63,18 @@
  * }} Button
  * 
  * @typedef {{
+ *  name: string,
+ *  width: number,
+ *  func: (t:TeamScore) => string
+ * }} Column
+ * 
+ * @typedef {{
  *  port:number,
  *  authString: string,
  *  initScript: string,
- *  metrics: {
- *    scoreName: string,
- *    showScoreAvg: bool,
- *    metAName: string,
- *    showMetA: boolean,
- *    metBName: string,
- *    showMetB: boolean,
- *  }
+ *  scoreboard: Column[][],
  *  buttons: (Button | Button[])[],
- *  rankPointFunction: (t:TeamScore) => number,
+ *  rankPointFunction: (t:TeamScore) => string,
  *  sortFunction: (a:TeamScore, b:TeamScore) => number,
  * }} Config
  */

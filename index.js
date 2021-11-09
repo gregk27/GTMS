@@ -3,7 +3,9 @@ require("./types");
 const express = require('express')
 const ip = require('ip');
 const manager = require('./manager');
-const config = require("./config")
+const config = require("./config");
+// Copy of config with functions stringified for sending through express
+const configStr = JsonFuncToStr({... config});
 const app = express()
 
 app.use(express.static('static',{index:false,extensions:['html']}));
@@ -19,7 +21,7 @@ app.get('/hostname', (req, res) => {
 app.get('/config/:entry', (req, res)=>{
   // Don't give the auth string
   if(req.params.entry == "authString") res.send("");
-  res.json(config[req.params.entry]);
+  res.json(configStr[req.params.entry]);
 })
 
 app.get('/game/data', (req, res) => {
@@ -101,3 +103,17 @@ app.listen(config.port, () => {
 })
 
 manager.loadMatch();
+
+/**
+ * Convert functions in a JSON object to strings for sending over API
+ */
+ function JsonFuncToStr(json){
+  for(let j in json) {
+    if(Array.isArray(json[j]) || typeof json[j] == 'object'){
+      json[j] = JsonFuncToStr(json[j]);
+    } else if(typeof json[j] == "function"){
+      json[j] = json[j].toString();
+    }
+  }
+  return json
+}

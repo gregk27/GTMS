@@ -4,13 +4,42 @@ module.exports = {
     port: 3000,
     authString: "password",
     initScript: "./setup.sql",
-    metrics: {
-        scoreName: "Score",
-        metAName: "MetA",
-        showMetA: true,
-        metBName: "MetB",
-        showMetB: true,
-    },
+    scoreboard: [
+        [
+            {
+                name: "Wins",
+                width: 3,
+                func: (t) => t.wins
+            },
+            {
+                name: "Losses",
+                width: 3,
+                func: (t) => t.losses
+            },
+            {
+                name: "Ties",
+                width: 3,
+                func: (t) => t.ties
+            }
+        ],
+        [
+            {
+                name: "Score",
+                width: 4,
+                func: (t) => t.score
+            },
+            {
+                name: "MetA",
+                width: 3,
+                func: (t) => t.metA
+            },
+            {
+                name: "MetB",
+                width: 3,
+                func: (t) => t.metB
+            }
+        ]
+    ],
     buttons: [
         [
             {

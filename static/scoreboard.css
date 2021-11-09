@@ -4,7 +4,7 @@ body {
     font-size: 4vh;
 }
 
-.schedule {    
+.scores {    
     display: flex;
     flex-direction: column;
     align-items: center;
