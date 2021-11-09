@@ -72,6 +72,7 @@
  *  port:number,
  *  authString: string,
  *  initScript: string,
+ *  matchLength: number,
  *  scoreboard: Column[][],
  *  buttons: (Button | Button[])[],
  *  rankPointFunction: (t:TeamScore) => string,

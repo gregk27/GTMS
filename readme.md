@@ -64,9 +64,10 @@ A wide variety of statitics about team performance are saved and calculated. The
 ## Configuration
 There are various elements of the system which can be configured to meet user requirements. Configuration settings are placed in `config.js`.
 ### Server Settings
- - **port:** Set the port used by the webserver
- - **authString:** Set the string required to make changes
- - **initScript:** Set the sql script to be run on initialization, this should clear any existing data and insert values for teams and match schedule. Refer to [Initializing Database](#initialising-database) for details.
+ - **port:** The port used by the webserver
+ - **authString:** The string required to make changes
+ - **initScript:** The sql script to be run on initialization, this should clear any existing data and insert values for teams and match schedule. Refer to [Initializing Database](#initialising-database) for details.
+ - **matchLength:** The length of a match, in seconds
 
 ### Scoreboard
 The scoreboard can be configured to display any combination of statistics across a number of pages. Configuration is provided as a list of pages, each being a list of displayed columns. While the Rank, Team, and RPA columns are automatically shown, the remaining space is free for any user-defined columns. Each column has three properies:

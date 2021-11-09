@@ -4,6 +4,7 @@ module.exports = {
     port: 3000,
     authString: "password",
     initScript: "./setup.sql",
+    matchLength: 5*60,
     scoreboard: [
         [
             {
