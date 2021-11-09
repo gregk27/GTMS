@@ -26,7 +26,7 @@ module.exports = {
         [
             {
                 name: "Total Score",
-                width: 5,
+                width: 6,
                 func: (t) => t.score
             },
             {

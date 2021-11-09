@@ -75,7 +75,7 @@ window.onload = async ()=>{
     }, 5000);
     setInterval(()=>{
         cycle();
-    }, 30000);
+    }, 15000);
     config = await (await fetch("/config/scoreboard")).json();
     buildTables();
     checkMatch();
