@@ -64,10 +64,10 @@ There are various elements of the system which can be configured to meet user re
 ### Scoreboard
 The scoreboard can be configured to display any combination of statistics across a number of pages. Configuration has the following properties:
  - **duration:** The duration each page is displayed before cycling, in seconds
+ - **rankCol:** Configuration for the column always displayed next to team info, should be clear indication of ranking. Defaults to Ranking Point Average (RPA)
  - **data:** Configuration options for what data is displayed
-
 #### Data
-Data is a list of pages, each being a list of displayed columns. While the Rank, Team, and RPA columns are automatically shown, the remaining space is free for any user-defined columns. Each column has three properies:
+Data is a list of pages, each being a list of displayed columns. While the Rank, Team, and rankCol columns are always shown, the remaining space is free for any user-defined columns. Each column has three properies:
  - **name:** Name to be displayed in header
  - **width:** Width of column, in em. This will need some tweaking to find sizes that work for target display
  - **func:** Callback function used to get the column's value. Takes [team score data](#tracked-data) as input, and returns a string as output

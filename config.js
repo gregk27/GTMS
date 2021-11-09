@@ -7,6 +7,11 @@ module.exports = {
     matchLength: 5*60,
     scoreboard: {
         duration: 15,
+        rankCol: {
+            name: "RPA",
+            width: 2,
+            func: (t) => t.rpa.toFixed(2)
+        },
         data: [
             [
                 {

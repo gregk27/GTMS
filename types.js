@@ -75,6 +75,7 @@
  *  matchLength: number,
  *  scoreboard: {
  *      duration: number,
+ *      rankCol: Column,
  *      data: Column[][]
  *  }
  *  buttons: (Button | Button[])[],

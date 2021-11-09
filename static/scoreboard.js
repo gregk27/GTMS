@@ -12,7 +12,7 @@ async function update(){
             <div>${rank+1}</div>
             <div>${team.name}<span style="float:right">${team.number}</span></div>
             <div></div>
-            <div>${team.rpa.toFixed(2)}</div>
+            <div>${eval(config.rankCol.func)(team)}</div>
             <div></div>`;
             for(let col of page){
                 html[i] += `<div>${eval(col.func)(team)}</div>`
@@ -47,8 +47,8 @@ async function buildTables(){
     numLayer = 0;
     widths = [];
     for(let [i, page] of config.data.entries()){
-        let cols = `<div>Rank</div>\n<div>Team</div>\n<div></div>\n<div>RPA</div><div></div>\n`;
-        let width = `2em 40% 0 2em auto`;
+        let cols = `<div>Rank</div>\n<div>Team</div>\n<div></div>\n<div>${config.rankCol.name}</div><div></div>\n`;
+        let width = `2em 40% 0 ${config.rankCol.width}em auto`;
         for(let col of page){
             cols += `<div>${col.name}</div>`;
             width += ` ${col.width}em `;
