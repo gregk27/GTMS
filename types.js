@@ -54,6 +54,11 @@
  * }} TeamScore
  * 
  * @typedef {{
+ *  time: number,
+ *  source: string,
+ * }} MatchSound
+ * 
+ * @typedef {{
  *  text: string,
  *  score?: number,
  *  metA?: number,
@@ -73,6 +78,10 @@
  *  authString: string,
  *  initScript: string,
  *  matchLength: number,
+ *  audio: {
+ *      leadTime: number,
+ *      sequence: MatchSound[],
+ *  },
  *  scoreboard: {
  *      duration: number,
  *      rankCol: Column,
