@@ -1,9 +1,8 @@
 require("./types");
 
 const ip = require('ip');
-const {express, app, config} = require("./server");
+const {express, app, config, server, emit} = require("./server");
 const manager = require('./manager');
-const audio = require("./audio");
 // Copy of config with functions stringified for sending through express
 const configStr = JsonFuncToStr({... config});
 
@@ -51,6 +50,7 @@ app.get('/game/addScore/:alliance', (req, res) => {
         currentGame.blue.metA  += parseInt(req.query['a'] ?? '0');
         currentGame.blue.metB  += parseInt(req.query['b'] ?? '0');
     }
+    emit("scoreChanged", currentGame);
     res.send("");
 })
 
@@ -98,7 +98,7 @@ app.get('/matches/load', (req, res)=>{
 
 app.get("/testAudio", (req, res)=>{
   for(let a of config.audio.sequence){
-    audio.queueAudio(a.source);
+    emit("queueAudio", a.source);
   }
 })
 
