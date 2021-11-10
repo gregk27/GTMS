@@ -38,6 +38,9 @@ The control page is the central point for operating the system. The `authString`
 
 ![](./.readmeImages/controlPage.png)
 
+### Audio Page (`/audio`)
+The audio page is used to get sound effects from the server. To prevent requests from devices where audio is not desired, this must be opened in a separate tab. Sound effects must be provided by the user, and will play at points in the match specified in config.
+
 ## Tracked Data
 A wide variety of statitics about team performance are saved and calculated. These statis include team info, win/loss/tie stats, total score across matches, and sums for 2 user-defined metrics. The following information is provdided for each team at the `/teams/scoreboard` endpoint.
 - **number:** Team number
@@ -61,6 +64,14 @@ There are various elements of the system which can be configured to meet user re
  - **initScript:** The sql script to be run on initialization, this should clear any existing data and insert values for teams and match schedule. Refer to [Initializing Database](#initialising-database) for details.
  - **matchLength:** The length of a match, in seconds
 
+### Audio Settings
+The audio played by the system can be configured to play user-defined files at any point in the match. Configuration has the following properties:
+ - **leadTime:** Time in seconds to start audio prematurely, used to combat network latency
+ - **sequence:** Sequence of audio files to be played during the match
+#### Sequence
+Sequence is a list of audio files and timestamps. The server will instruct the aduio page to load the files at specified timestamps. Each entry has two properties:
+ - **time:** Time to start audio, match time remaining in seconds
+ - **source:** Path to audio file
 ### Scoreboard
 The scoreboard can be configured to display any combination of statistics across a number of pages. Configuration has the following properties:
  - **duration:** The duration each page is displayed before cycling, in seconds

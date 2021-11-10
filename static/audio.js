@@ -20,7 +20,6 @@ function cacheAudio(src){
 }
 
 function playNextAudio(){
-    console.log("Playing next" + queue)
     if(queue.length > 0){
         busy = true;
         audioPlayer = players[queue.shift()];
@@ -43,7 +42,6 @@ window.onload = async () => {
 }
 
 socket.on("queueAudio", (src) => {
-    console.log("QUEUEING "+src);
     queue.push(src);
     if(!busy){
         playNextAudio();
