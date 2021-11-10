@@ -1,4 +1,7 @@
-var lastMatch = -1;
+import {socket, init} from "/socketbase.js";
+
+init(["matchSaved"])
+
 var config;
 var widths = [];
 
@@ -22,15 +25,6 @@ async function update(){
     }
     for(let i in config.data){
         document.querySelector(`#layer-${i} .scores`).innerHTML = html[i];
-    }
-}
-
-// Check if match id has changed, if it has then update
-async function checkMatch(){
-    match = await(await fetch("/game/data")).json();
-    if(match.saved && match.id != lastMatch){
-        lastMatch = match.id;
-        update();
     }
 }
 
@@ -71,13 +65,11 @@ async function buildTables(){
 
 window.onload = async ()=>{
     config = await (await fetch("/config/scoreboard")).json();
-    setInterval(() => {
-        checkMatch();
-    }, 5000);
     setInterval(()=>{
         cycle();
     }, config.duration*1000);
     buildTables();
-    checkMatch();
     update();
 };
+
+socket.on("matchSaved", update);
