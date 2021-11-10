@@ -4,7 +4,28 @@ module.exports = {
     port: 3000,
     authString: "password",
     initScript: "./setup.sql",
-    matchLength: 5*60,
+    matchLength: 1*60,
+    audio: {
+        leadTime: 0.25,
+        sequence:[
+            {
+                time: 60,
+                source: "/sounds/Start Auto_normalized.wav",
+            },
+            {
+                time: 45,
+                source: "/sounds/Start Teleop_normalized.wav",
+            },
+            {
+                time: 15,
+                source: "/sounds/Start of End Game_normalized.wav",
+            },
+            {
+                time: 0,
+                source: "/sounds/Match End_normalized.wav",
+            }
+        ]
+    },
     scoreboard: {
         duration: 15,
         rankCol: {

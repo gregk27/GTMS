@@ -18,6 +18,8 @@ const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, r
 
 /** @type ActiveMatch */
 var currentMatch = null;
+/** @type NodeJS.Timeout[] */
+var matchTimeouts = [];
 
 function getSchedule(){
     const stmt = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
@@ -118,10 +120,10 @@ function startMatch(){
         currentMatch.running = true;
         currentMatch.endTime = Date.now() + config.matchLength*1000;
 
-        setTimeout(() => audio.queueAudio("/sounds/Start Auto_normalized.wav"), 0)
-        setTimeout(() => audio.queueAudio("/sounds/Start Teleop_normalized.wav"), 15000-1000)
-        setTimeout(() => audio.queueAudio("/sounds/Start of End Game_normalized.wav"), 45000-1000)
-        setTimeout(() => audio.queueAudio("/sounds/Match End_normalized.wav"), 60000-1000)
+        matchTimeouts = []
+        for(let a of config.audio.sequence){
+            matchTimeouts.push(setTimeout(() => audio.queueAudio(a.source), (config.matchLength-a.time-config.audio.leadTime)*1000))
+        }
     }
 }
 
