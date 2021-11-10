@@ -1,8 +1,4 @@
-const config = require("./config");
-// Circular reference, avoid using wherever possible
-const server = require("./index");
-
-const io = require("socket.io")(server);
+const {io, config} = require("./server");
 
 clients = [];
 

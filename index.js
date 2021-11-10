@@ -1,21 +1,13 @@
 require("./types");
 
-const express = require('express')
 const ip = require('ip');
-const config = require("./config");
-// Copy of config with functions stringified for sending through express
-const configStr = JsonFuncToStr({... config});
-const app = express()
-
-app.use(express.static('static',{index:false,extensions:['html']}));
-
-module.exports = app.listen(config.port, () => {
-  console.log(`Example app listening at http://localhost:${config.port}`)
-})
-
-// Wait until after server is created so audio works
+const {express, app, config} = require("./server");
 const manager = require('./manager');
 const audio = require("./audio");
+// Copy of config with functions stringified for sending through express
+const configStr = JsonFuncToStr({... config});
+
+app.use(express.static('static',{index:false,extensions:['html']}));
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
