@@ -2,13 +2,19 @@ require("./types");
 
 const express = require('express')
 const ip = require('ip');
-const manager = require('./manager');
 const config = require("./config");
 // Copy of config with functions stringified for sending through express
 const configStr = JsonFuncToStr({... config});
 const app = express()
 
 app.use(express.static('static',{index:false,extensions:['html']}));
+
+module.exports = app.listen(config.port, () => {
+  console.log(`Example app listening at http://localhost:${config.port}`)
+})
+
+// Wait until after server is created so audio works
+const manager = require('./manager');
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -95,11 +101,6 @@ app.get('/matches/load', (req, res)=>{
     manager.loadMatch(parseInt(req.query['id']));
   }
   res.send("");
-})
-
-
-app.listen(config.port, () => {
-  console.log(`Example app listening at http://localhost:${config.port}`)
 })
 
 manager.loadMatch();

@@ -2,6 +2,7 @@ require("./types");
 
 const fs = require('fs');
 const config = require('./config');
+const audio = require("./audio");
 
 let needInit = !fs.existsSync("./db.sqlite");
 const db = require('better-sqlite3')('db.sqlite');
@@ -116,6 +117,11 @@ function startMatch(){
     if(!currentMatch.running){
         currentMatch.running = true;
         currentMatch.endTime = Date.now() + config.matchLength*1000;
+
+        setTimeout(() => audio.queueAudio("/sounds/Start Auto_normalized.wav"), 0)
+        setTimeout(() => audio.queueAudio("/sounds/Start Teleop_normalized.wav"), 15000-1000)
+        setTimeout(() => audio.queueAudio("/sounds/Start of End Game_normalized.wav"), 45000-1000)
+        setTimeout(() => audio.queueAudio("/sounds/Match End_normalized.wav"), 60000-1000)
     }
 }
 
