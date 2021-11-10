@@ -150,7 +150,7 @@ function saveGame(){
         stmt.bind(currentMatch.id, currentMatch.red.score, currentMatch.red.metA, currentMatch.red.metB, currentMatch.blue.score, currentMatch.blue.metA, currentMatch.blue.metB);
         stmt.run()
     } catch (e){
-        const stmt = db.prepare("UPDATE scores SET redScore=?, redMetA=?, redMetB=?, blueScore=?, blueMetA=?, blueMetB=?, WHERE id=?")
+        const stmt = db.prepare("UPDATE scores SET redScore=?, redMetA=?, redMetB=?, blueScore=?, blueMetA=?, blueMetB=? WHERE id=?")
         stmt.bind(currentMatch.red.score, currentMatch.red.metA, currentMatch.red.metB, currentMatch.blue.score, currentMatch.blue.metA, currentMatch.blue.metB, currentMatch.id);
         stmt.run()
     }
