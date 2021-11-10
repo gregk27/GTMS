@@ -15,6 +15,7 @@ module.exports = app.listen(config.port, () => {
 
 // Wait until after server is created so audio works
 const manager = require('./manager');
+const audio = require("./audio");
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -101,6 +102,12 @@ app.get('/matches/load', (req, res)=>{
     manager.loadMatch(parseInt(req.query['id']));
   }
   res.send("");
+})
+
+app.get("/testAudio", (req, res)=>{
+  for(let a of config.audio.sequence){
+    audio.queueAudio(a.source);
+  }
 })
 
 manager.loadMatch();
