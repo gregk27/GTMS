@@ -3,7 +3,7 @@ const config = require("./config");
 
 const express = require("express");
 const crypto = require("crypto");
-const { Server } = require("socket.io");
+const { Server, Socket } = require("socket.io");
 
 const app = express();
 
@@ -18,14 +18,32 @@ let subscriptions = {};
 
 class Client {
     constructor(sock) {
+        /** @type Socket */
         this.sock = sock;
         // List of all subscriptions created.
         this.subs = [];
         this.uuid = crypto.randomUUID();
 
         this.sock.on("disconnect", () => this.destructor());
-        this.sock.on("subscribe", (str) => this.subscribe(str));
-        this.sock.on("unsubscribe", (str) => this.unsubscribe(str));
+
+        this.sock.onevent = (packet) => {
+            var args = packet.data || [];
+            if(packet.data == []) return;
+            switch(args[0]){
+            case "subscribe":
+                this.subscribe(args[1]);
+                break;
+            case "unsubscribe":
+                this.unsubscribe(args[1]);
+                break;
+            default:
+                // If there's a listener for the event, call it
+                if(listeners[args[0]]){
+                    let res = listeners[args[0]](this, args[1], args[2] ?? "")
+                    if(res != undefined) emit(args[0], res);
+                }
+            }
+        }
     }
 
     destructor(){
@@ -73,8 +91,6 @@ class Client {
 // Register new clients on connection
 io.on("connection", (sock) => new Client(sock));
 
-io.on("subscribe", (str) => console.log(str));
-
 async function emit(event, payload){
     let subs = subscriptions[event]
     if(subs != undefined && subs != null){
@@ -84,7 +100,22 @@ async function emit(event, payload){
     }
 }
 
+/** @type Object.<string, (client:Client, payload:any, auth:string?)=>any> */
+var listeners = {};
+
+/** 
+ * Register a handler for an incoming event from any client.
+ * The value returned by the function will be sent back to the client with the same event name
+ * If undefined is returned then no response will be sent
+ * Note that only one function can be registered to each handle
+ * 
+ * @param {string} handle
+ * @param {(client:Client, payload, auth:string?)=>any} func
+ */
+function on(handle, func){
+    listeners[handle] = func;
+}
 
 module.exports = {
-    express, app, server, io, config, emit
+    express, app, server, io, config, emit, on
 }
