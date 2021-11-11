@@ -156,7 +156,7 @@ function getCombindMatchData(){
     return getCombinedMatchDataStmt.all();
 }
 
-function saveGame(){
+function saveMatch(){
     console.log(currentMatch);
     currentMatch.saved = true;
     try {
@@ -187,6 +187,24 @@ server.on("addScore", (client, payload, auth) => {
     server.emit("scoreChanged", currentMatch);
 })
 
+server.on("loadMatch", (client, payload, auth) => {
+    if(auth != config.authString) return;
+    loadMatch(payload.id ?? -1);
+})
+
+server.on("startMatch", (client, payload, auth)=>{
+    if(auth != config.authString) return;
+    startMatch();
+})
+
+server.on("saveMatch", (client, payload, auth) => {
+    if(auth != config.authString) return;
+    saveMatch();
+})
+
+
 module.exports = {
-    getSchedule, startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch, getScoreboard
+    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard
 }
+
+loadMatch();

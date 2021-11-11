@@ -56,21 +56,17 @@ async function updateCurrent(data){
 window.saveScore = saveScore;
 async function saveScore(){
     document.getElementById('saveScore').disabled = true;
-    fetch(`/game/save?auth=${authString}`);
+    socket.emit("saveMatch", {}, authString);
 }
 
 window.startMatch = startMatch;
 async function startMatch(){
-    await fetch(`/game/start?auth=${authString}`)
+    socket.emit("startMatch", {}, authString)
 }
 
 window.loadNext = loadNext;
 async function loadNext(id=-1){
-    if(id == -1){
-        await fetch(`/matches/load?auth=${authString}`)
-    } else {
-        await fetch(`/matches/load?id=${id}&auth=${authString}`)
-    }
+    socket.emit("loadMatch", {id}, authString);
 }
 
 window.onload = ()=>{

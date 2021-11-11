@@ -26,24 +26,6 @@ app.get('/game/data', (req, res) => {
     res.json(manager.getCurrentMatch());
 })
 
-app.get('/game/start', (req, res)=>{
-  if(req.query['auth'] != config.authString) { 
-    res.send("Unauthorized");
-    return;
-  }
-  manager.startMatch();
-  res.send("");
-})
-
-app.get('/game/save', (req, res)=>{
-  if(req.query['auth'] != config.authString) {
-    res.send("Unauthorized");
-    return;
-  }
-  manager.saveGame();
-  res.json({result:true})
-})
-
 app.get('/teams/list', (req, res)=>{
   res.json(manager.getTeams());
 })
@@ -64,26 +46,11 @@ app.get('/matches/list', (req, res)=>{
   }
 })
 
-app.get('/matches/load', (req, res)=>{
-  if(req.query['auth'] != config.authString) {
-    res.send("Unauthorized");
-    return;
-  };
-  if(req.query['id'] == null){
-    manager.loadMatch(-1)
-  } else {
-    manager.loadMatch(parseInt(req.query['id']));
-  }
-  res.send("");
-})
-
 app.get("/testAudio", (req, res)=>{
   for(let a of config.audio.sequence){
     emit("queueAudio", a.source);
   }
 })
-
-manager.loadMatch();
 
 /**
  * Convert functions in a JSON object to strings for sending over API
