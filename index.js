@@ -1,7 +1,11 @@
 require("./types");
 
 const ip = require('ip');
-const {express, app, config, server, emit} = require("./server");
+const server = require("./server");
+const express = server.express
+const app = server.app
+const config = server.config
+
 const manager = require('./manager');
 // Copy of config with functions stringified for sending through express
 const configStr = JsonFuncToStr({... config});
@@ -48,9 +52,30 @@ app.get('/matches/list', (req, res)=>{
 
 app.get("/testAudio", (req, res)=>{
   for(let a of config.audio.sequence){
-    emit("queueAudio", a.source);
+    server.emit("queueAudio", a.source);
   }
 })
+
+server.on("addScore", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.addScore(payload.alliance, payload.delta ?? 0, payload.dA ?? 0, payload.dB ?? 0);
+})
+
+server.on("loadMatch", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.loadMatch(payload.id ?? -1);
+})
+
+server.on("startMatch", (client, payload, auth)=>{
+  if(auth != config.authString) return;
+  manager.startMatch();
+})
+
+server.on("saveMatch", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.saveMatch();
+})
+
 
 /**
  * Convert functions in a JSON object to strings for sending over API

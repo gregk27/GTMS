@@ -171,40 +171,21 @@ function saveMatch(){
     server.emit("matchSaved", currentMatch);
 }
 
-server.on("addScore", (client, payload, auth) => {
-    if (auth != config.authString) {
-        return;
-    }
-    if (payload["alliance"] == 'red') {
-        currentMatch.red.score += payload.delta ?? 0;
-        currentMatch.red.metA += payload.dA ?? 0;
-        currentMatch.red.metB += payload.dB ?? 0;
-    } else if (payload["alliance"] == 'blue') {
-        currentMatch.blue.score += payload.delta ?? 0;
-        currentMatch.blue.metA += payload.dA ?? 0;
-        currentMatch.blue.metB += payload.dB ?? 0;
+function addScore(alliance, delta, dA, dB){
+    if (alliance == 'red') {
+        currentMatch.red.score += delta;
+        currentMatch.red.metA += dA;
+        currentMatch.red.metB += dB;
+    } else if (alliance == 'blue') {
+        currentMatch.blue.score += delta;
+        currentMatch.blue.metA += dA;
+        currentMatch.blue.metB += dB;
     }
     server.emit("scoreChanged", currentMatch);
-})
-
-server.on("loadMatch", (client, payload, auth) => {
-    if(auth != config.authString) return;
-    loadMatch(payload.id ?? -1);
-})
-
-server.on("startMatch", (client, payload, auth)=>{
-    if(auth != config.authString) return;
-    startMatch();
-})
-
-server.on("saveMatch", (client, payload, auth) => {
-    if(auth != config.authString) return;
-    saveMatch();
-})
-
+}
 
 module.exports = {
-    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard
+    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, startMatch, saveMatch, loadMatch, addScore
 }
 
 loadMatch();
