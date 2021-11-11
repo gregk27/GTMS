@@ -171,6 +171,22 @@ function saveGame(){
     server.emit("matchSaved", currentMatch);
 }
 
+server.on("addScore", (client, payload, auth) => {
+    if (auth != config.authString) {
+        return;
+    }
+    if (payload["alliance"] == 'red') {
+        currentMatch.red.score += payload.delta ?? 0;
+        currentMatch.red.metA += payload.dA ?? 0;
+        currentMatch.red.metB += payload.dB ?? 0;
+    } else if (payload["alliance"] == 'blue') {
+        currentMatch.blue.score += payload.delta ?? 0;
+        currentMatch.blue.metA += payload.dA ?? 0;
+        currentMatch.blue.metB += payload.dB ?? 0;
+    }
+    server.emit("scoreChanged", currentMatch);
+})
+
 module.exports = {
     getSchedule, startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch, getScoreboard
 }

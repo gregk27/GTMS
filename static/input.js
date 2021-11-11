@@ -1,3 +1,4 @@
+import { socket } from "./socketbase.js";
 import init from "/gamebase.js"
 
 init(update, document.querySelector("#time"), -1)
@@ -20,8 +21,7 @@ async function update(data){
 
 window.addScore = addScore;
 function addScore(delta, dA=0, dB=0){
-    fetch(`/game/addScore/${alliance}?d=${delta}&a=${dA}&b=${dB}&auth=${authString}`);
-    // document.querySelector("#score").innerText = parseInt(document.querySelector("#score").innerText) + delta;
+    socket.emit("addScore", {alliance, delta, dA, dB}, authString);
 }
 
 async function buildButtons() {

@@ -35,25 +35,6 @@ app.get('/game/start', (req, res)=>{
   res.send("");
 })
 
-app.get('/game/addScore/:alliance', (req, res) => {
-    if(req.query['auth'] != config.authString){
-      res.send("Unauthorized");
-      return
-    }
-    let currentGame = manager.getCurrentMatch();
-    if(req.params["alliance"] == 'red'){
-        currentGame.red.score += parseInt(req.query['d'] ?? '0');
-        currentGame.red.metA  += parseInt(req.query['a'] ?? '0');
-        currentGame.red.metB  += parseInt(req.query['b'] ?? '0');
-    } else if (req.params["alliance"] == 'blue'){
-        currentGame.blue.score += parseInt(req.query['d'] ?? '0');
-        currentGame.blue.metA  += parseInt(req.query['a'] ?? '0');
-        currentGame.blue.metB  += parseInt(req.query['b'] ?? '0');
-    }
-    emit("scoreChanged", currentGame);
-    res.send("");
-})
-
 app.get('/game/save', (req, res)=>{
   if(req.query['auth'] != config.authString) {
     res.send("Unauthorized");
