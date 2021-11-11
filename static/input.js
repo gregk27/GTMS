@@ -1,34 +1,27 @@
+import init from "/gamebase.js"
+
+init(update, document.querySelector("#time"), -1)
+
 let alliance = new URLSearchParams(window.location.search).get('a');
 let authString = new URLSearchParams(window.location.search).get('auth');
 
-function toMMSS (unix) {
-    if(unix < 0) return "00:00";
-    unix = Math.floor(unix/1000);
-    var minutes = Math.floor((unix / 60));
-    var seconds = unix - (minutes * 60);
-
-    if (minutes < 10) {minutes = "0"+minutes;}
-    if (seconds < 10) {seconds = "0"+seconds;}
-    return minutes+':'+seconds;
-}
-
-async function update(){
-    let data = await (await fetch("/game/data")).json();
-    console.log(data);
+async function update(data){
     document.querySelector("#matchNum").innerText = data.name;
+    let score;
     if(alliance == "red"){
         document.querySelector("#teamNum").innerText = data.red.num;
-        document.querySelector("#score").innerText = data.red.score;
+        score = data.red;
     } else if (alliance == "blue"){
         document.querySelector("#teamNum").innerText = data.blue.num;
-        document.querySelector("#score").innerText = data.blue.score;
+        score = data.blue;
     }
-    document.querySelector("#time").innerText = toMMSS(data.endTime - Date.now())
+    document.querySelector("#score").innerHTML = `<span>${score.metA}</span> <span style="font-size:1.2em">${score.score}</span> <span>${score.metB}</span>`;
 }
 
+window.addScore = addScore;
 function addScore(delta, dA=0, dB=0){
     fetch(`/game/addScore/${alliance}?d=${delta}&a=${dA}&b=${dB}&auth=${authString}`);
-    document.querySelector("#score").innerText = parseInt(document.querySelector("#score").innerText) + delta;
+    // document.querySelector("#score").innerText = parseInt(document.querySelector("#score").innerText) + delta;
 }
 
 async function buildButtons() {
@@ -57,9 +50,4 @@ async function buildButtons() {
 window.onload = ()=>{
     document.body.classList.add(alliance)
     buildButtons();
-
-    setInterval(() => {
-        update();
-    }, 2000);
-    update();
 };
