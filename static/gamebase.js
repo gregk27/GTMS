@@ -29,7 +29,7 @@ export default async function init(clbk, clk, postWindow=2500) {
     if(document.readyState === "complete"){
         onLoad();
     } else {
-        window.onload = onLoad
+        window.addEventListener("load", onLoad)
     }
 }
 

@@ -45,6 +45,7 @@ class Client {
             for(let s of str) this.subscribe(s);
             return;
         }
+        if(this.subs.indexOf(str) > 0) return;
         this.subs.push(str)
         if(subscriptions[str] == undefined || subscriptions[str] == null){
             subscriptions[str] = {};

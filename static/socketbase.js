@@ -1,4 +1,5 @@
 export const socket = io();
+window.socket = socket;
 var subscriptions = null;
 
 socket.on('connect', ()=>{
@@ -14,15 +15,16 @@ socket.on('reconnect', ()=>{
 })
 
 /**
- * Initialise subscriptions for the socket, can only be done once
+ * Initialise subscriptions for the socket
  * @param {string[]} subs 
  */
 export function init(subs) {
-    if(subscriptions == null){
-        if(socket.connected){
-            console.log(subs);
-            socket.emit("subscribe", subs);
-        }
-        subscriptions = subs;
+    if(socket.connected){
+        console.log(subs);
+        socket.emit("subscribe", subs);
     }
+    if(subscriptions == null)
+        subscriptions = subs;
+    else
+        subscriptions = subscriptions.concat(subs);
 }

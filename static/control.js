@@ -1,20 +1,10 @@
-import {socket, init} from '/socketbase.js';
+import {socket, init as sInit} from '/socketbase.js';
+import init from './gamebase.js'
 
-init(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinished"])
+sInit(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinished"])
+init(updateCurrent, document.getElementById("currentTime"), -1)
 
 var authString = new URLSearchParams(window.location.search).get('auth');
-var currentMatch = null;
-
-function toMMSS (unix) {
-    if(unix < 0) return "00:00";
-    unix = Math.floor(unix/1000);
-    var minutes = Math.floor((unix / 60));
-    var seconds = unix - (minutes * 60);
-
-    if (minutes < 10) {minutes = "0"+minutes;}
-    if (seconds < 10) {seconds = "0"+seconds;}
-    return minutes+':'+seconds;
-}
 
 async function updateScoreboard(){
     let teams = await (await fetch("/teams/scoreboard")).json();
@@ -58,7 +48,6 @@ async function updateSchedule(){
 }
 
 async function updateCurrent(data){
-    currentMatch = data;
     document.getElementById("currentNum").innerText = data.name;
     document.getElementById("currentTeams").innerText = `${data.red.num} v ${data.blue.num}`;
     document.getElementById("currentScore").innerText = `${data.red.score} - ${data.blue.score}`;
@@ -87,20 +76,6 @@ async function loadNext(id=-1){
 window.onload = ()=>{
     updateSchedule();
     updateScoreboard();
-    setInterval(() => {
-        let time;
-        if(currentMatch.running) {
-            time = currentMatch.endTime - Date.now();
-        } else {
-            time = currentMatch.duration*1000;
-        }
-        document.getElementById("currentTime").innerText = toMMSS(time)
-    }, 500);
-    let data = fetch("/game/data").then((response) => {
-        response.json().then((data) => {
-            updateCurrent(data);
-        })
-    })
     fetch("/hostname").then((res) => {
         res.text().then((hostname) => {
             new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
@@ -120,8 +95,6 @@ socket.on('matchSaved', () => {
 })
 
 socket.on('matchLoaded', (currentMatch)=>{
-    updateCurrent(currentMatch);
-    
     document.getElementById("saveScore").style.display='none';
     document.getElementById("startMatch").style.display='inline';
     document.getElementById("loadNext").style.display='none';
@@ -129,21 +102,13 @@ socket.on('matchLoaded', (currentMatch)=>{
 })
 
 socket.on('matchStarted', (currentMatch)=>{
-    updateCurrent(currentMatch);
-
     document.getElementById("saveScore").style.display='none';
     document.getElementById("startMatch").style.display='inline';
     document.getElementById("loadNext").style.display='none';
     document.getElementById("startMatch").disabled = true;
 })
 
-socket.on('scoreChanged', (currentMatch)=>{
-    updateCurrent(currentMatch);
-})
-
 socket.on('matchFinished', (currentMatch)=>{
-    updateCurrent(currentMatch);
-    
     document.getElementById("saveScore").style.display='inline';
     document.getElementById("startMatch").style.display='none';
     document.getElementById("loadNext").style.display='none';
