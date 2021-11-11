@@ -7,7 +7,9 @@
     <title>Control Page</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='control.css'>
-    <script src='control.js'></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/socketBase.js"></script>
+    <script type="module" src='control.js'></script>
     <script src='qrcode.min.js'></script>
 </head>
 
@@ -19,8 +21,8 @@
         <div id="currentTeams">1234 vs 5678</div>
         <div id="currentScore">999 - 999</div>
         <br/>
-        <button id="saveScore" style="display:inline" onclick="saveScore()">Save Score</button>
-        <button id="startMatch" style="display:none" onclick="startMatch()">Start Match</button>
+        <button id="saveScore" style="display:none" onclick="saveScore()">Save Score</button>
+        <button id="startMatch" style="display:inline" onclick="startMatch()">Start Match</button>
         <button id="loadNext" style="display:none" onclick="loadNext()">Load Next</button>
     </section>
     <section id="teams">

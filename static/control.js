@@ -1,4 +1,9 @@
+import {socket, init} from '/socketbase.js';
+
+init(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinished"])
+
 var authString = new URLSearchParams(window.location.search).get('auth');
+var currentMatch = null;
 
 function toMMSS (unix) {
     if(unix < 0) return "00:00";
@@ -11,7 +16,7 @@ function toMMSS (unix) {
     return minutes+':'+seconds;
 }
 
-async function update(){
+async function updateScoreboard(){
     let teams = await (await fetch("/teams/scoreboard")).json();
     let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>RP</th><th>RPA</th><th>Score</th><th>MetA</th><th>MetB</th></tr>\n";
     for(let t of teams){
@@ -29,9 +34,11 @@ async function update(){
         </tr>\n`;
     }
     document.querySelector("#teams > table").innerHTML = html;3
+}
 
+async function updateSchedule(){
     let matches = await(await fetch("/matches/list?dat=all")).json();
-    html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
+    let html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
     for(let m of matches){
         html += `<tr>
         <td>${m.id}</td>
@@ -50,48 +57,25 @@ async function update(){
     document.querySelector("#schedule > table").innerHTML = html;
 }
 
-async function updateCurrent(){
-    let data = await (await fetch("/game/data")).json();
-    console.log(data);
+async function updateCurrent(data){
+    currentMatch = data;
     document.getElementById("currentNum").innerText = data.name;
     document.getElementById("currentTeams").innerText = `${data.red.num} v ${data.blue.num}`;
     document.getElementById("currentScore").innerText = `${data.red.score} - ${data.blue.score}`;
-    let time = data.endTime - Date.now();
-    document.getElementById("currentTime").innerText = toMMSS(time)
-    if(!data.running){
-        document.getElementById("saveScore").style.display='none';
-        document.getElementById("startMatch").style.display='inline';
-        document.getElementById("loadNext").style.display='none';
-        document.getElementById("startMatch").disabled = false;
-    } else if (time >= 0){
-        document.getElementById("saveScore").style.display='none';
-        document.getElementById("startMatch").style.display='inline';
-        document.getElementById("loadNext").style.display='none';
-        document.getElementById("startMatch").disabled = true;
-    } else if (document.getElementById('startMatch').disabled){
-        document.getElementById("saveScore").style.display='inline';
-        document.getElementById("startMatch").style.display='none';
-        document.getElementById("loadNext").style.display='none';
-        document.getElementById("startMatch").disabled = false;
-    }
 }
 
+window.saveScore = saveScore;
 async function saveScore(){
     document.getElementById('saveScore').disabled = true;
-    let res = await (await fetch(`/game/save?auth=${authString}`)).json();
-    if(res.result){
-        document.getElementById("saveScore").style.display='none';
-        document.getElementById("startMatch").style.display='none';
-        document.getElementById("loadNext").style.display='inline';
-    }
-    document.getElementById('saveScore').disabled = false;
-    update();
+    fetch(`/game/save?auth=${authString}`);
 }
 
+window.startMatch = startMatch;
 async function startMatch(){
     await fetch(`/game/start?auth=${authString}`)
 }
 
+window.loadNext = loadNext;
 async function loadNext(id=-1){
     if(id == -1){
         await fetch(`/matches/load?auth=${authString}`)
@@ -101,11 +85,22 @@ async function loadNext(id=-1){
 }
 
 window.onload = ()=>{
-    update();
+    updateSchedule();
+    updateScoreboard();
     setInterval(() => {
-        updateCurrent();
-    }, 2000);
-    updateCurrent();
+        let time;
+        if(currentMatch.running) {
+            time = currentMatch.endTime - Date.now();
+        } else {
+            time = currentMatch.duration*1000;
+        }
+        document.getElementById("currentTime").innerText = toMMSS(time)
+    }, 500);
+    let data = fetch("/game/data").then((response) => {
+        response.json().then((data) => {
+            updateCurrent(data);
+        })
+    })
     fetch("/hostname").then((res) => {
         res.text().then((hostname) => {
             new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
@@ -113,3 +108,44 @@ window.onload = ()=>{
         })
     })
 }
+
+socket.on('matchSaved', () => {
+    updateSchedule();
+    updateScoreboard();
+    
+    document.getElementById("saveScore").style.display='none';
+    document.getElementById("startMatch").style.display='none';
+    document.getElementById("loadNext").style.display='inline';
+    document.getElementById('saveScore').disabled = false;
+})
+
+socket.on('matchLoaded', (currentMatch)=>{
+    updateCurrent(currentMatch);
+    
+    document.getElementById("saveScore").style.display='none';
+    document.getElementById("startMatch").style.display='inline';
+    document.getElementById("loadNext").style.display='none';
+    document.getElementById("startMatch").disabled = false;
+})
+
+socket.on('matchStarted', (currentMatch)=>{
+    updateCurrent(currentMatch);
+
+    document.getElementById("saveScore").style.display='none';
+    document.getElementById("startMatch").style.display='inline';
+    document.getElementById("loadNext").style.display='none';
+    document.getElementById("startMatch").disabled = true;
+})
+
+socket.on('scoreChanged', (currentMatch)=>{
+    updateCurrent(currentMatch);
+})
+
+socket.on('matchFinished', (currentMatch)=>{
+    updateCurrent(currentMatch);
+    
+    document.getElementById("saveScore").style.display='inline';
+    document.getElementById("startMatch").style.display='none';
+    document.getElementById("loadNext").style.display='none';
+    document.getElementById("startMatch").disabled = false;
+})

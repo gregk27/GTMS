@@ -102,6 +102,7 @@ function loadMatch(id=-1){
     let sch = getScheduledMatch.get();
     currentMatch = {
         id: sch.id,
+        duration: config.matchLength,
         running: false,
         saved: false,
         endTime: Date.now() + config.matchLength*1000,
@@ -127,14 +128,14 @@ function loadMatch(id=-1){
 function startMatch(){
     if(!currentMatch.running){
         currentMatch.running = true;
-        currentMatch.endTime = Date.now() + config.matchLength*1000;
+        currentMatch.endTime = Date.now() + currentMatch.duration*1000;
 
         matchTimeouts = []
         for(let a of config.audio.sequence){
-            matchTimeouts.push(setTimeout(() => server.emit("queueAudio", a.source), (config.matchLength-a.time-config.audio.leadTime)*1000))
+            matchTimeouts.push(setTimeout(() => server.emit("queueAudio", a.source), (currentMatch.duration-a.time-config.audio.leadTime)*1000))
         }
         // Emit event when match ends
-        matchTimeouts.push(setTimeout(() => server.emit("matchFinished", currentMatch), config.matchLength*1000));
+        matchTimeouts.push(setTimeout(() => server.emit("matchFinished", currentMatch), currentMatch.duration*1000));
 
         server.emit("matchStarted", currentMatch);
     }
@@ -142,7 +143,7 @@ function startMatch(){
 
 function getCurrentMatch(){
     if(!currentMatch.running){
-        currentMatch.endTime = Date.now() + config.matchLength*1000 + 750; // Add some time to allow for network latency
+        currentMatch.endTime = Date.now() + currentMatch.duration*1000 + 750; // Add some time to allow for network latency
     }
     return currentMatch;
 }
