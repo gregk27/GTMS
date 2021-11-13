@@ -1,13 +1,16 @@
 import {socket, init as sInit} from '/socketbase.js';
 import init from './gamebase.js'
 
-sInit(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinished"])
+sInit(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinished"], ()=>{
+    socket.emit("getScoreboard");
+    socket.emit("getMatchData");
+    socket.emit("getHostname");
+})
 init(updateCurrent, document.getElementById("currentTime"), -1)
 
 var authString = new URLSearchParams(window.location.search).get('auth');
 
-async function updateScoreboard(){
-    let teams = await (await fetch("/teams/scoreboard")).json();
+socket.on("getScoreboard", (teams) => {
     let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>RP</th><th>RPA</th><th>Score</th><th>MetA</th><th>MetB</th></tr>\n";
     for(let t of teams){
         html += `<tr>
@@ -24,10 +27,9 @@ async function updateScoreboard(){
         </tr>\n`;
     }
     document.querySelector("#teams > table").innerHTML = html;3
-}
+});
 
-async function updateSchedule(){
-    let matches = await(await fetch("/matches/list?dat=all")).json();
+socket.on("getMatchData", (matches) => {
     let html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
     for(let m of matches){
         html += `<tr>
@@ -45,7 +47,7 @@ async function updateSchedule(){
         </tr>\n`
     }
     document.querySelector("#schedule > table").innerHTML = html;
-}
+})
 
 async function updateCurrent(data){
     document.getElementById("currentNum").innerText = data.name;
@@ -69,20 +71,18 @@ async function loadNext(id=-1){
     socket.emit("loadMatch", {id}, authString);
 }
 
-window.onload = ()=>{
-    updateSchedule();
-    updateScoreboard();
-    fetch("/hostname").then((res) => {
-        res.text().then((hostname) => {
-            new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
-            new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue&auth=${authString}`, width:128, height:128});
-        })
-    })
+window.testAudio = () => {
+    socket.emit('testAudio', {}, authString);
 }
 
+socket.on("getHostname", (hostname)=>{
+    new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
+    new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue&auth=${authString}`, width:128, height:128});
+})
+
 socket.on('matchSaved', () => {
-    updateSchedule();
-    updateScoreboard();
+    socket.emit("getMatchData");
+    socket.emit("getScoreboard");
     
     document.getElementById("saveScore").style.display='none';
     document.getElementById("startMatch").style.display='none';

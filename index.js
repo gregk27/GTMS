@@ -35,9 +35,7 @@ app.get('/teams/list', (req, res)=>{
 })
 
 app.get('/teams/scoreboard', (req, res)=>{
-  manager.getScoreboard().then((dat)=>{
-    res.json(dat);
-  })
+  res.json(manager.getScoreboard());
 })
 
 app.get('/matches/list', (req, res)=>{
@@ -50,10 +48,27 @@ app.get('/matches/list', (req, res)=>{
   }
 })
 
-app.get("/testAudio", (req, res)=>{
+server.on("testAudio", (client, payload, auth)=>{
+  if(auth != config.authString) return;
   for(let a of config.audio.sequence){
     server.emit("queueAudio", a.source);
   }
+})
+
+server.on("getHostname", ()=>{
+  return ip.address() + ":" + config.port;
+})
+
+server.on("getScoreboard", () => {
+  return manager.getScoreboard();
+})
+
+server.on("getSchedule", () => {
+  return manager.getSchedule();
+})
+
+server.on("getMatchData", () => {
+  return manager.getCombindMatchData();
 })
 
 server.on("addScore", (client, payload, auth) => {

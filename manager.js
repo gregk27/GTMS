@@ -28,7 +28,7 @@ function getSchedule(){
     return stmt.all();
 }
 
-async function getScoreboard(){
+function getScoreboard(){
     let teams = getTeamsStmt.all();
     out = []
     for(let t of teams){

@@ -40,7 +40,7 @@ class Client {
                 // If there's a listener for the event, call it
                 if(listeners[args[0]]){
                     let res = listeners[args[0]](this, args[1], args[2] ?? "")
-                    if(res != undefined) emit(args[0], res);
+                    if(res != undefined) this.emit(args[0], res);
                 }
             }
         }
