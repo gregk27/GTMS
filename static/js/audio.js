@@ -1,7 +1,7 @@
 // This script can be added to any page for audio capability
 // However, this may come at a performance cost due to the number of sockets being managed
 
-import {socket, init} from "/socketbase.js"
+import {socket, init} from "/js/socketbase.js"
 // const socket = s.socket;
 init(["queueAudio"]);
 

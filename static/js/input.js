@@ -1,5 +1,5 @@
-import { socket } from "./socketbase.js";
-import init from "/gamebase.js"
+import { socket } from "/js./socketbase.js";
+import init from "/js/gamebase.js"
 
 init(update, document.querySelector("#time"), -1)
 

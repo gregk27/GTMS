@@ -1,4 +1,4 @@
-import init from '/gamebase.js';
+import init from '/js/gamebase.js';
 
 init(update, document.getElementById("time"));
 

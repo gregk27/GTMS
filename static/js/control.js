@@ -1,5 +1,5 @@
-import {socket, init as sInit} from '/socketbase.js';
-import init from './gamebase.js'
+import {socket, init as sInit} from '/js/socketbase.js';
+import init from '/js/gamebase.js'
 
 sInit(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinished"], ()=>{
     socket.emit("getScoreboard");

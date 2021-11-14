@@ -1,4 +1,4 @@
-import {socket, init as sInit} from '/socketbase.js';
+import {socket, init as sInit} from '/js/socketbase.js';
 
 sInit(["matchLoaded", "matchStarted", "scoreChanged", "matchFinished"], ()=>{
     // Load data for current match

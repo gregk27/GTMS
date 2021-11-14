@@ -1,4 +1,4 @@
-import {socket, init} from "/socketbase.js";
+import {socket, init} from "/js/socketbase.js";
 
 init(["matchStarted"], ()=>{
     socket.emit("getSchedule");
