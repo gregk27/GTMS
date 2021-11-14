@@ -1,9 +1,10 @@
 import {socket, init} from "/socketbase.js";
 
-init(["matchStarted"])
+init(["matchStarted"], ()=>{
+    socket.emit("getSchedule");
+})
 
-async function update(){
-    let schedule = await (await fetch("/matches/list?dat=sch")).json();
+socket.on("getSchedule", (schedule) => {
     let html = "";
     for(let m of schedule){
         html += `
@@ -15,11 +16,7 @@ async function update(){
         `
     }
     document.getElementById("schedule").innerHTML = html;
-}
-
-window.onload = () => {
-    update();
-};
+})
 
 // Update when the new match starts
-socket.on('matchStarted', update);
+socket.on('matchStarted', () => socket.emit("getSchedule"));

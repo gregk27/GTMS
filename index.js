@@ -59,6 +59,10 @@ server.on("getHostname", ()=>{
   return ip.address() + ":" + config.port;
 })
 
+server.on("getCurrentMatch", ()=>{
+  return manager.getCurrentMatch();
+})
+
 server.on("getScoreboard", () => {
   return manager.getScoreboard();
 })

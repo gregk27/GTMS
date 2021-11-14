@@ -1,12 +1,13 @@
 import {socket, init} from "/socketbase.js";
 
-init(["matchSaved"])
+init(["matchSaved"], ()=>{
+    socket.emit("getScoreboard");
+})
 
 var config;
 var widths = [];
 
-async function update(){
-    let teams = await (await fetch("/teams/scoreboard")).json();
+socket.on("getScoreboard", (teams)=>{
     let html = new Array(teams.length).fill("");
     for(let [rank, team] of teams.entries()){
         for(let [i, page] of config.data.entries()){
@@ -26,7 +27,7 @@ async function update(){
     for(let i in config.data){
         document.querySelector(`#layer-${i} .scores`).innerHTML = html[i];
     }
-}
+})
 
 var currLayer = 0;
 var numLayer = 0;
@@ -69,7 +70,6 @@ window.onload = async ()=>{
         cycle();
     }, config.duration*1000);
     buildTables();
-    update();
 };
 
-socket.on("matchSaved", update);
+socket.on("matchSaved", () => socket.emit("getScoreboard"));

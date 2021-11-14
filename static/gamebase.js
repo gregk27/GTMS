@@ -1,6 +1,9 @@
 import {socket, init as sInit} from '/socketbase.js';
 
-sInit(["matchLoaded", "matchStarted", "scoreChanged", "matchFinished"]);
+sInit(["matchLoaded", "matchStarted", "scoreChanged", "matchFinished"], ()=>{
+    // Load data for current match
+    socket.emit("getCurrentMatch");
+});
 
 function toMMSS (unix) {
     if(unix < 0) return "00:00";
@@ -35,8 +38,10 @@ export default async function init(clbk, clk, postWindow=2500) {
 
 async function onLoad(){
     clock.innerText = toMMSS(0);  
-    // Load data for current match
-    currentMatch = await (await fetch("/game/data")).json();
+}
+
+socket.on("getCurrentMatch", (cm) =>{
+    currentMatch=cm;
     update(currentMatch);
     // If it's reloaded mid-match, use higher frequency since it'll be offset from what it should be
     if(currentMatch.running){
@@ -44,9 +49,7 @@ async function onLoad(){
     } else {
         clock.innerText = toMMSS(currentMatch.duration*1000);
     }
-    console.log(currentMatch);
-}
-
+})
 
 socket.on("matchLoaded", (match)=>{
     currentMatch = match;
