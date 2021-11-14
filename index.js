@@ -1,21 +1,16 @@
 require("./types");
 
-const express = require('express')
 const ip = require('ip');
-const config = require("./config");
+const server = require("./server");
+const express = server.express
+const app = server.app
+const config = server.config
+
+const manager = require('./manager');
 // Copy of config with functions stringified for sending through express
 const configStr = JsonFuncToStr({... config});
-const app = express()
 
 app.use(express.static('static',{index:false,extensions:['html']}));
-
-module.exports = app.listen(config.port, () => {
-  console.log(`Example app listening at http://localhost:${config.port}`)
-})
-
-// Wait until after server is created so audio works
-const manager = require('./manager');
-const audio = require("./audio");
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -35,50 +30,12 @@ app.get('/game/data', (req, res) => {
     res.json(manager.getCurrentMatch());
 })
 
-app.get('/game/start', (req, res)=>{
-  if(req.query['auth'] != config.authString) { 
-    res.send("Unauthorized");
-    return;
-  }
-  manager.startMatch();
-  res.send("");
-})
-
-app.get('/game/addScore/:alliance', (req, res) => {
-    if(req.query['auth'] != config.authString){
-      res.send("Unauthorized");
-      return
-    }
-    let currentGame = manager.getCurrentMatch();
-    if(req.params["alliance"] == 'red'){
-        currentGame.red.score += parseInt(req.query['d'] ?? '0');
-        currentGame.red.metA  += parseInt(req.query['a'] ?? '0');
-        currentGame.red.metB  += parseInt(req.query['b'] ?? '0');
-    } else if (req.params["alliance"] == 'blue'){
-        currentGame.blue.score += parseInt(req.query['d'] ?? '0');
-        currentGame.blue.metA  += parseInt(req.query['a'] ?? '0');
-        currentGame.blue.metB  += parseInt(req.query['b'] ?? '0');
-    }
-    res.send("");
-})
-
-app.get('/game/save', (req, res)=>{
-  if(req.query['auth'] != config.authString) {
-    res.send("Unauthorized");
-    return;
-  }
-  manager.saveGame();
-  res.json({result:true})
-})
-
 app.get('/teams/list', (req, res)=>{
   res.json(manager.getTeams());
 })
 
 app.get('/teams/scoreboard', (req, res)=>{
-  manager.getScoreboard().then((dat)=>{
-    res.json(dat);
-  })
+  res.json(manager.getScoreboard());
 })
 
 app.get('/matches/list', (req, res)=>{
@@ -91,26 +48,53 @@ app.get('/matches/list', (req, res)=>{
   }
 })
 
-app.get('/matches/load', (req, res)=>{
-  if(req.query['auth'] != config.authString) {
-    res.send("Unauthorized");
-    return;
-  };
-  if(req.query['id'] == null){
-    manager.loadMatch(-1)
-  } else {
-    manager.loadMatch(parseInt(req.query['id']));
-  }
-  res.send("");
-})
-
-app.get("/testAudio", (req, res)=>{
+server.on("testAudio", (client, payload, auth)=>{
+  if(auth != config.authString) return;
   for(let a of config.audio.sequence){
-    audio.queueAudio(a.source);
+    server.emit("queueAudio", a.source);
   }
 })
 
-manager.loadMatch();
+server.on("getHostname", ()=>{
+  return ip.address() + ":" + config.port;
+})
+
+server.on("getCurrentMatch", ()=>{
+  return manager.getCurrentMatch();
+})
+
+server.on("getScoreboard", () => {
+  return manager.getScoreboard();
+})
+
+server.on("getSchedule", () => {
+  return manager.getSchedule();
+})
+
+server.on("getMatchData", () => {
+  return manager.getCombindMatchData();
+})
+
+server.on("addScore", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.addScore(payload.alliance, payload.delta ?? 0, payload.dA ?? 0, payload.dB ?? 0);
+})
+
+server.on("loadMatch", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.loadMatch(payload.id ?? -1);
+})
+
+server.on("startMatch", (client, payload, auth)=>{
+  if(auth != config.authString) return;
+  manager.startMatch();
+})
+
+server.on("saveMatch", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.saveMatch();
+})
+
 
 /**
  * Convert functions in a JSON object to strings for sending over API

@@ -2,7 +2,7 @@ require("./types");
 
 const fs = require('fs');
 const config = require('./config');
-const audio = require("./audio");
+const server = require("./server");
 
 let needInit = !fs.existsSync("./db.sqlite");
 const db = require('better-sqlite3')('db.sqlite');
@@ -28,7 +28,7 @@ function getSchedule(){
     return stmt.all();
 }
 
-async function getScoreboard(){
+function getScoreboard(){
     let teams = getTeamsStmt.all();
     out = []
     for(let t of teams){
@@ -88,12 +88,21 @@ function loadMatch(id=-1){
             id = currentMatch.id+1; 
         } 
     }
+    // If the match was interrupted, kill the remaining timeouts and emit event
+    if(currentMatch != null && currentMatch.running && !currentMatch.saved){
+        for(let t of matchTimeouts){
+            clearTimeout(t)
+        }
+        server.emit("matchInterrupted", currentMatch);
+    }
+
     const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
     getScheduledMatch.bind(id);
     /** @type Match */
     let sch = getScheduledMatch.get();
     currentMatch = {
         id: sch.id,
+        duration: config.matchLength,
         running: false,
         saved: false,
         endTime: Date.now() + config.matchLength*1000,
@@ -113,23 +122,28 @@ function loadMatch(id=-1){
             metB: 0
         }
     }
+    server.emit("matchLoaded", currentMatch);
 }
 
 function startMatch(){
     if(!currentMatch.running){
         currentMatch.running = true;
-        currentMatch.endTime = Date.now() + config.matchLength*1000;
+        currentMatch.endTime = Date.now() + currentMatch.duration*1000;
 
         matchTimeouts = []
         for(let a of config.audio.sequence){
-            matchTimeouts.push(setTimeout(() => audio.queueAudio(a.source), (config.matchLength-a.time-config.audio.leadTime)*1000))
+            matchTimeouts.push(setTimeout(() => server.emit("queueAudio", a.source), (currentMatch.duration-a.time-config.audio.leadTime)*1000))
         }
+        // Emit event when match ends
+        matchTimeouts.push(setTimeout(() => server.emit("matchFinished", currentMatch), currentMatch.duration*1000));
+
+        server.emit("matchStarted", currentMatch);
     }
 }
 
 function getCurrentMatch(){
     if(!currentMatch.running){
-        currentMatch.endTime = Date.now() + config.matchLength*1000 + 750; // Add some time to allow for network latency
+        currentMatch.endTime = Date.now() + currentMatch.duration*1000 + 750; // Add some time to allow for network latency
     }
     return currentMatch;
 }
@@ -142,7 +156,7 @@ function getCombindMatchData(){
     return getCombinedMatchDataStmt.all();
 }
 
-function saveGame(){
+function saveMatch(){
     console.log(currentMatch);
     currentMatch.saved = true;
     try {
@@ -150,12 +164,28 @@ function saveGame(){
         stmt.bind(currentMatch.id, currentMatch.red.score, currentMatch.red.metA, currentMatch.red.metB, currentMatch.blue.score, currentMatch.blue.metA, currentMatch.blue.metB);
         stmt.run()
     } catch (e){
-        const stmt = db.prepare("UPDATE scores SET redScore=?, redMetA=?, redMetB=?, blueScore=?, blueMetA=?, blueMetB=?, WHERE id=?")
+        const stmt = db.prepare("UPDATE scores SET redScore=?, redMetA=?, redMetB=?, blueScore=?, blueMetA=?, blueMetB=? WHERE id=?")
         stmt.bind(currentMatch.red.score, currentMatch.red.metA, currentMatch.red.metB, currentMatch.blue.score, currentMatch.blue.metA, currentMatch.blue.metB, currentMatch.id);
         stmt.run()
     }
+    server.emit("matchSaved", currentMatch);
+}
+
+function addScore(alliance, delta, dA, dB){
+    if (alliance == 'red') {
+        currentMatch.red.score += delta;
+        currentMatch.red.metA += dA;
+        currentMatch.red.metB += dB;
+    } else if (alliance == 'blue') {
+        currentMatch.blue.score += delta;
+        currentMatch.blue.metA += dA;
+        currentMatch.blue.metB += dB;
+    }
+    server.emit("scoreChanged", currentMatch);
 }
 
 module.exports = {
-    getSchedule, startMatch, getCurrentMatch, getTeams, getCombindMatchData, saveGame, loadMatch, getScoreboard
+    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, startMatch, saveMatch, loadMatch, addScore
 }
+
+loadMatch();

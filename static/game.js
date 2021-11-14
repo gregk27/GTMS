@@ -1,17 +1,8 @@
-function toMMSS (unix) {
-    if(unix < 0) return "00:00";
-    unix = Math.floor(unix/1000);
-    var minutes = Math.floor((unix / 60));
-    var seconds = unix - (minutes * 60);
+import init from '/gamebase.js';
 
-    if (minutes < 10) {minutes = "0"+minutes;}
-    if (seconds < 10) {seconds = "0"+seconds;}
-    return minutes+':'+seconds;
-}
+init(update, document.getElementById("time"));
 
-async function update(){
-    let data = await (await fetch("/game/data")).json();
-    console.log(data);
+async function update(data){
     document.querySelector("#matchNum").innerText = data.name;
     document.querySelector("#red .teamNum").innerText = data.red.num;
     document.querySelector("#red .teamName").innerText = data.red.name;
@@ -19,12 +10,4 @@ async function update(){
     document.querySelector("#blue .teamNum").innerText = data.blue.num;
     document.querySelector("#blue .teamName").innerText = data.blue.name;
     document.querySelector("#blue .score").innerText = data.blue.score;
-    document.querySelector("#time").innerText = toMMSS(data.endTime - Date.now())
 }
-
-window.onload = ()=>{
-    setInterval(() => {
-        update();
-    }, 500);
-    update();
-};

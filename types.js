@@ -18,6 +18,7 @@
  * 
  * @typedef {{
  *   name: string,
+ *   duration: number,
  *   endTime: number,
  *   running: boolean,
  *   saved: boolean,

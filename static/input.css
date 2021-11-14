@@ -10,6 +10,20 @@ body>section {
     padding: 0.5em 0 2em 0;
 }
 
+
+#score {
+    display:flex;
+    flex-direction: row;
+    width:100%;
+    align-items: center;
+}
+
+#score>span {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+}
+
 .red {
     background-color: var(--red-accent);
 }

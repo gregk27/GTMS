@@ -1,9 +1,13 @@
-var lastMatch = -1;
+import {socket, init} from "/socketbase.js";
+
+init(["matchSaved"], ()=>{
+    socket.emit("getScoreboard");
+})
+
 var config;
 var widths = [];
 
-async function update(){
-    let teams = await (await fetch("/teams/scoreboard")).json();
+socket.on("getScoreboard", (teams)=>{
     let html = new Array(teams.length).fill("");
     for(let [rank, team] of teams.entries()){
         for(let [i, page] of config.data.entries()){
@@ -23,16 +27,7 @@ async function update(){
     for(let i in config.data){
         document.querySelector(`#layer-${i} .scores`).innerHTML = html[i];
     }
-}
-
-// Check if match id has changed, if it has then update
-async function checkMatch(){
-    match = await(await fetch("/game/data")).json();
-    if(match.saved && match.id != lastMatch){
-        lastMatch = match.id;
-        update();
-    }
-}
+})
 
 var currLayer = 0;
 var numLayer = 0;
@@ -71,13 +66,10 @@ async function buildTables(){
 
 window.onload = async ()=>{
     config = await (await fetch("/config/scoreboard")).json();
-    setInterval(() => {
-        checkMatch();
-    }, 5000);
     setInterval(()=>{
         cycle();
     }, config.duration*1000);
     buildTables();
-    checkMatch();
-    update();
 };
+
+socket.on("matchSaved", () => socket.emit("getScoreboard"));

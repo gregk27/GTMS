@@ -1,7 +1,10 @@
 // This script can be added to any page for audio capability
 // However, this may come at a performance cost due to the number of sockets being managed
 
-const socket = io();
+import {socket, init} from "/socketbase.js"
+// const socket = s.socket;
+init(["queueAudio"]);
+
 /** @type HTMLAudioElement */
 var audioPlayer = null;
 /** @type Object.<string, HTMLAudioElement> */
@@ -36,7 +39,7 @@ window.onload = async () => {
     div.style.display = 'none';
     document.body.appendChild(div);
 
-    config = await(await(fetch("/config/audio"))).json();
+    let config = await(await(fetch("/config/audio"))).json();
     for(let a of config.sequence)
         cacheAudio(a.source);
 }

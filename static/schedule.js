@@ -1,7 +1,10 @@
-lastMatch = -1;
+import {socket, init} from "/socketbase.js";
 
-async function update(){
-    let schedule = await (await fetch("/matches/list?dat=sch")).json();
+init(["matchStarted"], ()=>{
+    socket.emit("getSchedule");
+})
+
+socket.on("getSchedule", (schedule) => {
     let html = "";
     for(let m of schedule){
         html += `
@@ -13,21 +16,7 @@ async function update(){
         `
     }
     document.getElementById("schedule").innerHTML = html;
-}
+})
 
-// Check if match id has changed, if it has then update
-async function checkMatch(){
-    match = await(await fetch("/game/data")).json();
-    if(match.id != lastMatch){
-        lastMatch = match.id;
-        update();
-    }
-}
-
-window.onload = ()=>{
-    setInterval(() => {
-        checkMatch();
-    }, 5000);
-    checkMatch();
-    update();
-};
+// Update when the new match starts
+socket.on('matchStarted', () => socket.emit("getSchedule"));
