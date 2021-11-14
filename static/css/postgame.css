@@ -1,0 +1,91 @@
+@import url("/css/common.css");
+
+body {
+    font-size: 4vh;
+    color: black;
+    display: grid;
+    padding: 1em 2em;
+
+    grid-template-areas: 
+    ". . result result result . ."
+    ". . . . . . ."
+    ". red red . blue blue .";
+
+    grid-template-rows: auto 2em auto;
+    grid-template-columns: auto 25% 15% 10% 15% 25% auto;
+    margin:auto;
+}
+
+#result {
+    grid-area: result;
+    text-align: center;
+    background-color: var(--white-primary);
+    width: 100%;
+    margin: auto;
+    font-size:1.5em;
+    padding: 0.25em 0;
+    box-shadow: 0 0 0 0.165em #0000004d;
+}
+
+.alliance {
+    background-color: var(--white-primary);
+    padding:0.25em 1em;
+    box-shadow: 0 0 0 0.25em #0000004d;
+    display:grid;
+    width: 75%;
+}
+
+#red {
+    grid-area: red;
+    text-align: right;
+    grid-template-areas: 
+    ". score score"
+    "team team rank"
+    "breakdown breakdown breakdown";
+    margin-left: auto;
+    grid-template-columns: auto auto 2.5em;
+}
+#blue {
+    grid-area: blue;
+    grid-template-areas: 
+    "score score ."
+    "rank team team"
+    "breakdown breakdown breakdown";
+    margin-right: auto;
+    grid-template-columns: 2.5em auto auto;
+}
+
+.score {
+    grid-area: score;
+    font-size: 2em;
+    margin-bottom: 0.125em;
+}
+
+.team {
+    grid-area: team;
+}
+
+#red .team>span {
+    float: left;
+}
+#blue .team>span {
+    float: right;
+}
+
+.rank {
+    grid-area: rank;
+}
+
+.breakdown {
+    grid-area: breakdown;
+    margin-top: 0.75em;
+}
+
+#red .breakdown td:nth-child(3), #blue .breakdown td:nth-child(1) {
+    width: 2em;
+    text-align: center;
+}
+
+#red .breakdown td:nth-child(2), #blue .breakdown td:nth-child(2) {
+    width: 0.5em;
+}
