@@ -1,4 +1,4 @@
-import { socket } from "/js./socketbase.js";
+import { socket } from "/js/socketbase.js";
 import init from "/js/gamebase.js"
 
 init(update, document.querySelector("#time"), -1)

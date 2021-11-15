@@ -22,9 +22,17 @@ body {
     background-color: var(--white-primary);
     width: 100%;
     margin: auto;
-    font-size:1.5em;
     padding: 0.25em 0;
     box-shadow: 0 0 0 0.165em #0000004d;
+}
+
+#result>div {
+    font-size:0.75em;
+}
+
+#result>h2 {
+    font-size:2em;
+    margin:0;
 }
 
 .alliance {
