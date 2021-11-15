@@ -30,7 +30,6 @@ body {
 .alliance {
     background-color: var(--white-primary);
     padding:0.25em 1em;
-    box-shadow: 0 0 0 0.25em #0000004d;
     display:grid;
     width: 75%;
 }
@@ -44,6 +43,12 @@ body {
     "breakdown breakdown breakdown";
     margin-left: auto;
     grid-template-columns: auto auto 2.5em;
+    
+    background: linear-gradient(0deg, white 75%, transparent 0), 
+                linear-gradient(-30deg, white 60%, transparent 0), 
+                var(--red-accent);
+
+    box-shadow: 0 0 0 0.5em var(--red-accent);
 }
 #blue {
     grid-area: blue;
@@ -53,6 +58,11 @@ body {
     "breakdown breakdown breakdown";
     margin-right: auto;
     grid-template-columns: 2.5em auto auto;
+    
+    background: linear-gradient(0deg, white 75%, transparent 0), 
+                linear-gradient(30deg, white 60%, transparent 0), 
+                var(--blue-accent);
+    box-shadow: 0 0 0 0.5em var(--blue-accent);
 }
 
 .score {
