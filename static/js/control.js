@@ -6,7 +6,7 @@ sInit(["matchSaved", "matchLoaded", "matchStarted", "scoreChanged", "matchFinish
     socket.emit("getMatchData");
     socket.emit("getHostname");
 })
-init(updateCurrent, document.getElementById("currentTime"), -1)
+init(updateCurrent, document.getElementById("currentTime"), null)
 
 var authString = new URLSearchParams(window.location.search).get('auth');
 

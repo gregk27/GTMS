@@ -24,6 +24,7 @@ body {
     margin: auto;
     padding: 0.25em 0;
     box-shadow: 0 0 0 0.165em #0000004d;
+    position:relative;
 }
 
 #banner>div {

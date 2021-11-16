@@ -21,12 +21,13 @@ export var currentMatch = null;
 var update = null;
 var clock = null;
 var timer = null;
-var updatePost = 0;
+var postUpdateFunc = null;
+var updatePost = 2500;
 
-export default async function init(clbk, clk, postWindow=2500) {
+export default async function init(clbk, clk, postUpdate=()=>{}) {
     update = clbk;
     clock = clk;
-    updatePost = postWindow;
+    postUpdateFunc = postUpdate;
 
     // Run load script
     if(document.readyState === "complete"){
@@ -68,8 +69,12 @@ socket.on("matchStarted", (match)=>{
 socket.on("scoreChanged", (match)=>{
     currentMatch = match;
     // Only show updates shortly after timer has ended, prevents score swings from fixing input mistakes
-    if(updatePost < 0 || currentMatch.endTime > Date.now()-updatePost)
+    if(postUpdateFunc==null || currentMatch.endTime > Date.now()-updatePost)
         update(match);
+    else {
+        console.log("postUpdate");
+        postUpdateFunc(match);
+    }
 })
 
 socket.on("matchFinished", (match)=>{

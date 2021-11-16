@@ -14,3 +14,16 @@
     "team team team"
     "breakdown breakdown breakdown";
 }
+
+#banner #review {
+    display: block;
+    background-color: yellow;
+    width: 100%;
+    text-align: center;
+    color: black;
+    padding: 1em 0 0 0;
+    bottom: 0;
+    z-index: -1;
+    transition: bottom 0.5s;
+    position: absolute;
+}

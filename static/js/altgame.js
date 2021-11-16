@@ -4,6 +4,7 @@ var config;
 
 function update(currentMatch){
     document.querySelector("#banner div").innerText = currentMatch.name;
+    document.getElementById("review").style.bottom="0em"
 
     document.querySelector(`.alliance#red .score`).innerText = currentMatch.red.score
     document.querySelector(`.alliance#red .team`).innerHTML = `<span>${currentMatch.red.num}</span>${currentMatch.red.name}`
@@ -25,5 +26,7 @@ function update(currentMatch){
 (async () => {
     config = await (await fetch("/config/postgame")).json()
     // Load config before initializing
-    init(update, document.querySelector("#banner h2"));
+    init(update, document.querySelector("#banner h2"), ()=>{
+        document.getElementById("review").style.bottom="-1.5em"
+    });
 })();

@@ -1,7 +1,7 @@
 import { socket } from "/js/socketbase.js";
 import init from "/js/gamebase.js"
 
-init(update, document.querySelector("#time"), -1)
+init(update, document.querySelector("#time"), null)
 
 let alliance = new URLSearchParams(window.location.search).get('a');
 let authString = new URLSearchParams(window.location.search).get('auth');
