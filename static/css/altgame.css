@@ -1,0 +1,16 @@
+@import url('/css/postgame.css');
+
+
+#red {
+    grid-template-areas: 
+    ". score score"
+    "team team team"
+    "breakdown breakdown breakdown";
+}
+
+#blue {
+    grid-template-areas: 
+    "score score ."
+    "team team team"
+    "breakdown breakdown breakdown";
+}

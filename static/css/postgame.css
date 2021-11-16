@@ -16,7 +16,7 @@ body {
     margin:auto;
 }
 
-#result {
+#banner {
     grid-area: result;
     text-align: center;
     background-color: var(--white-primary);
@@ -26,11 +26,11 @@ body {
     box-shadow: 0 0 0 0.165em #0000004d;
 }
 
-#result>div {
+#banner>div {
     font-size:0.75em;
 }
 
-#result>h2 {
+#banner>h2 {
     font-size:2em;
     margin:0;
 }
@@ -52,9 +52,10 @@ body {
     margin-left: auto;
     grid-template-columns: auto auto 2.5em;
     
-    background: linear-gradient(180deg, transparent 2em,  white 0), 
+    background-color: white;
+    /* background: linear-gradient(180deg, transparent 2em,  white 0), 
                 linear-gradient(135deg, transparent 50%,  white 0), 
-                var(--red-accent);
+                var(--red-accent); */
 
     box-shadow: 0 0 0 0.5em var(--red-accent);
 }
@@ -67,9 +68,10 @@ body {
     margin-right: auto;
     grid-template-columns: 2.5em auto auto;
     
-    background: linear-gradient(180deg, transparent 2em,  white 0), 
+    background-color: white;
+    /* background: linear-gradient(180deg, transparent 2em,  white 0), 
                 linear-gradient(-135deg, transparent 50%,  white 0), 
-                var(--blue-accent);
+                var(--blue-accent); */
     box-shadow: 0 0 0 0.5em var(--blue-accent);
 }
 
