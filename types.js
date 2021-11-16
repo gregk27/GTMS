@@ -17,26 +17,22 @@
  * }} Match
  * 
  * @typedef {{
+ *  num: number,
+ *  name: string,
+ *  score: number,
+ *  metA: number,
+ *  metB: number
+ * }} ActiveAlliance
+ * 
+ * @typedef {{
  *   name: string,
  *   duration: number,
  *   endTime: number,
  *   running: boolean,
  *   saved: boolean,
  *   id: number,
- *   red: {
- *       num: number,
- *       name: string,
- *       score: number,
- *       metA: number,
- *       metB: number
- *   },
- *   blue: {
- *       num: number,
- *       name: string,
- *       score: number,
- *       metA: number,
- *       metB: number
- *   }
+ *   red: ActiveAlliance,
+ *   blue: ActiveAlliance
  * }} ActiveMatch
  * 
  * @typedef {{
@@ -87,7 +83,10 @@
  *      duration: number,
  *      rankCol: Column,
  *      data: Column[][]
- *  }
+ *  },
+ *  postgame: {
+ *      breakdown: {name:string, func: (a:ActiveAlliance) => string}[]
+ *  },
  *  buttons: (Button | Button[])[],
  *  rankPointFunction: (t:TeamScore) => string,
  *  sortFunction: (a:TeamScore, b:TeamScore) => number,

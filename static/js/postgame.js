@@ -20,18 +20,20 @@ socket.on("matchSaved", (currentMatch)=>{
     document.querySelector(`.alliance#red .score`).innerText = currentMatch.red.score
     document.querySelector(`.alliance#red .team`).innerHTML = `<span>${currentMatch.red.num}</span>${currentMatch.red.name}`
     let html = "";
-    html += `<tr><td>Met A</td><td>-</td><td>${currentMatch.red.metA}</td></tr>`
-    html += `<tr><td>Met B</td><td>-</td><td>${currentMatch.red.metB}</td></tr>`
+    for(let b of config.breakdown){
+        html += `<tr><td>${b.name}</td><td>-</td><td>${eval(b.func)(currentMatch.red)}</td></tr>\n`
+    }
     document.querySelector('.alliance#red .breakdown').innerHTML = html;
     
     document.querySelector(`.alliance#blue .score`).innerText = currentMatch.blue.score
     document.querySelector(`.alliance#blue .team`).innerHTML = `${currentMatch.blue.name}<span>${currentMatch.blue.num}</span>`
     html = "";
-    html += `<tr><td>${currentMatch.blue.metA}</td><td>-</td><td>Met A</td></tr>`
-    html += `<tr><td>${currentMatch.blue.metB}</td><td>-</td><td>Met B</td></tr>`
+    for(let b of config.breakdown){
+        html += `<tr><td>${eval(b.func)(currentMatch.blue)}</td><td>-</td><td>${b.name}</td></tr>`
+    }
     document.querySelector('.alliance#blue .breakdown').innerHTML = html;
-})
+});
 
-// (async function() {
-//     // config = await(await(fetch))
-// })();
+(async () => {
+    config = await (await fetch("/config/postgame")).json()
+})();

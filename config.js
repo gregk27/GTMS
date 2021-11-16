@@ -70,6 +70,22 @@ module.exports = {
             ]
         ],
     },
+    postgame: {
+        breakdown: [
+            {
+                name: "Met A",
+                func: (a) => a.metA
+            },
+            {
+                name: "Met B",
+                func: (a) => a.metB
+            },
+            {
+                name: "Met Sum",
+                func: (a) => a.metA+a.metB
+            }
+        ]
+    },
     buttons: [
         [
             {
