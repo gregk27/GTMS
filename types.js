@@ -75,6 +75,7 @@
  *  authString: string,
  *  initScript: string,
  *  matchLength: number,
+ *  freezeDelay: number,
  *  audio: {
  *      leadTime: number,
  *      sequence: MatchSound[],

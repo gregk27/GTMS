@@ -22,7 +22,11 @@ var update = null;
 var clock = null;
 var timer = null;
 var postUpdateFunc = null;
-var updatePost = 2500;
+var freezeDelay;
+
+(async () => {
+    freezeDelay = parseFloat(await(await fetch("/config/freezeDelay")).text())*1000;
+})();
 
 export default async function init(clbk, clk, postUpdate=()=>{}) {
     update = clbk;
@@ -69,7 +73,7 @@ socket.on("matchStarted", (match)=>{
 socket.on("scoreChanged", (match)=>{
     currentMatch = match;
     // Only show updates shortly after timer has ended, prevents score swings from fixing input mistakes
-    if(postUpdateFunc==null || currentMatch.endTime > Date.now()-updatePost)
+    if(postUpdateFunc==null || currentMatch.endTime > Date.now()-freezeDelay)
         update(match);
     else {
         console.log("postUpdate");

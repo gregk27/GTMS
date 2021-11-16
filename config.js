@@ -5,6 +5,7 @@ module.exports = {
     authString: "password",
     initScript: "./setup.sql",
     matchLength: 1*60,
+    freezeDelay: 2.5,
     audio: {
         leadTime: 0.25,
         sequence:[
