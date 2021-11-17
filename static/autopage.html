@@ -5,17 +5,17 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Automatic Page</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='/css/autopage.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/framepage.css'>
     <script src="/socket.io/socket.io.js"></script>
     <script type="module" src='/js/autopage.js'></script>
 </head>
 <body>
-    <iframe id="base" src="/" style="opacity: 1;"></iframe>
+    <iframe id="base" src="/splashpage" style="opacity: 1;"></iframe>
     <iframe id="game" src="/game"></iframe>
     <iframe id="postgame" src="/postgame"></iframe>
     <iframe id="scoreboard" src="/scoreboard"></iframe>
     <iframe id="schedule" src="/schedule"></iframe>
-    <div id="control">
+    <div id="control" style="right:0">
         <button onclick="showBase()">Splashpage</button>
         <button onclick="showGame()">Game Page</button>
         <button onclick="showPostgame()">Postgame Page</button>

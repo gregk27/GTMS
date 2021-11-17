@@ -5,27 +5,46 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>GTMS</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='/css/common.css'>
-    <style>
-        html {
-            height:100%;
-        }
-        body {
-            height:100%;
-            text-align: center;
-            display:flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        h1,h4 {
-            margin:0.25em;
-        }
-    </style>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/framepage.css'>
+    <script>
+        var currView = 'A';
 
+        function cycleTo(src){
+            if(currView == 'A'){
+                document.getElementById("viewB").src = src;
+                setTimeout(() => {
+                    document.getElementById("viewB").style.opacity = 1;
+                    document.getElementById("viewA").style.opacity = 0;
+                }, 100)
+                setTimeout(() => {
+                    document.getElementById("viewA").src = ""
+                    currView = 'B'
+                }, 500)
+            } else {
+                document.getElementById("viewA").src = src;
+                setTimeout(() => {
+                    document.getElementById("viewA").style.opacity = 1;
+                    document.getElementById("viewB").style.opacity = 0;
+                }, 100)
+                setTimeout(() => {
+                    document.getElementById("viewB").src = ""
+                    currView = 'A'
+                }, 500)
+            }
+        }
+    </script>
 </head>
 <body>
-    <h1 style="margin-bottom:1em">GTMS</h1>
-    <h4>Greg's Tournament Management System</h4>
-    <h4>v1.3.0</h4>
+    <iframe id="viewA" src="/splashpage" style="opacity: 1;"></iframe>
+    <iframe id="viewB" src="/splashpage"></iframe>
+    <div id="control">
+        <button onclick="cycleTo('/splashpage')">Splashpage</button>
+        <button onclick="cycleTo('/autoPage')">Auto Page</button>
+        <button onclick="cycleTo('/game')">Game Page</button>
+        <button onclick="cycleTo('/altgame')">Alternate Game Page</button>
+        <button onclick="cycleTo('/postgame')">Postgame Page</button>
+        <button onclick="cycleTo('/scoreboard')">Scoreboard</button>
+        <button onclick="cycleTo('/schedule')">Schedule</button>
+    </div>
 </body>
 </html>
