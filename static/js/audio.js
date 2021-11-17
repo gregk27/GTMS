@@ -32,7 +32,7 @@ function playNextAudio(){
     }
 }
 
-window.onload = async () => {
+window.addEventListener("load", async () => {
     // Create an invisible div to hold the audio elements
     let div = document.createElement("div");
     div.id = "audios";
@@ -42,7 +42,7 @@ window.onload = async () => {
     let config = await(await(fetch("/config/audio"))).json();
     for(let a of config.sequence)
         cacheAudio(a.source);
-}
+});
 
 socket.on("queueAudio", (src) => {
     queue.push(src);

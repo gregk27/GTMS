@@ -41,14 +41,13 @@ window.cycleScoreboard = cycleScoreboard;
 function cycleScoreboard(){
     showView(scoreboard);
     clearTimeout(cycleTimeout);
-    console.log(scoreboardDuration);
-    setTimeout(cycleSchedule, scoreboardDuration);
+    cycleTimeout = setTimeout(cycleSchedule, scoreboardDuration);
 }
 
 function cycleSchedule(){
     showView(schedule);
     clearTimeout(cycleTimeout);
-    setTimeout(cycleScoreboard, scheduleDuration);
+    cycleTimeout = setTimeout(cycleScoreboard, scheduleDuration);
 }
 
 
@@ -76,6 +75,7 @@ function showPostgame() {
 window.showSS = showSS;
 function showSS(){
     scoreboard.contentWindow.location.reload();
+    clearTimeout(cycleTimeout);
     // Stagger to leave time for reload
     cycleTimeout = setTimeout(()=>{
         cycleScoreboard();
