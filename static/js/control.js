@@ -89,6 +89,11 @@ window.testAudio = () => {
     socket.emit('testAudio', {}, authString);
 }
 
+window.showGame = () => {
+    socket.emit("broadcast", "showGame", {}, authString);
+    startMatchButton.disabled = false;
+}
+
 socket.on("getHostname", (hostname)=>{
     new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
     new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue&auth=${authString}`, width:128, height:128});
@@ -105,7 +110,8 @@ socket.on('matchSaved', () => {
 })
 
 socket.on('matchLoaded', (currentMatch)=>{
-    startMatchButton.disabled = false;
+    // Disable match control until game is shown (button in display column)
+    startMatchButton.disabled = true;
     saveScoreButton.disabled = true;
     loadNextButton.disabled = true;
 })

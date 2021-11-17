@@ -1,6 +1,6 @@
 import {socket, init} from "/js/socketbase.js"
 
-init(["matchSaved", "matchLoaded", "matchStarted"]);
+init(["matchSaved", "showGame", "matchStarted"]);
 
 var base;
 var game;
@@ -84,4 +84,4 @@ function showSS(){
 
 socket.on("matchStarted", showGame)
 socket.on("matchSaved", showPostgame)
-socket.on("matchLoaded", showGame)
+socket.on("showGame", showGame)
