@@ -51,25 +51,37 @@ function cycleSchedule(){
     setTimeout(cycleScoreboard, scheduleDuration);
 }
 
-socket.on("matchStarted", ()=>{
-    showView(game);
-    clearTimeout(cycleTimeout);
-})
 
-socket.on("matchSaved", ()=>{
+window.showBase = () => {
+    showView(base)
+    clearTimeout(cycleTimeout);
+}
+
+window.showGame = showGame;
+function showGame() {
+    showView(game)
+    clearTimeout(cycleTimeout);
+}
+
+window.showPostgame = showPostgame;
+function showPostgame() {
     showView(postgame)
     clearTimeout(cycleTimeout);
-    // Cycle to scoreboard page when done
+    // Cycle to scoreboard/schedule page when done
     cycleTimeout = setTimeout(()=>{
-        scoreboard.contentWindow.location.reload();
-        // Stagger to leave time for reload
-        cycleTimeout = setTimeout(()=>{
-            cycleScoreboard();
-        }, 100)
+        showSS();
     }, 60000)
-})
+}
 
-socket.on("matchLoaded", ()=>{
-    showView(game);
-    clearTimeout(cycleTimeout);
-})
+window.showSS = showSS;
+function showSS(){
+    scoreboard.contentWindow.location.reload();
+    // Stagger to leave time for reload
+    cycleTimeout = setTimeout(()=>{
+        cycleScoreboard();
+    }, 100)
+}
+
+socket.on("matchStarted", showGame)
+socket.on("matchSaved", showPostgame)
+socket.on("matchLoaded", showGame)
