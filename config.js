@@ -8,6 +8,7 @@ module.exports = {
     freezeDelay: 2.5,
     audio: {
         leadTime: 0.25,
+        interrupted: "/sounds/Match Pause_normalized.wav",
         sequence:[
             {
                 time: 60,

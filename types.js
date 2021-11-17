@@ -78,6 +78,7 @@
  *  freezeDelay: number,
  *  audio: {
  *      leadTime: number,
+ *      interrupted: string,
  *      sequence: MatchSound[],
  *  },
  *  scoreboard: {

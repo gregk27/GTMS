@@ -94,6 +94,7 @@ function loadMatch(id=-1){
             clearTimeout(t)
         }
         server.emit("matchInterrupted", currentMatch);
+        server.emit("queueAudio", config.audio.interrupted);
     }
 
     const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
