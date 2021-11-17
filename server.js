@@ -36,6 +36,11 @@ class Client {
             case "unsubscribe":
                 this.unsubscribe(args[1]);
                 break;
+            case "broadcast":
+                // Allow an authorized user to broadcast a message
+                if(args[3] == config.authString)
+                    emit(args[1], args[2])
+                break;
             default:
                 // If there's a listener for the event, call it
                 if(listeners[args[0]]){
