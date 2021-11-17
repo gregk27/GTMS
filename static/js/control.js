@@ -10,6 +10,20 @@ init(updateCurrent, document.getElementById("currentTime"), null)
 
 var authString = new URLSearchParams(window.location.search).get('auth');
 
+/** @type HTMLButtonElement */
+var saveScoreButton;
+/** @type HTMLButtonElement */
+var startMatchButton;
+/** @type HTMLButtonElement */
+var loadNextButton;
+
+window.onload = () => {
+    saveScoreButton = document.getElementById("saveScore");
+    startMatchButton = document.getElementById("startMatch");
+    loadNextButton = document.getElementById("loadNext");
+}
+
+
 socket.on("getScoreboard", (teams) => {
     let html = "<tr><th>Number</th><th>Name</th><th>W</th><th>L</th><th>T</th><th>RP</th><th>RPA</th><th>Score</th><th>MetA</th><th>MetB</th></tr>\n";
     for(let t of teams){
@@ -57,7 +71,7 @@ async function updateCurrent(data){
 
 window.saveScore = saveScore;
 async function saveScore(){
-    document.getElementById('saveScore').disabled = true;
+    saveScoreButton.disabled = true;
     socket.emit("saveMatch", {}, authString);
 }
 
@@ -84,29 +98,26 @@ socket.on('matchSaved', () => {
     socket.emit("getMatchData");
     socket.emit("getScoreboard");
     
-    document.getElementById("saveScore").style.display='none';
-    document.getElementById("startMatch").style.display='none';
-    document.getElementById("loadNext").style.display='inline';
-    document.getElementById('saveScore').disabled = false;
+
+    startMatchButton.disabled = true;
+    saveScoreButton.disabled = false;
+    loadNextButton.disabled = false;
 })
 
 socket.on('matchLoaded', (currentMatch)=>{
-    document.getElementById("saveScore").style.display='none';
-    document.getElementById("startMatch").style.display='inline';
-    document.getElementById("loadNext").style.display='none';
-    document.getElementById("startMatch").disabled = false;
+    startMatchButton.disabled = false;
+    saveScoreButton.disabled = true;
+    loadNextButton.disabled = true;
 })
 
 socket.on('matchStarted', (currentMatch)=>{
-    document.getElementById("saveScore").style.display='none';
-    document.getElementById("startMatch").style.display='inline';
-    document.getElementById("loadNext").style.display='none';
-    document.getElementById("startMatch").disabled = true;
+    startMatchButton.disabled = true;
+    saveScoreButton.disabled = true;
+    loadNextButton.disabled = true;
 })
 
 socket.on('matchFinished', (currentMatch)=>{
-    document.getElementById("saveScore").style.display='inline';
-    document.getElementById("startMatch").style.display='none';
-    document.getElementById("loadNext").style.display='none';
-    document.getElementById("startMatch").disabled = false;
+    startMatchButton.disabled = true;
+    saveScoreButton.disabled = false;
+    loadNextButton.disabled = true;
 })
