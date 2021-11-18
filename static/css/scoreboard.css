@@ -1,9 +1,5 @@
 @import url("/css/common.css");
 
-body {
-    font-size: 4vh;
-}
-
 .scores {    
     display: flex;
     flex-direction: column;

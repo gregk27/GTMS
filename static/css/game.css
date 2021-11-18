@@ -3,7 +3,6 @@
 body {
     background-color: lime;
     height:100%;
-    font-size: min(4.5vh, 2vw);
 }
 
 #scoreboard {

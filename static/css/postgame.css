@@ -1,7 +1,6 @@
 @import url("/css/common.css");
 
 body {
-    font-size: 4vh;
     color: black;
     display: grid;
     padding: 1em 2em;
