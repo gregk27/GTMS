@@ -95,6 +95,7 @@ body {
 
 .rank {
     grid-area: rank;
+    height: 1em;
 }
 
 .breakdown {

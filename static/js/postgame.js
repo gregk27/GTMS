@@ -1,10 +1,20 @@
 import {socket, init} from '/js/socketbase.js'
 
-init(["matchSaved"])
+init(["matchSaved", "matchStarted"], ()=>{
+    socket.emit("getCurrentMatch");
+})
 
 var config;
+var lastScoreboard;
+var currScoreboard;
+var currMatch;
 
-socket.on("matchSaved", (currentMatch)=>{
+function update(currentMatch) {
+    currMatch = currentMatch;
+    socket.emit("getScoreboard");
+    document.querySelector(".alliance#red .rank").innerText = "";
+    document.querySelector(".alliance#blue .rank").innerText = "";
+
     let delta = currentMatch.red.score - currentMatch.blue.score;
     if(delta > 0) {
         document.body.style.background = "var(--red-primary)";
@@ -32,8 +42,45 @@ socket.on("matchSaved", (currentMatch)=>{
         html += `<tr><td>${eval(b.func)(currentMatch.blue)}</td><td>-</td><td>${b.name}</td></tr>`
     }
     document.querySelector('.alliance#blue .breakdown').innerHTML = html;
-});
+}
 
 (async () => {
     config = await (await fetch("/config/postgame")).json()
 })();
+
+socket.on("matchSaved", update);
+socket.on("getCurrentMatch", update);
+
+socket.on("getScoreboard", (scoreboard)=>{
+    if(currScoreboard == scoreboard) return;
+    currScoreboard = scoreboard;
+    let redRank, blueRank, redDelta=0, blueDelta=0;
+    
+    for(let [i, team] of Object.entries(scoreboard)){
+        if(team.number == currMatch.red.num){
+            redRank = parseInt(i);
+        } else if(team.number == currMatch.blue.num){
+            blueRank = parseInt(i);
+        }
+    }
+
+    try {
+        for(let [i, team] of Object.entries(lastScoreboard)){
+            if(team.number == currMatch.red.num){
+                redDelta = redRank-i;
+            } else if(team.number == currMatch.blue.num){
+                blueDelta = blueRank-i;
+            }
+        }
+    } catch (e) {
+
+    }
+    
+    let arrows = ['▲', '▶', '▼'];
+    document.querySelector(".alliance#red .rank").innerText = `${redRank+1} ${arrows[Math.sign(redDelta)+1]} `;
+    document.querySelector(".alliance#blue .rank").innerText = `${blueRank+1} ${arrows[Math.sign(blueDelta)+1]}`;
+})
+
+socket.on("matchStarted", ()=>{
+    lastScoreboard = currScoreboard;
+})
