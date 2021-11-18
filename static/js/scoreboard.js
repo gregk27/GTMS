@@ -1,15 +1,7 @@
 import {socket, init} from "/js/socketbase.js";
 
-init(["matchSaved"], ()=>{
-    socket.emit("getScoreboard");
-})
-
 var config;
 var widths = [];
-
-(async () => {
-    config = await (await fetch("/config/scoreboard")).json();
-})();
 
 socket.on("getScoreboard", (teams)=>{
     let html = new Array(teams.length).fill("");
@@ -69,9 +61,13 @@ async function buildTables(){
 }
 
 window.onload = async ()=>{
+    config = await (await fetch("/config/scoreboard")).json();
     setInterval(()=>{
         cycle();
     }, config.duration*1000);
+    init(["matchSaved"], ()=>{
+        socket.emit("getScoreboard");
+    })
     buildTables();
 };
 
