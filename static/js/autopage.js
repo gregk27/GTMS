@@ -30,12 +30,15 @@ window.onload = () =>{
 var cycleTimeout = null;
 var scoreboardDuration = 0;
 var scheduleDuration = 0;
+var postgameDuration = 0;
 
-(async () => {
-    let cfg = await(await fetch("/config/scoreboard")).json();
+fetch("/config/scoreboard").then(res => res.json()).then(cfg => {
     scoreboardDuration = cfg.duration * cfg.data.length * 1000;
     scheduleDuration = cfg.duration * 2 * 1000;
-})();
+})
+fetch("/config/postgame").then(res => res.json()).then(cfg => {
+    postgameDuration = cfg.duration;
+})
 
 window.cycleScoreboard = cycleScoreboard;
 function cycleScoreboard(){
@@ -69,7 +72,7 @@ function showPostgame() {
     // Cycle to scoreboard/schedule page when done
     cycleTimeout = setTimeout(()=>{
         showSS();
-    }, 60000)
+    }, postgameDuration*1000)
 }
 
 window.showSS = showSS;

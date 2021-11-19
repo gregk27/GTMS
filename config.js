@@ -73,6 +73,7 @@ module.exports = {
         ],
     },
     postgame: {
+        duration: 45,
         breakdown: [
             {
                 name: "Met A",
