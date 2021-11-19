@@ -45,6 +45,7 @@ window.addEventListener("load", async () => {
 });
 
 socket.on("queueAudio", (src) => {
+    cacheAudio(src);
     queue.push(src);
     if(!busy){
         playNextAudio();
