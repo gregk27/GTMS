@@ -10,21 +10,47 @@ Greg's Tournament Management System is a centralized scheduling and scoring syst
  - System operations can be distributed across multiple devices
  - Designed for camera passthrough with OBS
 
-## Pages
-### Game Page (`/game`)
-The game page is the primary way displaying scores during gameplay. It is designed to have the background replaced with a camera feed in OBS.
+## Views
+### Game View (`/game`)
+The game view is the primary way displaying scores during gameplay. It is designed to have the background replaced with a camera feed in OBS.
 ![](./.readmeImages/gamePage.png)
 
-### Scoreboard Page (`/scoreboard`)
-The scoreboard page displays the cumulative scores from all played matches. The displayed columns can be configured to meet application requirements.
+### Postgame View (`/postgame`)
+The postgame view shows the outcome of a match. It shows match result, score, teams, and change in ranking. Additional statistics can be set in config.
+
+![](TODO: Add image)
+
+### Alternate Game View (`/altgame`)
+The alterate game view is a fullscreen view dervied from the postgame view. This shows more complete match statistics, but does not have support for camera passthrough.
+
+![](TODO: Add image)
+
+### Scoreboard View (`/scoreboard`)
+The scoreboard view displays the cumulative scores from all played matches. The displayed columns can be configured to meet application requirements.
 
 ![](./.readmeImages/scoreboardPage.gif)
 
-### Schedule Page (`/schedule`)
-The schedule page displays the list of upcoming matches. The displayed columns can be configured to meet the application.
+### Schedule View (`/schedule`)
+The schedule view displays the list of upcoming matches. The displayed columns can be configured to meet the application.
 
 
 ![](./.readmeImages/schedulePage.png)
+
+## Pages
+
+### Homepage (`/`)
+The homepage allows for easily selecting a single view. The user can hover over the top-left to see a list of buttons to change the visible page.
+### Automatic Page (`/autopage`)
+The automatic page is designed to be the primary audience view. The page will automatically cycle between views as events occur. To select a page manually when opening, buttons will appear in the top-right on hover. This page can create high server traffic as it maintains open connections for all pages.
+
+The page will cycle views on the following events:
+ - **Show Game Button** -> Game View
+ - **Match Started** -> Game View
+ - **Match Saved** -> Postgame View (1 min) -> Scoreboard
+ - **Scoreboard Page Duration** -> Schedule
+ - **Schedule Page Duration** -> Scoreboard
+
+The scoreboard page duration is the time required to show all pages from config. The schedule page duration is the time required to show 2 scoreboard pages.
 
 ### Input Page (`/input?a=[red|blue]&auth=[authString]`)
 The input page is designed for mobile devices to provide data for live scoring. Team colour should be specified in the Query String, otherwise inputs will not be registered. Additionally, the `authString` must be provided for secruity. Any number of devices can be used in this role, but there is no system to detect duplicate inputs.
@@ -39,7 +65,7 @@ The control page is the central point for operating the system. The `authString`
 ![](./.readmeImages/controlPage.png)
 
 ### Audio Page (`/audio`)
-The audio page is used to get sound effects from the server. To prevent requests from devices where audio is not desired, this must be opened in a separate tab. Sound effects must be provided by the user, and will play at points in the match specified in config.
+The audio page is used to get sound effects from the server. To prevent requests from devices where audio is not desired, only the automatic page contains bundled audio. For other uses, this must be opened in a separate tab. Sound effects must be provided by the user, and will play at points in the match specified in config.
 
 ## Tracked Data
 A wide variety of statitics about team performance are saved and calculated. These statis include team info, win/loss/tie stats, total score across matches, and sums for 2 user-defined metrics. The following information is provdided for each team at the `/teams/scoreboard` endpoint.
@@ -63,10 +89,12 @@ There are various elements of the system which can be configured to meet user re
  - **authString:** The string required to make changes
  - **initScript:** The sql script to be run on initialization, this should clear any existing data and insert values for teams and match schedule. Refer to [Initializing Database](#initialising-database) for details.
  - **matchLength:** The length of a match, in seconds
+ - **freezeDelay:** Delay before game views freeze, in seconds. After this time has passed score changes will cause "Match Under Review" banner to appear instead of displayed score changing. This is intended to allow for fixing input mistakes without the displayed score fluctuating. 
 
 ### Audio Settings
 The audio played by the system can be configured to play user-defined files at any point in the match. Configuration has the following properties:
  - **leadTime:** Time in seconds to start audio prematurely, used to combat network latency
+ - **interrupted:** Path to audio file which should be played when a match in interrupted (another is loaded before ending)
  - **sequence:** Sequence of audio files to be played during the match
 #### Sequence
 Sequence is a list of audio files and timestamps. The server will instruct the aduio page to load the files at specified timestamps. Each entry has two properties:
@@ -123,6 +151,19 @@ Data is a list of pages, each being a list of displayed columns. While the Rank,
   ]
 ]
  ```
+
+### Postgame
+The postgame view can be conifgured to behave in various ways. Configuration has the following properties:
+ - **duration:** Duration autoview shows postgame view after a match, in seconds.
+ - **breakdown:** Values to show in match breakdown
+
+#### Breakdown
+The match breakdown display on the post game view can be customized by providing a list of JSON objects similar to a sccoreboard view. Each object consits of a name to be displayed and function to be used for obtaining the value. The functions are provided with a team's match performance, which has the following properties:
+ - **num:** The team's number
+ - **name:** The team's name
+ - **score:** The team's score
+ - **metA:** The team's Metric A performance
+ - **metB:** The team's Metric B performance
 
 ### Input Buttons
 The buttons on the input page can be customized by providing a list of JSON objects. Singular buttons added to the list will be vertically spaced, if a list of buttons is added they will be grouped vertically and spaced horizontally.
