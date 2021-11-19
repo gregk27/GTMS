@@ -1,5 +1,9 @@
 @import url("/css/common.css");
 
+body {
+    font-size: min(9vw, 4vh);
+}
+
 body>section {
     display: flex;
     flex-direction: column;
