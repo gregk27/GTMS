@@ -5,6 +5,11 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+body {
+  min-width: 700px;
+  position: relative;
+}
+
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
@@ -69,4 +74,14 @@ td.number {
 
 #qr div {
   margin: 0 1em;
+}
+
+#preview {
+  position:absolute;
+  top:0;
+  right:0;
+  width:40vw;
+  height:20vw;
+  min-width: 280px;
+  min-height: 140px;
 }
