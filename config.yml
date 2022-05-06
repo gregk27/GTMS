@@ -1,0 +1,6 @@
+match:
+  allianceSize: 3
+metrics:
+  - High
+  - Low
+  - Fouls
