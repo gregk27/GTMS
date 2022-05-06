@@ -17,15 +17,51 @@ public class Database {
         connection.Open();
         if(init){
             Console.WriteLine("Creating database");
-            createTable.Execute();
-            insert.Bind("val", "0").Execute();
-            insert.Bind("val", "1").Execute();
-            insert.Bind("val", "2").Execute();
+            // Create tables
+            new Query(@"
+                CREATE TABLE Team (
+                    number      INTEGER PRIMARY KEY,
+                    name        VARCHAR(128)
+                );", 0, false).Execute();
+
+            string matchTeams = "";
+            string matchFKs = "";
+            // Procedurally build table for match data
+            for(int i=0; i<3; i++){
+                string nullability = i < Config.instance.match.allianceSize ? "NOT NULL" : "";
+                matchTeams += @$"
+                    red{i} INTEGER {nullability},
+                    blue{i} INTEGER {nullability},";
+                matchFKs += @$"
+                    FOREIGN KEY (red{i}) REFERENCES Team(number) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY (blue{i}) REFERENCES Team(number) ON UPDATE CASCADE ON DELETE RESTRICT,";
+            }
+            // Remove trailing command and end statement
+            new Query(@$"
+                CREATE TABLE Match (
+                    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type        VARCHAR(16) NOT NULL,
+                    number      INTEGER NOT NULL,
+                    {matchTeams}
+                    {matchFKs.Remove(matchFKs.Length-1)}
+                );", 0, false).Execute();
+
+            // Procedurally build table for match score
+            string scoreMetrics = "";
+            foreach(var m in Config.instance.metrics) {
+                scoreMetrics += @$"
+                    red{m} INTEGER NOT NULL,
+                    blue{m} INTEGER NOT NULL,";
+            }
+            new Query(@$"
+                CREATE TABLE MatchScore (
+                    match INTEGER PRIMARY KEY,
+                    {scoreMetrics}
+
+                    FOREIGN KEY (match) REFERENCES Match(id) ON UPDATE CASCADE ON DELETE RESTRICT
+                );", 0, false).Execute();
         }
     }
-
-    private static readonly Query createTable = new Query("CREATE TABLE test (id INTEGER PRIMARY KEY);", 0, false);
-    private static readonly Query insert = new Query("INSERT INTO test (id) VALUES ($val);", 1, false);
 
     class Query {
         private readonly SqliteCommand Command = Database.instance.connection.CreateCommand();
