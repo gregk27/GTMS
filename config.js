@@ -4,7 +4,7 @@ module.exports = {
     port: 3000,
     authString: "password",
     initScript: "./setup.sql",
-    matchLength: 1*60,
+    matchLength: 4*60,
     freezeDelay: 2.5,
     audio: {
         leadTime: 0.25,
@@ -56,18 +56,13 @@ module.exports = {
             [
                 {
                     name: "Score",
-                    width: 4,
+                    width: 3,
                     func: (t) => t.score
                 },
                 {
-                    name: "MetA",
-                    width: 3,
+                    name: "Balls Scored",
+                    width: 8,
                     func: (t) => t.metA
-                },
-                {
-                    name: "MetB",
-                    width: 3,
-                    func: (t) => t.metB
                 }
             ]
         ],
@@ -76,16 +71,12 @@ module.exports = {
         duration: 45,
         breakdown: [
             {
-                name: "Met A",
+                name: "Balls Scored",
                 func: (a) => a.metA
             },
             {
-                name: "Met B",
+                name: "Oppo. Fouls",
                 func: (a) => a.metB
-            },
-            {
-                name: "Met Sum",
-                func: (a) => a.metA+a.metB
             }
         ]
     },
@@ -93,32 +84,40 @@ module.exports = {
         [
             {
                 text: "Low",
-                score: 1,
+                score: 5,
                 metA: 1,
             },
             {
                 text: "Mid",
-                score: 2,
+                score: 7,
                 metA: 1,
             },
             {
                 text: "High",
-                score: 3,
+                score: 15,
                 metA: 1,
-            },
+            }
         ],
-        {
-            text: "Foul",
-            score: 10,
-            metB: 10,
-            opposing: true,
-            spaceBefore: 2,
-        },
         {
             text: "-1",
             score: -1,
-            metB: 1
-        }
+            metB: 1,
+            spaceBefore: 2,
+        },
+        [
+            {
+                text: "Foul",
+                score: -7,
+                metB: 7,
+                opposing: true,
+            },
+            {
+                text: "Tech Foul",
+                score: -15,
+                metB: 15,
+                opposing: true,
+            }
+        ],
     ],
     rankPointFunction: (t) => {
         return 2*t.wins + 1*t.ties;
