@@ -105,13 +105,19 @@ module.exports = {
                 text: "High",
                 score: 3,
                 metA: 1,
-            }
+            },
         ],
+        {
+            text: "Foul",
+            score: 10,
+            metB: 10,
+            opposing: true,
+            spaceBefore: 2,
+        },
         {
             text: "-1",
             score: -1,
-            metB: 1,
-            spaceBefore: 2,
+            metB: 1
         }
     ],
     rankPointFunction: (t) => {
