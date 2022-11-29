@@ -1,7 +1,7 @@
 // This script can be added to any page for audio capability
 // However, this may come at a performance cost due to the number of sockets being managed
 
-import {socket, init} from "/socketbase.js"
+import {socket, init} from "/js/socketbase.js"
 // const socket = s.socket;
 init(["queueAudio"]);
 
@@ -32,7 +32,7 @@ function playNextAudio(){
     }
 }
 
-window.onload = async () => {
+window.addEventListener("load", async () => {
     // Create an invisible div to hold the audio elements
     let div = document.createElement("div");
     div.id = "audios";
@@ -42,9 +42,10 @@ window.onload = async () => {
     let config = await(await(fetch("/config/audio"))).json();
     for(let a of config.sequence)
         cacheAudio(a.source);
-}
+});
 
 socket.on("queueAudio", (src) => {
+    cacheAudio(src);
     queue.push(src);
     if(!busy){
         playNextAudio();

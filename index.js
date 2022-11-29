@@ -13,7 +13,7 @@ const configStr = JsonFuncToStr({... config});
 app.use(express.static('static',{index:false,extensions:['html']}));
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.sendFile(__dirname + "/static/index.html")
 })
 
 app.get('/hostname', (req, res) => {

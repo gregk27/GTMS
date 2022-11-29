@@ -5,8 +5,10 @@ module.exports = {
     authString: "password",
     initScript: "./setup.sql",
     matchLength: 1*60,
+    freezeDelay: 2.5,
     audio: {
         leadTime: 0.25,
+        interrupted: "/sounds/Match Pause_normalized.wav",
         sequence:[
             {
                 time: 60,
@@ -70,6 +72,23 @@ module.exports = {
             ]
         ],
     },
+    postgame: {
+        duration: 45,
+        breakdown: [
+            {
+                name: "Met A",
+                func: (a) => a.metA
+            },
+            {
+                name: "Met B",
+                func: (a) => a.metB
+            },
+            {
+                name: "Met Sum",
+                func: (a) => a.metA+a.metB
+            }
+        ]
+    },
     buttons: [
         [
             {
@@ -86,13 +105,19 @@ module.exports = {
                 text: "High",
                 score: 3,
                 metA: 1,
-            }
+            },
         ],
+        {
+            text: "Foul",
+            score: 10,
+            metB: 10,
+            opposing: true,
+            spaceBefore: 2,
+        },
         {
             text: "-1",
             score: -1,
-            metB: 1,
-            spaceBefore: 2,
+            metB: 1
         }
     ],
     rankPointFunction: (t) => {

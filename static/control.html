@@ -6,24 +6,35 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Control Page</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='control.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/control.css'>
     <script src="/socket.io/socket.io.js"></script>
-    <script type="module" src='control.js'></script>
-    <script src='qrcode.min.js'></script>
+    <script type="module" src='/js/control.js'></script>
+    <script src='/js/qrcode.min.js'></script>
 </head>
 
 <body>
-    <section id="currentMatch">
-        <h2>Current Match</h2>
-        <div id="currentNum">Test 1</div>
-        <div id="currentTime">00:00</div>
-        <div id="currentTeams">1234 vs 5678</div>
-        <div id="currentScore">999 - 999</div>
-        <br/>
-        <button id="saveScore" style="display:none" onclick="saveScore()">Save Score</button>
-        <button id="startMatch" style="display:inline" onclick="startMatch()">Start Match</button>
-        <button id="loadNext" style="display:none" onclick="loadNext()">Load Next</button>
-    </section>
+    <div id="top-span">
+        <section id="currentMatch">
+            <h2>Current Match</h2>
+            <div id="currentNum">Test 1</div>
+            <div id="currentTime">00:00</div>
+            <div id="currentTeams">1234 vs 5678</div>
+            <div id="currentScore">999 - 999</div>
+        </section>
+        <section id="controls">
+            <div>
+                <h4>Match</h4>
+                <button id="startMatch" onclick="startMatch()">Start Match</button>
+                <button id="saveScore" onclick="saveScore()">Save Score</button>
+                <button id="loadNext" onclick="loadNext()">Load Next</button>
+            </div>
+            <div>
+                <h4>Display</h4>
+                <button onclick="showGame()">Show Game</button>
+                <button onclick="testAudio()">Test Audio</button>
+            </div>
+        </section>
+    </div>
     <section id="teams">
         <h2>Teams</h2>
         <table>
@@ -57,7 +68,7 @@
         <div id="blueInputCode" style="grid-area: blueCode;"></div>
     </section>
     <br/>
-    <button onclick="testAudio()">Test Audio</button>
+    <iframe id="preview" src="/autopage"></iframe>
 </body>
 
 </html>

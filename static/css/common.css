@@ -16,4 +16,5 @@ body {
     padding: 0;
     font-size:40px;
     background-color: var(--purple-primary);
+    font-size: min(4.5vh, 2vw);
 }

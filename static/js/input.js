@@ -1,7 +1,7 @@
-import { socket } from "./socketbase.js";
-import init from "/gamebase.js"
+import { socket } from "/js/socketbase.js";
+import init from "/js/gamebase.js"
 
-init(update, document.querySelector("#time"), -1)
+init(update, document.querySelector("#time"), null)
 
 let alliance = new URLSearchParams(window.location.search).get('a');
 let authString = new URLSearchParams(window.location.search).get('auth');
@@ -20,7 +20,7 @@ async function update(data){
 }
 
 window.addScore = addScore;
-function addScore(delta, dA=0, dB=0){
+function addScore(alliance, delta, dA=0, dB=0){
     socket.emit("addScore", {alliance, delta, dA, dB}, authString);
 }
 
@@ -30,15 +30,31 @@ async function buildButtons() {
     for(let button of config){
         // If single button
         if(button.toString() === '[object Object]'){
+            // Support for adjusting opposing alliance (mainly for fouls)
+            var _alliance = alliance;
+            if(button.opposing){
+                if(alliance == "red")
+                    _alliance = "blue";
+                else if (alliance == "blue")
+                    _alliance = "red";
+            }
             html+=`<button style="margin-top:${button.spaceBefore ?? ""}em; margin-bottom:${button.spaceAfter ?? ""}em;"
-                 onclick="addScore(${button.score ?? 0}, ${button.metA ?? 0}, ${button.metB ?? 0})">${button.text}</button>\n`
+                 onclick="addScore('${_alliance}', ${button.score ?? 0}, ${button.metA ?? 0}, ${button.metB ?? 0})">${button.text}</button>\n`
         } else {
             html += "<div>\n";
             console.log(button);
             for(let sub of button){
                 console.log(sub);
+                // Support for adjusting opposing alliance (mainly for fouls)
+                var _alliance = alliance;
+                if(button.opposing){
+                    if(alliance == "red")
+                        _alliance = "blue";
+                    else if (alliance == "blue")
+                        _alliance = "red";
+                }
                 html+=`<button style="margin-left:${sub.spaceBefore ?? ""}em; margin-right:${sub.spaceAfter ?? ""}em;"
-                     onclick="addScore(${sub.score ?? 0}, ${sub.metA ?? 0}, ${sub.metB ?? 0})">${sub.text}</button>\n`
+                     onclick="addScore('${_alliance}', ${sub.score ?? 0}, ${sub.metA ?? 0}, ${sub.metB ?? 0})">${sub.text}</button>\n`
             }
             html += "</div>\n";
         }

@@ -1,8 +1,4 @@
-import {socket, init} from "/socketbase.js";
-
-init(["matchSaved"], ()=>{
-    socket.emit("getScoreboard");
-})
+import {socket, init} from "/js/socketbase.js";
 
 var config;
 var widths = [];
@@ -69,6 +65,9 @@ window.onload = async ()=>{
     setInterval(()=>{
         cycle();
     }, config.duration*1000);
+    init(["matchSaved"], ()=>{
+        socket.emit("getScoreboard");
+    })
     buildTables();
 };
 

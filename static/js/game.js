@@ -1,6 +1,8 @@
-import init from '/gamebase.js';
+import init from '/js/gamebase.js';
 
-init(update, document.getElementById("time"));
+init(update, document.getElementById("time"), ()=>{
+    document.getElementById("review").style.bottom = "4em";
+});
 
 async function update(data){
     document.querySelector("#matchNum").innerText = data.name;
@@ -10,4 +12,5 @@ async function update(data){
     document.querySelector("#blue .teamNum").innerText = data.blue.num;
     document.querySelector("#blue .teamName").innerText = data.blue.name;
     document.querySelector("#blue .score").innerText = data.blue.score;
+    document.getElementById("review").style.bottom = "2em";
 }

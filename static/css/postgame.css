@@ -1,0 +1,112 @@
+@import url("/css/common.css");
+
+body {
+    color: black;
+    display: grid;
+    padding: 1em 2em;
+
+    grid-template-areas: 
+    ". . result result result . ."
+    ". . . . . . ."
+    ". red red . blue blue .";
+
+    grid-template-rows: auto 2em auto;
+    grid-template-columns: auto 25% 15% 10% 15% 25% auto;
+    margin:auto;
+}
+
+#banner {
+    grid-area: result;
+    text-align: center;
+    background-color: var(--white-primary);
+    width: 100%;
+    margin: auto;
+    padding: 0.25em 0;
+    box-shadow: 0 0 0 0.165em #0000004d;
+    position:relative;
+}
+
+#banner>div {
+    font-size:0.75em;
+}
+
+#banner>h2 {
+    font-size:2em;
+    margin:0;
+}
+
+.alliance {
+    background-color: var(--white-primary);
+    padding:0.25em 1em;
+    display:grid;
+    width: 75%;
+}
+
+#red {
+    grid-area: red;
+    text-align: right;
+    grid-template-areas: 
+    ". score score"
+    "team team rank"
+    "breakdown breakdown breakdown";
+    margin-left: auto;
+    grid-template-columns: auto auto 2.5em;
+    
+    background-color: white;
+    /* background: linear-gradient(180deg, transparent 2em,  white 0), 
+                linear-gradient(135deg, transparent 50%,  white 0), 
+                var(--red-accent); */
+
+    box-shadow: 0 0 0 0.5em var(--red-accent);
+}
+#blue {
+    grid-area: blue;
+    grid-template-areas: 
+    "score score ."
+    "rank team team"
+    "breakdown breakdown breakdown";
+    margin-right: auto;
+    grid-template-columns: 2.5em auto auto;
+    
+    background-color: white;
+    /* background: linear-gradient(180deg, transparent 2em,  white 0), 
+                linear-gradient(-135deg, transparent 50%,  white 0), 
+                var(--blue-accent); */
+    box-shadow: 0 0 0 0.5em var(--blue-accent);
+}
+
+.score {
+    grid-area: score;
+    font-size: 2em;
+    margin-bottom: 0.125em;
+}
+
+.team {
+    grid-area: team;
+}
+
+#red .team>span {
+    float: left;
+}
+#blue .team>span {
+    float: right;
+}
+
+.rank {
+    grid-area: rank;
+    height: 1em;
+}
+
+.breakdown {
+    grid-area: breakdown;
+    margin-top: 0.75em;
+}
+
+#red .breakdown td:nth-child(3), #blue .breakdown td:nth-child(1) {
+    width: 2em;
+    text-align: center;
+}
+
+#red .breakdown td:nth-child(2), #blue .breakdown td:nth-child(2) {
+    width: 0.5em;
+}

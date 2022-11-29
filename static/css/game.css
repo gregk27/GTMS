@@ -1,9 +1,8 @@
-@import url("/common.css");
+@import url("/css/common.css");
 
 body {
     background-color: lime;
     height:100%;
-    font-size: min(4.5vh, 2vw);
 }
 
 #scoreboard {
@@ -88,4 +87,16 @@ body {
 
 #scoreboard #middle #time {
     font-size: 2em;
+}
+
+#scoreboard #review {
+    position: absolute;
+    background-color: yellow;
+    width: 100%;
+    text-align: center;
+    color: black;
+    padding: 0;
+    bottom: 2em;
+    z-index: -1;
+    transition: bottom 0.5s;
 }

@@ -27,7 +27,7 @@ socket.on('reconnect', ()=>{
 export function init(subs, onConnect) {
     callback.push(onConnect);
     if(socket.connected){
-        console.log(subs);
+        onConnect();
         socket.emit("subscribe", subs);
     }
     if(subscriptions == null)

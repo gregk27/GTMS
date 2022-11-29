@@ -1,8 +1,4 @@
-@import url("/common.css");
-
-body {
-    font-size: 4vh;
-}
+@import url("/css/common.css");
 
 .scores {    
     display: flex;
