@@ -6,6 +6,7 @@ CREATE TABLE teams (
 CREATE TABLE schedule (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     type        VARCHAR(16) NOT NULL,
+    prettyName  VARCHAR(16) NOT NULL,
     number      INTEGER NOT NULL,
     redTeam     INTEGER NOT NULL,
     blueTeam    INTEGER NOT NULL,
@@ -36,9 +37,9 @@ INSERT INTO teams (number, name) VALUES
     (1234, 'Test 1'), 
     (5678, 'Test 2');
 
-INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-    ('Test', 1, 1234, 5678),
-    ('Test', 2, 5678, 1234);
+INSERT INTO schedule (type, prettyName, number, redTeam, blueTeam) VALUES
+    ('OTHER', 'Test', 1, 1234, 5678),
+    ('OTHER', 'Test', 2, 5678, 1234);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;

@@ -13,16 +13,16 @@ INSERT INTO teams (number, name) VALUES
 	(8000, 'Eighth Team'),
 	(9000, 'Ninth Team');
 
-INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-	('Match', 1, 1000, 2000),
-	('Match', 2, 3000, 4000),
-	('Match', 3, 5000, 6000),
-	('Match', 4, 7000, 8000),
-	('Match', 5, 9000, 1000),
-	('Match', 6, 2000, 3000),
-	('Match', 7, 4000, 5000),
-	('Match', 8, 6000, 7000),
-	('Match', 9, 8000, 2000);
+INSERT INTO schedule (type, prettyName, number, redTeam, blueTeam) VALUES
+	('RANKED', 'Match', 1, 1000, 2000),
+	('RANKED', 'Match', 2, 3000, 4000),
+	('RANKED', 'Match', 3, 5000, 6000),
+	('RANKED', 'Match', 4, 7000, 8000),
+	('RANKED', 'Match', 5, 9000, 1000),
+	('RANKED', 'Match', 6, 2000, 3000),
+	('RANKED', 'Match', 7, 4000, 5000),
+	('RANKED', 'Match', 8, 6000, 7000),
+	('RANKED', 'Match', 9, 8000, 2000);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;
