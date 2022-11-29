@@ -14,7 +14,7 @@ if(needInit){
 }
 
 const getTeamsStmt = db.prepare("SELECT * FROM teams");
-const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
+const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, prettyName, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
 /** @type ActiveMatch */
 var currentMatch = null;
@@ -22,7 +22,7 @@ var currentMatch = null;
 var matchTimeouts = [];
 
 function getSchedule(){
-    const stmt = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
+    const stmt = db.prepare("SELECT schedule.id, type, prettyName, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
     // Show current match if it hasn't started yet
     stmt.bind(currentMatch.running ? currentMatch.id : currentMatch.id-1);
     return stmt.all();
@@ -97,7 +97,7 @@ function loadMatch(id=-1){
         server.emit("queueAudio", config.audio.interrupted);
     }
 
-    const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
+    const getScheduledMatch = db.prepare("SELECT schedule.id, type, prettyName, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
     getScheduledMatch.bind(id);
     /** @type Match */
     let sch = getScheduledMatch.get();
@@ -107,7 +107,8 @@ function loadMatch(id=-1){
         running: false,
         saved: false,
         endTime: Date.now() + config.matchLength*1000,
-        name: sch.type + " " + sch.number,
+        // Name is pretty name + number. If number is negative then it's just pretty name
+        name: sch.prettyName + (sch.number >= 0 ? (" " + sch.number) : ""),
         red: {
             name: sch.redName,
             num: sch.redTeam,

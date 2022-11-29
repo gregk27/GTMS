@@ -44,11 +44,12 @@ socket.on("getScoreboard", (teams) => {
 });
 
 socket.on("getMatchData", (matches) => {
-    let html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
+    let html = "<tr><th>ID</th><th>Type</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
     for(let m of matches){
         html += `<tr>
         <td>${m.id}</td>
-        <td>${m.type} ${m.number}</td>
+        <td style="padding-right:0.75em">${m.type}</td>
+        <td>${m.prettyName} ${m.number >= 0 ? m.number : ""}</td>
         <td class='number'>${m.redTeam}</td>
         <td class='number'>${m.redScore ?? "-"}</td>
         <td class='number'>${m.redMetA ?? "-"}</td>
