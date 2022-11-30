@@ -22,7 +22,7 @@ var currentMatch = null;
 var matchTimeouts = [];
 
 function getSchedule(){
-    const stmt = db.prepare("SELECT schedule.id, type, prettyName, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
+    const stmt = db.prepare("SELECT schedule.id, type, prettyName, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>? AND (type='RANKED' OR type='PRACTICE')");
     // Show current match if it hasn't started yet
     stmt.bind(currentMatch.running ? currentMatch.id : currentMatch.id-1);
     return stmt.all();
@@ -35,31 +35,31 @@ function getScoreboard(){
         let stmt = db.prepare(`
         select number, name, sum(wins) AS wins, sum(losses) AS losses, sum(ties) AS ties, sum(score) AS score, sum(metA) as metA, sum(metB) as metB from (
             SELECT COUNT(scores.id) AS wins, 0 as ties, 0 as losses, 0 as score, 0 as metA, 0 as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)
+            WHERE ((redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)) AND type='RANKED'
             UNION ALL
             SELECT 0, COUNT(scores.id) AS ties, 0, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)
+            WHERE ((redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, COUNT(scores.id) AS losses, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)
+            WHERE ((redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, SUM(redScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
+            WHERE (redTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, SUM(blueScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
+            WHERE (blueTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, SUM(redMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
+            WHERE (redTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, SUM(blueMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
+            WHERE (blueTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, 0, SUM(redMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
+            WHERE (redTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, 0, SUM(blueMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
+            WHERE (blueTeam = ?) AND type='RANKED'
             ) left join teams t on number=?;`)
         stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
         out.push(stmt.get());
