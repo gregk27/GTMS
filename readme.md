@@ -220,16 +220,21 @@ INSERT INTO teams (number, name) VALUES
     (8000, "Eighth Team"),
     (9000, "Ninth Team");
 
-INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-    ("Match", 1, 1000, 2000),
-    ("Match", 2, 3000, 4000),
-    ("Match", 3, 5000, 6000),
-    ("Match", 4, 7000, 8000),
-    ("Match", 5, 9000, 1000),
-    ("Match", 6, 2000, 3000),
-    ("Match", 7, 4000, 5000),
-    ("Match", 8, 6000, 7000),
-    ("Match", 9, 8000, 2000);
+-- Match type is one of PRACTICE, RANKING, ELIMINATION, OTHER
+-- - Practice matches show on schedule but don't get counted for ranking
+-- - RANKING matches show on schedule and count towards ranking
+-- - ELIMINATION matches are same as OTHER, but reserved for future use
+-- - OTHER matches do not appear on schedule or count for ranking
+INSERT INTO schedule (type, prettyName, number, redTeam, blueTeam) VALUES
+    ("RANKING", "Match", 1, 1000, 2000),
+    ("RANKING", "Match", 2, 3000, 4000),
+    ("RANKING", "Match", 3, 5000, 6000),
+    ("RANKING", "Match", 4, 7000, 8000),
+    ("RANKING", "Match", 5, 9000, 1000),
+    ("RANKING", "Match", 6, 2000, 3000),
+    ("RANKING", "Match", 7, 4000, 5000),
+    ("RANKING", "Match", 8, 6000, 7000),
+    ("RANKING", "Match", 9, 8000, 2000);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;

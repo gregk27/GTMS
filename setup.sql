@@ -13,6 +13,11 @@ INSERT INTO teams (number, name) VALUES
 	(8000, 'Eighth Team'),
 	(9000, 'Ninth Team');
 
+-- Match type is one of PRACTICE, RANKING, ELIMINATION, OTHER
+-- - Practice matches show on schedule but don't get counted for ranking
+-- - RANKING matches show on schedule and count towards ranking
+-- - ELIMINATION matches are same as OTHER, but reserved for future use
+-- - OTHER matches do not appear on schedule or count for ranking
 INSERT INTO schedule (type, prettyName, number, redTeam, blueTeam) VALUES
 	('RANKED', 'Match', 1, 1000, 2000),
 	('RANKED', 'Match', 2, 3000, 4000),
