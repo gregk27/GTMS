@@ -4,6 +4,14 @@ p {
     color: black;
 }
 
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+}
+
 /* 
  * Bracket CSS sourced from “Tournament bracket” by Serhii Dudnyk 
  * https://codepen.io/sdudnyk/pen/bWbqMb
@@ -11,7 +19,7 @@ p {
 
 .wrapper {
     display: flex;
-    height: 600px;
+    height: 100%;
     justify-content: center;
 }
 
@@ -21,9 +29,17 @@ p {
 }
 
 .item p {
-    padding: 20px;
     margin: 0;
+}
+
+.item .match p {
+    padding: 20px;
     background-color: Beige;
+}
+
+.item .entry p {
+    /* padding-bottom: calc(25px + 0.1em); */
+    transform: translateY(-50%);
 }
 
 .item-parent {
@@ -78,6 +94,11 @@ p {
     height: calc(50% + 22px);
     width: 2px;
     top: 50%;
+}
+
+.item-child.entry::before {
+    transform: translateX(calc(100% - 4em + 25px));
+    width: 4em;
 }
 
 .item-child:last-child:after {
