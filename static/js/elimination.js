@@ -1,39 +1,19 @@
-var results = [
-    {
-        type:"ELIMINATION", 
-        number: 1,
-        redTeam: 9994,
-        blueTeam: 9995,
-        redScore: 100, 
-        blueScore: 200
-    },
-    {
-        type: "ELIMINATION", 
-        number: 2, 
-        redTeam: 9992,
-        blueTeam: 9993,
-        redScore: 200, 
-        blueScore: 100
-    },
-    {
-        type: "ELIMINATION", 
-        number: 3, 
-        redTeam: 9991,
-        blueTeam: 9995,
-        redScore: 200, 
-        blueScore: 100
-    },
-    {
-        type: "ELIMINATION", 
-        number: 4, 
-        redTeam: 9993,
-        blueTeam: 9994,
-        redScore: 50, 
-        blueScore: 100
-    },
-]
+import {socket, init} from "/js/socketbase.js";
 
-var seeds = [9991, 9992, 9993, 9994, 9995, 9996, 9997]
+init(["matchFinished"], ()=>{
+    socket.emit("getEliminationScores");
+})
+
+socket.on("getEliminationScores", (scores) => {
+    results = scores;
+    updateBracket();
+})
+
+socket.on("matchFinished", () => socket.emit("getEliminationScores"));
+
+var results = []
+
+var seeds = [1000, 2000, 3000, 4000, 5000, 6000, 7000]
 
 const NUM_TEAMS = 5;
 const NUM_MATCHES = 7;
@@ -75,4 +55,4 @@ function updateBracket() {
 }
 
 
-window.onload = updateBracket();
+// window.onload = updateBracket();
