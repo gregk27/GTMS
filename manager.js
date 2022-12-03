@@ -80,6 +80,11 @@ function getScoreboard(){
     return out;
 }
 
+function getEliminationScores(){
+    // Get scores and teams for all played elims matches
+    return db.prepare("SELECT number, redTeam, blueTeam, redScore, blueScore FROM scores JOIN schedule ON scores.id=schedule.id WHERE type='ELIMINATION'").all();
+}
+
 function loadMatch(id=-1){
     if(id == -1){
         if(currentMatch == null){
@@ -187,7 +192,7 @@ function addScore(alliance, delta, dA, dB){
 }
 
 module.exports = {
-    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, startMatch, saveMatch, loadMatch, addScore
+    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, getEliminationScores, startMatch, saveMatch, loadMatch, addScore
 }
 
 loadMatch();
