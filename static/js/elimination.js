@@ -1,27 +1,31 @@
 import {socket, init} from "/js/socketbase.js";
 
-init(["matchFinished"], ()=>{
-    socket.emit("getEliminationScores");
-})
-
-socket.on("getEliminationScores", (scores) => {
-    results = scores;
-    updateBracket();
-})
-
-socket.on("matchFinished", () => socket.emit("getEliminationScores"));
-
 var results = []
-
-var seeds = [1000, 2000, 3000, 4000, 5000, 6000, 7000]
+var seeds = []
 
 const NUM_TEAMS = 5;
 const NUM_MATCHES = 7;
 const MATCH_NAME = "Elims";
 
+init(["matchFinished"], ()=>{
+    socket.emit("getEliminationScores");
+})
+
+// Chain socket events to get elim scores and ranking scoreboard
+socket.on("getEliminationScores", (scores) => {
+    results = scores;
+    socket.emit("getScoreboard");
+})
+socket.on("getScoreboard", (scoreboard) => {
+    seeds = scoreboard;
+    updateBracket();
+})
+
+socket.on("matchFinished", () => socket.emit("getEliminationScores"));
+
 function updateBracket() {
     for(let i=0; i<NUM_TEAMS; i++){
-        document.getElementById(`seed-${i+1}`).querySelector("p").innerText = seeds[i]
+        document.getElementById(`seed-${i+1}`).querySelector("p").innerText = seeds[i].number
     }
 
     let i=0;
