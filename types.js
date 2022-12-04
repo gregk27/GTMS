@@ -6,6 +6,7 @@
  * 
  * @typedef {{
  *  id: number,
+ *  prettyName: string,
  *  type: string,
  *  number: number,
  *  redTeam: number,
@@ -26,6 +27,8 @@
  * 
  * @typedef {{
  *   name: string,
+ *   type: string,
+ *   number: number
  *   duration: number,
  *   endTime: number,
  *   running: boolean,
