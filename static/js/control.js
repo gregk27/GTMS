@@ -16,11 +16,14 @@ var saveScoreButton;
 var startMatchButton;
 /** @type HTMLButtonElement */
 var loadNextButton;
+/** @type HTMLButtonElement */
+var showElimsButton;
 
 window.onload = () => {
     saveScoreButton = document.getElementById("saveScore");
     startMatchButton = document.getElementById("startMatch");
     loadNextButton = document.getElementById("loadNext");
+    showElimsButton = document.getElementById("showElims");
 }
 
 
@@ -95,6 +98,10 @@ window.showGame = () => {
     startMatchButton.disabled = false;
 }
 
+window.showElims = () => {
+    socket.emit("broadcast", "showElims", {}, authString);
+}
+
 socket.on("getHostname", (hostname)=>{
     new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
     new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue&auth=${authString}`, width:128, height:128});
@@ -108,6 +115,7 @@ socket.on('matchSaved', () => {
     startMatchButton.disabled = true;
     saveScoreButton.disabled = false;
     loadNextButton.disabled = false;
+    showElimsButton.disabled = false;
 })
 
 socket.on('matchLoaded', (currentMatch)=>{
@@ -121,6 +129,7 @@ socket.on('matchStarted', (currentMatch)=>{
     startMatchButton.disabled = true;
     saveScoreButton.disabled = true;
     loadNextButton.disabled = true;
+    showElimsButton.disabled = true;
 })
 
 socket.on('matchFinished', (currentMatch)=>{
