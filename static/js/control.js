@@ -16,11 +16,14 @@ var saveScoreButton;
 var startMatchButton;
 /** @type HTMLButtonElement */
 var loadNextButton;
+/** @type HTMLButtonElement */
+var showElimsButton;
 
 window.onload = () => {
     saveScoreButton = document.getElementById("saveScore");
     startMatchButton = document.getElementById("startMatch");
     loadNextButton = document.getElementById("loadNext");
+    showElimsButton = document.getElementById("showElims");
 }
 
 
@@ -44,11 +47,12 @@ socket.on("getScoreboard", (teams) => {
 });
 
 socket.on("getMatchData", (matches) => {
-    let html = "<tr><th>ID</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
+    let html = "<tr><th>ID</th><th>Type</th><th>Name</th><th>Red team</th><th>Red Score</th><th>Red MetA</th><th>Red MetB</th><th>Blue Team</th><th>Blue Score</th><th>Blue MetA</th><th>Blue MetB</th><th></th></tr>";
     for(let m of matches){
         html += `<tr>
         <td>${m.id}</td>
-        <td>${m.type} ${m.number}</td>
+        <td style="padding-right:0.75em">${m.type}</td>
+        <td>${m.prettyName} ${m.number >= 0 ? m.number : ""}</td>
         <td class='number'>${m.redTeam}</td>
         <td class='number'>${m.redScore ?? "-"}</td>
         <td class='number'>${m.redMetA ?? "-"}</td>
@@ -94,6 +98,10 @@ window.showGame = () => {
     startMatchButton.disabled = false;
 }
 
+window.showElims = () => {
+    socket.emit("broadcast", "showElims", {}, authString);
+}
+
 socket.on("getHostname", (hostname)=>{
     new QRCode(document.getElementById("redInputCode"), {text: `http://${hostname}/input?a=red&auth=${authString}`, width:128, height:128});
     new QRCode(document.getElementById("blueInputCode"), {text: `${hostname}/input?a=blue&auth=${authString}`, width:128, height:128});
@@ -107,6 +115,7 @@ socket.on('matchSaved', () => {
     startMatchButton.disabled = true;
     saveScoreButton.disabled = false;
     loadNextButton.disabled = false;
+    showElimsButton.disabled = false;
 })
 
 socket.on('matchLoaded', (currentMatch)=>{
@@ -120,6 +129,7 @@ socket.on('matchStarted', (currentMatch)=>{
     startMatchButton.disabled = true;
     saveScoreButton.disabled = true;
     loadNextButton.disabled = true;
+    showElimsButton.disabled = true;
 })
 
 socket.on('matchFinished', (currentMatch)=>{

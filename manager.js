@@ -14,7 +14,7 @@ if(needInit){
 }
 
 const getTeamsStmt = db.prepare("SELECT * FROM teams");
-const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
+const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, prettyName, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
 /** @type ActiveMatch */
 var currentMatch = null;
@@ -22,7 +22,7 @@ var currentMatch = null;
 var matchTimeouts = [];
 
 function getSchedule(){
-    const stmt = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
+    const stmt = db.prepare("SELECT schedule.id, type, prettyName, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>? AND (type='RANKED' OR type='PRACTICE')");
     // Show current match if it hasn't started yet
     stmt.bind(currentMatch.running ? currentMatch.id : currentMatch.id-1);
     return stmt.all();
@@ -35,31 +35,31 @@ function getScoreboard(){
         let stmt = db.prepare(`
         select number, name, sum(wins) AS wins, sum(losses) AS losses, sum(ties) AS ties, sum(score) AS score, sum(metA) as metA, sum(metB) as metB from (
             SELECT COUNT(scores.id) AS wins, 0 as ties, 0 as losses, 0 as score, 0 as metA, 0 as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)
+            WHERE ((redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)) AND type='RANKED'
             UNION ALL
             SELECT 0, COUNT(scores.id) AS ties, 0, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)
+            WHERE ((redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, COUNT(scores.id) AS losses, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)
+            WHERE ((redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, SUM(redScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
+            WHERE (redTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, SUM(blueScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
+            WHERE (blueTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, SUM(redMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
+            WHERE (redTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, SUM(blueMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
+            WHERE (blueTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, 0, SUM(redMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
+            WHERE (redTeam = ?) AND type='RANKED'
             UNION ALL
             SELECT 0, 0, 0, 0, 0, SUM(blueMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
+            WHERE (blueTeam = ?) AND type='RANKED'
             ) left join teams t on number=?;`)
         stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
         out.push(stmt.get());
@@ -80,6 +80,11 @@ function getScoreboard(){
     return out;
 }
 
+function getEliminationScores(){
+    // Get scores and teams for all played elims matches
+    return db.prepare("SELECT number, redTeam, blueTeam, redScore, blueScore FROM scores JOIN schedule ON scores.id=schedule.id WHERE type='ELIMINATION'").all();
+}
+
 function loadMatch(id=-1){
     if(id == -1){
         if(currentMatch == null){
@@ -97,7 +102,7 @@ function loadMatch(id=-1){
         server.emit("queueAudio", config.audio.interrupted);
     }
 
-    const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
+    const getScheduledMatch = db.prepare("SELECT schedule.id, type, prettyName, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
     getScheduledMatch.bind(id);
     /** @type Match */
     let sch = getScheduledMatch.get();
@@ -107,7 +112,10 @@ function loadMatch(id=-1){
         running: false,
         saved: false,
         endTime: Date.now() + config.matchLength*1000,
-        name: sch.type + " " + sch.number,
+        // Name is pretty name + number. If number is negative then it's just pretty name
+        name: sch.prettyName + (sch.number >= 0 ? (" " + sch.number) : ""),
+        type: sch.type,
+        number: sch.number,
         red: {
             name: sch.redName,
             num: sch.redTeam,
@@ -186,7 +194,7 @@ function addScore(alliance, delta, dA, dB){
 }
 
 module.exports = {
-    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, startMatch, saveMatch, loadMatch, addScore
+    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, getEliminationScores, startMatch, saveMatch, loadMatch, addScore
 }
 
 loadMatch();

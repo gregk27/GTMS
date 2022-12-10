@@ -13,27 +13,21 @@ INSERT INTO teams (number, name) VALUES
 	(8, 'Eighth Team'),
 	(9, 'Ninth Team');
 
-INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
-	('Quals', 1, 1, 4),
-	('Quals', 2, 4, 5),
-	('Quals', 3, 1, 2),
-	('Quals', 4, 4, 3),
-	('Quals', 5, 5, 1),
-	('Quals', 6, 3, 2),
-	('Quals', 7, 2, 1),
-	('Quals', 8, 5, 4),
-	('Quals', 9, 4, 2),
-	('Quals', 10, 3, 5),
-	('Quals', 11, 1, 3),
-	('Quals', 12, 2, 4),
-	('Quals', 13, 4, 1),
-	('Quals', 14, 1, 5),
-	('Quals', 15, 5, 2),
-	('Quals', 16, 3, 4),
-	('Quals', 17, 2, 5),
-	('Quals', 18, 3, 1),
-	('Quals', 19, 2, 3),
-	('Quals', 20, 5, 3);
+-- Match type is one of PRACTICE, RANKING, ELIMINATION, OTHER
+-- - Practice matches show on schedule but don't get counted for ranking
+-- - RANKING matches show on schedule and count towards ranking
+-- - ELIMINATION matches are same as OTHER, but reserved for future use
+-- - OTHER matches do not appear on schedule or count for ranking
+INSERT INTO schedule (type, prettyName, number, redTeam, blueTeam) VALUES
+	('RANKED', 'Match', 1, 1, 2),
+	('RANKED', 'Match', 2, 3, 1),
+	('RANKED', 'Match', 3, 2, 6),
+	('RANKED', 'Match', 4, 7, 8),
+	('RANKED', 'Match', 5, 9, 1),
+	('RANKED', 'Match', 6, 2, 3),
+	('RANKED', 'Match', 7, 1, 2),
+	('RANKED', 'Match', 8, 6, 7),
+	('RANKED', 'Match', 9, 8, 2);
 
 SELECT * FROM teams;
 SELECT * FROM schedule;

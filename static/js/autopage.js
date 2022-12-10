@@ -1,12 +1,13 @@
 import {socket, init} from "/js/socketbase.js"
 
-init(["matchSaved", "showGame", "matchStarted"]);
+init(["matchSaved", "showGame", "matchStarted", "showElims"]);
 
 var base;
 var game;
 var postgame;
 var scoreboard;
 var schedule;
+var elims;
 var views;
 
 window.showView = showView;
@@ -23,7 +24,8 @@ window.onload = () =>{
     postgame = document.getElementById("postgame");
     scoreboard = document.getElementById("scoreboard");
     schedule = document.getElementById("schedule");
-    views = [base, game, postgame, scoreboard, schedule]
+    elims = document.getElementById("elims");
+    views = [base, game, postgame, scoreboard, schedule, elims]
     window.views = views;
 }
 
@@ -66,12 +68,17 @@ function showGame() {
 }
 
 window.showPostgame = showPostgame;
-function showPostgame() {
+function showPostgame(lastMatch) {
     showView(postgame)
     clearTimeout(cycleTimeout);
-    // Cycle to scoreboard/schedule page when done
+    // Cycle to scoreboard/schedule or elimination bracket page when done
     cycleTimeout = setTimeout(()=>{
-        showSS();
+        // Show schedule while playing ranked games
+        if(lastMatch.type == "RANKED" || lastMatch.type == "PRACTICE")
+            showSS();
+        // Show tournament bracket while playing elimination games
+        else if(lastMatch.type == "ELIMINATION")
+            showElims();
     }, postgameDuration*1000)
 }
 
@@ -85,6 +92,13 @@ function showSS(){
     }, 100)
 }
 
+window.showElims = showElims;
+function showElims(){
+    showView(elims);
+}
+
 socket.on("matchStarted", showGame)
 socket.on("matchSaved", showPostgame)
+socket.on("showSS", showSS)
+socket.on("showElims", showElims)
 socket.on("showGame", showGame)

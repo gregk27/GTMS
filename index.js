@@ -75,6 +75,10 @@ server.on("getMatchData", () => {
   return manager.getCombindMatchData();
 })
 
+server.on("getEliminationScores", () => {
+  return manager.getEliminationScores();
+})
+
 server.on("addScore", (client, payload, auth) => {
   if(auth != config.authString) return;
   manager.addScore(payload.alliance, payload.delta ?? 0, payload.dA ?? 0, payload.dB ?? 0);
