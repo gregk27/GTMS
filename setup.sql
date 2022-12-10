@@ -3,15 +3,12 @@ DELETE FROM schedule WHERE 1=1;
 DELETE FROM teams WHERE 1=1;
 
 INSERT INTO teams (number, name) VALUES
-	(1, 'VelociCLAPtors'),
-	(2, 'Second Team'),
-	(3, 'Third Team'),
-	(4, 'Fourth Team'),
-	(5, 'Fifth Team'),
-	(6, 'Sixth Team'),
-	(7, 'Seventh Team'),
-	(8, 'Eighth Team'),
-	(9, 'Ninth Team');
+	(1, 'VelociKLAPPtors'),
+	(2, 'Sharpshot Atlas'),
+	(3, 'The Best Team'),
+	(777, 'The Gamblers'),
+	(5272, 'Straight Shooters'),
+	(4, 'Sydenham')
 
 -- Match type is one of PRACTICE, RANKING, ELIMINATION, OTHER
 -- - Practice matches show on schedule but don't get counted for ranking
