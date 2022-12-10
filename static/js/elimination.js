@@ -3,8 +3,8 @@ import {socket, init} from "/js/socketbase.js";
 var results = []
 var seeds = []
 
-const NUM_TEAMS = 5;
-const NUM_MATCHES = 7;
+const NUM_TEAMS = 6;
+const NUM_MATCHES = 9;
 const MATCH_NAME = "Elims";
 
 init(["matchFinished"], ()=>{
