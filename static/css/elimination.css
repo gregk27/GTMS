@@ -45,7 +45,7 @@ h1, h2, h3 {
     display: flex;
     justify-content: center;
     width: fit-content;
-    padding: 1em 2em;
+    padding: 0em 2em;
 }
 
 .item {
@@ -150,7 +150,7 @@ h1, h2, h3 {
     background-color: var(--blue-primary);
 } */
 
-.item .item-childrens .item-child:nth-child(1) .match
+.item .item-childrens .item-child:nth-child(1)>.item>.match
 {
     color: var(--red-accent);
 }
@@ -159,7 +159,7 @@ h1, h2, h3 {
     color: var(--red-primary);
 }
 
-.item .item-childrens .item-child:nth-child(2) .match
+.item .item-childrens .item-child:nth-child(2)>.item>.match
 {
     color: var(--blue-accent);
 }
