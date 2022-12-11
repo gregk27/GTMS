@@ -82,7 +82,7 @@ function updateBracket() {
     let i=0;
     console.log(results);
     for(i=0; i<results.length; i++){
-        // Get winner/looser numbers
+        // Get winner/loser numbers
         var match = results[i]
         let winner = match.redScore > match.blueScore ? match.redTeam : match.blueTeam;
         let loser = match.redScore < match.blueScore ? match.redTeam : match.blueTeam;
@@ -92,7 +92,7 @@ function updateBracket() {
         matchDiv.classList.remove("next");
         matchDiv.querySelector("p").innerText = winner;
         
-        var loserDiv = document.getElementById(`looser-${i+1}`);
+        var loserDiv = document.getElementById(`loser-${i+1}`);
         if(loserDiv != null)
             loserDiv.querySelector("p").innerText = loser;
     }
@@ -102,9 +102,9 @@ function updateBracket() {
         matchDiv.classList.remove("next");
         matchDiv.querySelector("p").innerText = `${MATCH_NAME} ${i+1}`;
         
-        var loserDiv = document.getElementById(`looser-${i+1}`);
+        var loserDiv = document.getElementById(`loser-${i+1}`);
         if(loserDiv != null)
-            loserDiv.querySelector("p").innerText = `Looser ${i+1}`;
+            loserDiv.querySelector("p").innerText = `L. of ${i+1}`;
     }
 
     var currNum = results.length + 1;
