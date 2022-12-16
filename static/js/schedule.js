@@ -9,7 +9,7 @@ socket.on("getSchedule", (schedule) => {
     for(let m of schedule){
         html += `
         <div class="match">
-            <div class="matchName">${m.prettyName} ${m.number >= 0 ? m.number : ""}</div>
+            <div class="matchName">${m.prettyName.replace("$N", m.number)}</div>
             <div class="redTeam">${m.redName}<span style="float:right">${m.redTeam}</span></div>
             <div class="blueTeam">${m.blueName}<span style="float:right">${m.blueTeam}</span></div>
         </div>
