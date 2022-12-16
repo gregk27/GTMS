@@ -50,6 +50,8 @@ function updateBracket() {
         matchDiv.classList.add("upcoming");
         matchDiv.classList.remove("next");
         matchDiv.querySelector("p").innerText = `${MATCH_NAME} ${i+1}`;
+        if(i==NUM_MATCHES - 1)
+            matchDiv.querySelector("p").innerText = `Semis`;
         
         var loserDiv = document.getElementById(`loser-${i+1}`);
         if(loserDiv != null)
