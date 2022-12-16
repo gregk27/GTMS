@@ -52,7 +52,7 @@ socket.on("getMatchData", (matches) => {
         html += `<tr>
         <td>${m.id}</td>
         <td style="padding-right:0.75em">${m.type}</td>
-        <td>${m.prettyName} ${m.number >= 0 ? m.number : ""}</td>
+        <td>${m.prettyName.replace("$N", m.number)}</td>
         <td class='number'>${m.redTeam}</td>
         <td class='number'>${m.redScore ?? "-"}</td>
         <td class='number'>${m.redMetA ?? "-"}</td>

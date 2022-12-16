@@ -112,8 +112,8 @@ function loadMatch(id=-1){
         running: false,
         saved: false,
         endTime: Date.now() + config.matchLength*1000,
-        // Name is pretty name + number. If number is negative then it's just pretty name
-        name: sch.prettyName + (sch.number >= 0 ? (" " + sch.number) : ""),
+        // Name is pretty name with substitution for number
+        name: sch.prettyName.replace("$N", sch.number),
         type: sch.type,
         number: sch.number,
         red: {
