@@ -5,24 +5,25 @@
  * }} Team
  * 
  * @typedef {{
+ *  points: number,
+ *  fouls: number,
+ *  duckies: number, 
+ *  karma: number, 
+ * }} Score
+ * 
+ * @typedef {{
  *  id: number,
  *  type: string,
  *  number: number,
- *  redTeam: number,
- *  redScore: number,
- *  redName?: number
- *  blueTeam: number,
- *  blueScore: number,
- *  blueName?: number
+ *  teams: number[],
+ *  scores: Score[]
  * }} Match
- * 
+ *  
  * @typedef {{
  *  num: number,
  *  name: string,
- *  score: number,
- *  metA: number,
- *  metB: number
- * }} ActiveAlliance
+ *  score: Score
+ * }} ActiveTeam
  * 
  * @typedef {{
  *   name: string,
@@ -31,19 +32,13 @@
  *   running: boolean,
  *   saved: boolean,
  *   id: number,
- *   red: ActiveAlliance,
- *   blue: ActiveAlliance
+ *   teams: ActiveTeam[]
  * }} ActiveMatch
  * 
  * @typedef {{
  *  number: number,
  *  name: string,
- *  wins: number,
- *  losses: number,
- *  ties: number,
- *  score: number,
- *  metA: number,
- *  metB: number,
+ *  score: Score
  *  numMatches: number,
  *  rp: number,
  *  rpa: number,
@@ -87,7 +82,7 @@
  *      data: Column[][]
  *  },
  *  postgame: {
- *      breakdown: {name:string, func: (a:ActiveAlliance) => string}[]
+ *      breakdown: {name:string, func: (a:ActiveTeam) => string}[]
  *  },
  *  buttons: (Button | Button[])[],
  *  rankPointFunction: (t:TeamScore) => string,
