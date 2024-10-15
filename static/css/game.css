@@ -52,98 +52,49 @@ body {
         linear-gradient(110deg, #00000000 0.4em, #00000022 0.6em);
 }
 
-#scoreboard {
-    position:absolute;
-    bottom:0px;
-    width:100%;
-    display:flex;
-    justify-content: space-between;
-    align-items: flex-end;
-}
 
-#scoreboard>div {
-    width:inherit;
-    padding-bottom:1em;
-    padding-left:1em;
-    padding-right:1em;
-    display:grid;
-    grid-template-rows: auto;
-}
+#clock {
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: min-content;
+    
+    background: linear-gradient(0deg, var(--white-accent) 1em, var(--white-primary) 0%);
 
-#scoreboard #red {
-    text-align: left;
-    background: 
-        linear-gradient(0deg, var(--red-accent) 3em, #ffffff00 0%),
-        linear-gradient(45deg, var(--red-accent) 40%, #ffffff00 0%),
-        linear-gradient(0deg, var(--red-primary) 80%, #ffffff00 0%);
-    grid-template-columns: 1em 3em 50% auto;
-    grid-template-areas: 
-        "score score . ."
-        ". num name .";
-}
+    background-color: var(--white-accent);
 
-#scoreboard #blue {
-    text-align: right;
-    background: 
-    linear-gradient(0deg, var(--blue-accent) 3em, #ffffff00 0%),
-    linear-gradient(-45deg, var(--blue-accent) 40%, #ffffff00 0%),
-    linear-gradient(0deg, var(--blue-primary) 80%, #ffffff00 0%);
-    grid-template-columns: auto 50% 3em 1em;
-    grid-template-areas: 
-        ". . score score"
-        ". name num .";
-}
-
-#scoreboard .score {
-    grid-area: score;
-    font-size: 2.5em;
-}
-
-#scoreboard .teamNum {
-    grid-area: num;
-}
-
-#scoreboard #red .teamNum {
-    text-align:right;
-}
-#scoreboard #red .teamNum::after {
-    content: "-";
-    margin-left: 0.25em;
-    margin-right: 0.25em;
-}
-#scoreboard #blue .teamNum {
-    text-align:left;
-}
-#scoreboard #blue .teamNum::before {
-    content: "-";
-    margin-left: 0.25em;
-    margin-right: 0.25em;
-}
-
-#scoreboard .teamName {
-    grid-area: name;
-}
-
-#scoreboard #middle {
-    width:35%;
-    background: linear-gradient(var(--white-primary) 2em, var(--white-accent) 0%);
+    box-shadow: 5px 5px 0.2em black,
+                0px 0px 0.5em black;
+    
     color: black;
     text-align: center;
-    height:3em;
+    padding: 0 2em;
+    padding-bottom: 0.75em;
 }
 
-#scoreboard #middle #time {
+#clock #time {
     font-size: 2em;
 }
 
-#scoreboard #review {
+#clock #review {
     position: absolute;
+    top: -1.25em;
+    left: 0;
+    right: 0;
+    margin: auto;
+    
+    width: 90%;
+    padding: 0;
+    padding-bottom: 0.5em;
+    z-index: -1;
+
     background-color: yellow;
-    width: 100%;
     text-align: center;
     color: black;
-    padding: 0;
-    bottom: 2em;
-    z-index: -1;
-    transition: bottom 0.5s;
+    transition: top 0.5s;
+    
+    box-shadow: 5px 5px 0.2em black,
+                0px 0px 0.5em black;
 }
