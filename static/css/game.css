@@ -42,7 +42,6 @@ body {
     background-color: #00000044;
     padding-left: 0.75em;
     padding-right: 0.2em;
-    display: inline-block;
     
     float:right;
     min-width: 1em;
@@ -61,7 +60,7 @@ body {
     margin: auto;
     width: min-content;
     
-    background: linear-gradient(0deg, var(--white-accent) 1em, var(--white-primary) 0%);
+    background: linear-gradient(0deg, var(--white-accent) 0.75em, var(--white-primary) 0%);
 
     background-color: var(--white-accent);
 
@@ -71,7 +70,7 @@ body {
     color: black;
     text-align: center;
     padding: 0 2em;
-    padding-bottom: 0.75em;
+    padding-bottom: 0.5em;
 }
 
 #clock #time {
