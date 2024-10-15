@@ -1,8 +1,55 @@
 @import url("/css/common.css");
 
 body {
-    background-color: lime;
+    background-color: green;
     height:100%;
+    font-size: 2em;
+}
+
+.teamScore {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.scoreItem {
+    margin-left: 0.5em;
+    background-color: white;
+    color: black;
+    margin-bottom: 0.25em;
+    box-shadow: 5px 5px 0.2em black,
+                0px 0px 0.5em black;
+
+    background: 
+        linear-gradient(110deg, darkred 0.6em, white 0.8em);
+}
+
+.scoreItem.teamName {
+    margin-left: 0;
+    background: darkred;
+    color:white;
+}
+
+.scoreItem.teamName .scoreName {
+    margin-right: 0.5em;
+}
+
+.scoreItem .scoreName {
+    margin-left: 0.8em;
+}
+
+.scoreItem .scoreValue {
+    background-color: #00000044;
+    padding-left: 0.75em;
+    padding-right: 0.2em;
+    display: inline-block;
+    
+    float:right;
+    min-width: 1em;
+    text-align: right;
+
+    background: 
+        linear-gradient(110deg, #00000000 0.4em, #00000022 0.6em);
 }
 
 #scoreboard {
