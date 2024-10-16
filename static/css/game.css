@@ -10,6 +10,7 @@ body {
     width: fit-content;
     display: flex;
     flex-direction: column;
+    --team-colour: black;
 }
 
 .scoreItem {
@@ -21,12 +22,12 @@ body {
                 0px 0px 0.5em black;
 
     background: 
-        linear-gradient(110deg, darkred 0.6em, white 0.8em);
+        linear-gradient(110deg, var(--team-colour) 0.6em, white 0.8em);
 }
 
 .scoreItem.teamName {
     margin-left: 0;
-    background: darkred;
+    background: var(--team-colour);
     color:white;
 }
 

@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS  scores;
 
 CREATE TABLE teams (
     number      INTEGER PRIMARY KEY,
-    name        VARCHAR(128)
+    name        VARCHAR(128),
+    colour      VARCHAR(16)
 );
 
 CREATE TABLE schedule (

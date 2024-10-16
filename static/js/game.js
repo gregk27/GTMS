@@ -4,12 +4,17 @@ init(update, document.getElementById("time"), ()=>{
     document.getElementById("review").style.bottom = "4em";
 });
 
+var initialized = false;
+
 /**
  * 
  * @param {ActiveMatch} data 
  */
 async function update(data){
-    generateBlocks(4, ["Score", "Count", "Penalties", "Another"])
+    if(!initialized) {
+        generateBlocks(4, ["Score", "Count", "Penalties", "Another"]);
+        initialized = true;
+    }
     console.log(data);
 
     for(let i = 0; i < data.teams.length; i++){
@@ -19,6 +24,8 @@ async function update(data){
         document.getElementById(`Count-${i}`).innerText = team.score.duckies;
         document.getElementById(`Penalties-${i}`).innerText = team.score.fouls;
         document.getElementById(`Another-${i}`).innerText = team.score.karma;
+
+        document.getElementById(`_scoreblock-${i}`).style.setProperty("--team-colour", team.colour)
     }
 
     document.querySelector("#matchNum").innerText = data.name;
@@ -39,7 +46,7 @@ async function update(data){
 function generateBlocks(numTeams, scoreItems){
     let html = "";
     for(let i = 0; i < numTeams; i ++){
-        html += `\n<div class="teamScore">`;
+        html += `\n<div class="teamScore" id="_scoreblock-${i}">`;
         html += `\n<div class="scoreItem teamName">`;
         html += `\t<span class="scoreName" id="_name-${i}"></span>`
         html += `</div>`;

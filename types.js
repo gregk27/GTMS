@@ -1,7 +1,8 @@
 /**
  * @typedef {{
  *  number: number,
- *  name: string
+ *  name: string,
+ *  colour: string,
  * }} Team
  * 
  * @typedef {{
@@ -22,8 +23,9 @@
  * @typedef {{
  *  num: number,
  *  name: string,
+ *  colour: string,
  *  score: Score
- * }} ActiveTeam
+ * }} ActiveTeam 
  * 
  * @typedef {{
  *   name: string,
