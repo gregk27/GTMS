@@ -12,7 +12,9 @@ var initialized = false;
  */
 async function update(data){
     if(!initialized) {
-        generateBlocks(4, ["Score", "Count", "Penalties", "Another"]);
+        let horzOffset = "1em";
+        let vertOffset = "1em";
+        generateBlocks([`top:${vertOffset};left:${horzOffset}`,`bottom:${vertOffset};left:${horzOffset}`,`top:${vertOffset};right:${horzOffset}`,`bottom:${vertOffset};right:${horzOffset}`], ["Score", "Count", "Penalties", "Another"]);
         initialized = true;
     }
     console.log(data);
@@ -29,24 +31,18 @@ async function update(data){
     }
 
     document.querySelector("#matchNum").innerText = data.name;
-    document.querySelector("#red .teamNum").innerText = data.red.num;
-    document.querySelector("#red .teamName").innerText = data.red.name;
-    document.querySelector("#red .score").innerText = data.red.score;
-    document.querySelector("#blue .teamNum").innerText = data.blue.num;
-    document.querySelector("#blue .teamName").innerText = data.blue.name;
-    document.querySelector("#blue .score").innerText = data.blue.score;
-    document.getElementById("review").style.bottom = "2em";
+    document.getElementById("review").style.top = "0.5em";
 }
 
 /**
  * 
- * @param {number} numTeams 
+ * @param {string[]} locations 
  * @param {string[]} scoreItems 
  */
-function generateBlocks(numTeams, scoreItems){
+function generateBlocks(locations, scoreItems){
     let html = "";
-    for(let i = 0; i < numTeams; i ++){
-        html += `\n<div class="teamScore" id="_scoreblock-${i}">`;
+    for(let i = 0; i < locations.length; i ++){
+        html += `\n<div class="teamScore" id="_scoreblock-${i}" style="position:absolute;${locations[i]}">`;
         html += `\n<div class="scoreItem teamName">`;
         html += `\t<span class="scoreName" id="_name-${i}"></span>`
         html += `</div>`;
