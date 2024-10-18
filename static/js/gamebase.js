@@ -16,6 +16,7 @@ function toMMSS (unix) {
     return minutes+':'+seconds;
 }
 
+/** @type {ActiveMatch} */
 export var currentMatch = null;
 
 var update = null;
@@ -28,6 +29,12 @@ var freezeDelay;
     freezeDelay = parseFloat(await(await fetch("/config/freezeDelay")).text())*1000;
 })();
 
+/**
+ * 
+ * @param {(ActiveMatch) => void} clbk 
+ * @param {HTMLElement} clk 
+ * @param {() => void)} postUpdate 
+ */
 export default async function init(clbk, clk, postUpdate=()=>{}) {
     update = clbk;
     clock = clk;
@@ -42,12 +49,15 @@ export default async function init(clbk, clk, postUpdate=()=>{}) {
 }
 
 async function onLoad(){
-    clock.innerText = toMMSS(0);  
+    clock.innerText = toMMSS(0); 
+    if(socket != null)
+        socket.emit("getCurrentMatch"); 
 }
 
 socket.on("getCurrentMatch", (cm) =>{
     currentMatch=cm;
-    update(currentMatch);
+    if(update != null)
+        update(currentMatch);
     // If it's reloaded mid-match, use higher frequency since it'll be offset from what it should be
     if(currentMatch.running){
         timer = setInterval(() => clock.innerText = toMMSS(currentMatch.endTime - Date.now()), 100);

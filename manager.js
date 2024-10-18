@@ -13,8 +13,8 @@ if(needInit){
     db.exec(fs.readFileSync(config.initScript).toString())
 }
 
-const getTeamsStmt = db.prepare("SELECT * FROM teams");
-const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
+// const getTeamsStmt = db.prepare("SELECT * FROM teams");
+// const getCombinedMatchDataStmt = db.prepare("SELECT schedule.id, type, number, redTeam, scores.redScore AS redScore, scores.redMetA AS redMetA, scores.redMetB AS redMetB, blueTeam, scores.blueScore AS blueScore, scores.blueMetA AS blueMetA, scores.blueMetB AS blueMetB FROM schedule LEFT JOIN scores ON scores.id = schedule.id");
 
 /** @type ActiveMatch */
 var currentMatch = null;
@@ -81,6 +81,7 @@ function getScoreboard(){
 }
 
 function loadMatch(id=-1){
+    return;
     if(id == -1){
         if(currentMatch == null){
             id = db.prepare("SELECT MIN(id) AS id FROM schedule").get().id;
@@ -143,6 +144,63 @@ function startMatch(){
 }
 
 function getCurrentMatch(){
+    /**
+     * @type {ActiveMatch}
+     */
+    let match = {
+        name: "Test 1",
+        duration: 10 * 60,
+        id: 0,
+        running: false,
+        teams: [
+            {
+                name: "First Team",
+                num: 1,
+                colour: "#3b429f",
+                score: {
+                    points: 3,
+                    duckies: 1,
+                    fouls: 2,
+                    karma: -1
+                }
+            },
+            {
+                name: "Second Team",
+                num: 2,
+                colour: "#74c2e7",
+                score: {
+                    points: 3,
+                    duckies: 1,
+                    fouls: 2,
+                    karma: -1
+                }
+            },
+            {
+                name: "Third Team",
+                num: 3,
+                colour: "#1a936f",
+                score: {
+                    points: 3,
+                    duckies: 1,
+                    fouls: 2,
+                    karma: -1
+                }
+            },
+            {
+                name: "Fourth Team",
+                num: 60,
+                colour: "#e3bac6",
+                score: {
+                    points: 3,
+                    duckies: 1,
+                    fouls: 2,
+                    karma: -1
+                }
+            }
+        ]
+    };
+    
+    return match;
     if(!currentMatch.running){
         currentMatch.endTime = Date.now() + currentMatch.duration*1000 + 750; // Add some time to allow for network latency
     }
