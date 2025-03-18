@@ -16,6 +16,8 @@ CREATE TABLE schedule (
     team2       INTEGER NOT NULL,
     team3       INTEGER NOT NULL,
     team4       INTEGER NOT NULL,
+    team5       INTEGER NOT NULL,
+    team6       INTEGER NOT NULL,
 
     FOREIGN KEY (team1)
         REFERENCES teams(number)
@@ -27,6 +29,12 @@ CREATE TABLE schedule (
         REFERENCES teams(number)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (team4)
+        REFERENCES teams(number)
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (team5)
+        REFERENCES teams(number)
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (team6)
         REFERENCES teams(number)
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
@@ -60,11 +68,11 @@ INSERT INTO teams (number, name) VALUES
     (7, 'Test 7'), 
     (8, 'Test 8');
 
-INSERT INTO schedule (type, number, team1, team2, team3, team4) VALUES
-    ('Test', 1, 1, 2, 3, 4),
-    ('Test', 2, 5, 6, 7, 8),
-    ('Test', 3, 1, 2, 7, 8),
-    ('Test', 4, 5, 6, 3, 4);
+INSERT INTO schedule (type, number, team1, team2, team3, team4, team5, team6) VALUES
+    ('Test', 1, 1, 2, 3, 4, 5, 6),
+    ('Test', 2, 5, 6, 7, 8, 1, 3),
+    ('Test', 3, 1, 2, 7, 8, 6, 4),
+    ('Test', 4, 5, 6, 3, 7, 1, 8);
 
 INSERT INTO scores (matchId, team, points, penalties, duckies, karma) VALUES
     (1, 1, 5, 0, 1, 1),

@@ -16,8 +16,18 @@
  *  id: number,
  *  type: string,
  *  number: number,
- *  teams: number[],
- *  scores: Score[]
+ *  team1: number,
+ *  team1Name: string,
+ *  team2: number,
+ *  team2Name: string,
+ *  team3: number,
+ *  team3Name: string,
+ *  team4: number,
+ *  team4Name: string,
+ *  team5: number,
+ *  team5Name: string,
+ *  team6: number,
+ *  team6Name: string,
  * }} Match
  *  
  * @typedef {{

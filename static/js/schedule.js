@@ -10,8 +10,13 @@ socket.on("getSchedule", (schedule) => {
         html += `
         <div class="match">
             <div class="matchName">${m.type} ${m.number}</div>
-            <div class="redTeam">${m.redName}<span style="float:right">${m.redTeam}</span></div>
-            <div class="blueTeam">${m.blueName}<span style="float:right">${m.blueTeam}</span></div>
+            <div></div>
+            <div class="team">${m.team1}</div>
+            <div class="team">${m.team2}</div>
+            <div class="team">${m.team3}</div>
+            <div class="team">${m.team4}</div>
+            <div class="team">${m.team5}</div>
+            <div class="team">${m.team6}</div>
         </div>
         `
     }

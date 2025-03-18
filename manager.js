@@ -22,7 +22,22 @@ var currentMatch = null;
 var matchTimeouts = [];
 
 function getSchedule(){
-    const stmt = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id>?");
+    const stmt = db.prepare(`
+        SELECT schedule.id, type, schedule.number, 
+        team1, t1.name AS team1Name,
+        team2, t2.name AS team2Name,
+        team3, t3.name AS team3Name,
+        team4, t4.name AS team4Name,
+        team5, t5.name AS team5Name,
+        team6, t6.name AS team6Name
+        FROM schedule
+        LEFT JOIN teams t1 ON t1.number = team1
+        LEFT JOIN teams t2 ON t2.number = team2
+        LEFT JOIN teams t3 ON t3.number = team3
+        LEFT JOIN teams t4 ON t4.number = team4
+        LEFT JOIN teams t5 ON t5.number = team5
+        LEFT JOIN teams t6 ON t6.number = team6
+        WHERE id>?`);
     // Show current match if it hasn't started yet
     stmt.bind(currentMatch.running ? currentMatch.id : currentMatch.id-1);
     return stmt.all();
@@ -40,7 +55,6 @@ function getScoreboard(){
 }
 
 function loadMatch(id=-1){
-    return;
     if(id == -1){
         if(currentMatch == null){
             id = db.prepare("SELECT MIN(id) AS id FROM schedule").get().id;
@@ -57,7 +71,22 @@ function loadMatch(id=-1){
         server.emit("queueAudio", config.audio.interrupted);
     }
 
-    const getScheduledMatch = db.prepare("SELECT schedule.id, type, schedule.number, redTeam, red.name AS redName, blueTeam, blue.name AS blueName FROM schedule LEFT JOIN teams red ON red.number = redTeam LEFT JOIN teams blue ON blue.number = blueTeam WHERE id=?")
+    const getScheduledMatch = db.prepare(`
+        SELECT schedule.id, type, schedule.number, 
+        team1, t1.name AS team1Name,
+        team2, t2.name AS team2Name,
+        team3, t3.name AS team3Name,
+        team4, t4.name AS team4Name,
+        team5, t5.name AS team5Name,
+        team6, t6.name AS team6Name
+        FROM schedule
+        LEFT JOIN teams t1 ON t1.number = team1
+        LEFT JOIN teams t2 ON t2.number = team2
+        LEFT JOIN teams t3 ON t3.number = team3
+        LEFT JOIN teams t4 ON t4.number = team4
+        LEFT JOIN teams t5 ON t5.number = team5
+        LEFT JOIN teams t6 ON t6.number = team6
+        WHERE id=?`)
     getScheduledMatch.bind(id);
     /** @type Match */
     let sch = getScheduledMatch.get();
@@ -68,20 +97,74 @@ function loadMatch(id=-1){
         saved: false,
         endTime: Date.now() + config.matchLength*1000,
         name: sch.type + " " + sch.number,
-        red: {
-            name: sch.redName,
-            num: sch.redTeam,
-            score: 0,
-            metA: 0,
-            metB: 0
-        },        
-        blue: {
-            name: sch.blueName,
-            num: sch.blueTeam,
-            score: 0,
-            metA: 0,
-            metB: 0
-        }
+        teams: [
+            {
+                num: sch.team1,
+                name: sch.team1Name,
+                colour: "FFFFFFF",
+                score: {
+                    duckies: 0,
+                    fouls: 0,
+                    karma: 0,
+                    points: 0
+                }
+            },
+            {
+                num: sch.team2,
+                name: sch.team2Name,
+                colour: "FFFFFFF",
+                score: {
+                    duckies: 0,
+                    fouls: 0,
+                    karma: 0,
+                    points: 0
+                }
+            },
+            {
+                num: sch.team3,
+                name: sch.team3Name,
+                colour: "FFFFFFF",
+                score: {
+                    duckies: 0,
+                    fouls: 0,
+                    karma: 0,
+                    points: 0
+                }
+            },
+            {
+                num: sch.team4,
+                name: sch.team4Name,
+                colour: "FFFFFFF",
+                score: {
+                    duckies: 0,
+                    fouls: 0,
+                    karma: 0,
+                    points: 0
+                }
+            },
+            {
+                num: sch.team5,
+                name: sch.team5Name,
+                colour: "FFFFFFF",
+                score: {
+                    duckies: 0,
+                    fouls: 0,
+                    karma: 0,
+                    points: 0
+                }
+            },
+            {
+                num: sch.team6,
+                name: sch.team6Name,
+                colour: "FFFFFFF",
+                score: {
+                    duckies: 0,
+                    fouls: 0,
+                    karma: 0,
+                    points: 0
+                }
+            },
+        ]
     }
     server.emit("matchLoaded", currentMatch);
 }

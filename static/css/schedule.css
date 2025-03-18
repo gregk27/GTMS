@@ -8,10 +8,16 @@
     flex-wrap: nowrap;
 }
 
+.teams {
+    text-align: center;
+    grid-column: 4 / 8;
+}
+
 .match {
     color: black;
     display: grid;
-    grid-template-columns: auto 40% 40%;
+    /* Leave 20% ish for the auto column */
+    grid-template-columns: auto 1fr repeat(6, 1fr);
     grid-gap:1em;
     background-color: white;
     padding: 0.25em 5%;
@@ -20,14 +26,9 @@
     box-shadow: 0 0.25em var(--purple-accent);
 }
 
-.redTeam {
-    color: var(--red-accent);
+.team {
+    /* color: var(--red-accent); */
     overflow: hidden;
     white-space: nowrap;
-}
-
-.blueTeam {
-    color: var(--blue-accent);
-    overflow: hidden;
-    white-space: nowrap;
+    text-align: center;
 }
