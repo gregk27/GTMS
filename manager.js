@@ -29,54 +29,13 @@ function getSchedule(){
 }
 
 function getScoreboard(){
-    let teams = getTeamsStmt.all();
-    out = []
-    for(let t of teams){
-        let stmt = db.prepare(`
-        select number, name, sum(wins) AS wins, sum(losses) AS losses, sum(ties) AS ties, sum(score) AS score, sum(metA) as metA, sum(metB) as metB from (
-            SELECT COUNT(scores.id) AS wins, 0 as ties, 0 as losses, 0 as score, 0 as metA, 0 as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore > blueScore) OR (blueTeam = ? AND blueScore > redScore)
-            UNION ALL
-            SELECT 0, COUNT(scores.id) AS ties, 0, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore = blueScore) OR (blueTeam = ? AND blueScore = redScore)
-            UNION ALL
-            SELECT 0, 0, COUNT(scores.id) AS losses, 0, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ? AND redScore < blueScore) OR (blueTeam = ? AND blueScore < redScore)
-            UNION ALL
-            SELECT 0, 0, 0, SUM(redScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
-            UNION ALL
-            SELECT 0, 0, 0, SUM(blueScore) as score, 0, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
-            UNION ALL
-            SELECT 0, 0, 0, 0, SUM(redMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
-            UNION ALL
-            SELECT 0, 0, 0, 0, SUM(blueMetA) as metA, 0 from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
-            UNION ALL
-            SELECT 0, 0, 0, 0, 0, SUM(redMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (redTeam = ?)
-            UNION ALL
-            SELECT 0, 0, 0, 0, 0, SUM(blueMetB) as metB from (scores LEFT JOIN schedule ON scores.id=schedule.id)
-            WHERE (blueTeam = ?)
-            ) left join teams t on number=?;`)
-        stmt.bind(t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number, t.number)
-        out.push(stmt.get());
-    }
-    for(let t of out){
-        t.numMatches = (t.wins+t.ties+t.losses);
-        t.rp = config.rankPointFunction(t);
-        if(t.numMatches > 0){
-            t.rpa = t.rp/t.numMatches;
-            t.scoreAvg = t.score/t.numMatches;
-        }
-        else{
-            t.rpa = 0;
-            t.scoreAvg = 0;
-        }
-    }
-    out.sort(config.sortFunction);
+    let stmt = db.prepare(`
+    SELECT team AS number, t.name, COUNT(*) as numMatches, SUM(points) AS score, SUM(duckies) as duckies, AVG(karma) AS karma
+        FROM scores
+        LEFT JOIN teams t ON t.number=team
+        GROUP BY team
+        ORDER BY score DESC;`)
+    out = stmt.all();
     return out;
 }
 

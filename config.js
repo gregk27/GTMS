@@ -31,45 +31,23 @@ module.exports = {
     scoreboard: {
         duration: 15,
         rankCol: {
-            name: "RPA",
-            width: 2,
-            func: (t) => t.rpa.toFixed(2)
+            name: "Score",
+            width: 1,
+            func: (t) => t.score.toFixed(2)
         },
         data: [
             [
                 {
-                    name: "Wins",
-                    width: 3,
-                    func: (t) => t.wins
+                    name: "Reputation",
+                    width: 5,
+                    func: (t) => `${t.karma * 100}%`
                 },
                 {
-                    name: "Losses",
-                    width: 3,
-                    func: (t) => t.losses
-                },
-                {
-                    name: "Ties",
-                    width: 3,
-                    func: (t) => t.ties
+                    name: "Duckies",
+                    width: 4,
+                    func: (t) => t.duckies
                 }
             ],
-            [
-                {
-                    name: "Score",
-                    width: 4,
-                    func: (t) => t.score
-                },
-                {
-                    name: "MetA",
-                    width: 3,
-                    func: (t) => t.metA
-                },
-                {
-                    name: "MetB",
-                    width: 3,
-                    func: (t) => t.metB
-                }
-            ]
         ],
     },
     postgame: {

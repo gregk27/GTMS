@@ -42,9 +42,8 @@
  *  name: string,
  *  score: Score
  *  numMatches: number,
- *  rp: number,
- *  rpa: number,
- *  scoreAvg: number,
+ *  duckies: number,
+ *  karma: number,
  * }} TeamScore
  * 
  * @typedef {{
