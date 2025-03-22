@@ -1,28 +1,80 @@
--- DELETE FROM scores WHERE 1=1;
--- DELETE FROM schedule WHERE 1=1;
--- DELETE FROM teams WHERE 1=1;
+DELETE FROM scores WHERE 1=1;
+DELETE FROM schedule WHERE 1=1;
+DELETE FROM teams WHERE 1=1;
 
--- INSERT INTO teams (number, name) VALUES
--- 	(1000, 'First Team'),
--- 	(2000, 'Second Team'),
--- 	(3000, 'Third Team'),
--- 	(4000, 'Fourth Team'),
--- 	(5000, 'Fifth Team'),
--- 	(6000, 'Sixth Team'),
--- 	(7000, 'Seventh Team'),
--- 	(8000, 'Eighth Team'),
--- 	(9000, 'Ninth Team');
+INSERT INTO teams (number, name, colour) VALUES
+    (1,  'Team 1',  '#800000'),
+    (2,  'Team 2',  '#802600'),
+    (3,  'Team 3',  '#804c00'),
+    (4,  'Team 4',  '#807300'),
+    (5,  'Team 5',  '#668000'),
+    (6,  'Team 6',  '#408000'),
+    (7,  'Team 7',  '#198000'),
+    (8,  'Team 8',  '#00800d'),
+    (9,  'Team 9',  '#008033'),
+    (10, 'Team 10', '#008059'),
+    (11, 'Team 11', '#008080'),
+    (12, 'Team 12', '#005980'),
+    (13, 'Team 13', '#003380'),
+    (14, 'Team 14', '#000d80'),
+    (15, 'Team 15', '#1a0080'),
+    (16, 'Team 16', '#400080'),
+    (17, 'Team 17', '#660080'),
+    (18, 'Team 18', '#800073'),
+    (19, 'Team 19', '#80004c'),
+    (20, 'Team 20', '#800026'),
+    (21, 'Team 21', '#ff0000'),
+    (22, 'Team 22', '#ff4c00'),
+    (23, 'Team 23', '#ff9900'),
+    (24, 'Team 24', '#ffe600'),
+    (25, 'Team 25', '#ccff00'),
+    (26, 'Team 26', '#80ff00'),
+    (27, 'Team 27', '#33ff00'),
+    (28, 'Team 28', '#00ff19'),
+    (29, 'Team 29', '#00ff66'),
+    (30, 'Team 30', '#00ffb3'),
+    (31, 'Team 31', '#00ffff'),
+    (32, 'Team 32', '#00b3ff'),
+    (33, 'Team 33', '#0066ff'),
+    (34, 'Team 34', '#0019ff'),
+    (35, 'Team 35', '#3300ff'),
+    (36, 'Team 36', '#8000ff'),
+    (37, 'Team 37', '#cc00ff'),
+    (38, 'Team 38', '#ff00e6'),
+    (39, 'Team 39', '#ff0099'),
+    (40, 'Team 40', '#ff004c'),
+    (41, 'Team 41', '#ff8080'),
+    (42, 'Team 42', '#ffa680'),
+    (43, 'Team 43', '#ffcc80'),
+    (44, 'Team 44', '#fff280'),
+    (45, 'Team 45', '#e6ff80'),
+    (46, 'Team 46', '#bfff80'),
+    (47, 'Team 47', '#99ff80'),
+    (48, 'Team 48', '#80ff8c'),
+    (49, 'Team 49', '#80ffb3'),
+    (50, 'Team 50', '#80ffd9'),
+    (51, 'Team 51', '#80ffff'),
+    (52, 'Team 52', '#80d9ff'),
+    (53, 'Team 53', '#80b3ff'),
+    (54, 'Team 54', '#808cff'),
+    (55, 'Team 55', '#9980ff'),
+    (56, 'Team 56', '#bf80ff'),
+    (57, 'Team 57', '#e580ff'),
+    (58, 'Team 58', '#ff80f2'),
+    (59, 'Team 59', '#ff80cc'),
+    (60, 'Team 60', '#ff80a6');
 
--- INSERT INTO schedule (type, number, redTeam, blueTeam) VALUES
--- 	('Match', 1, 1000, 2000),
--- 	('Match', 2, 3000, 4000),
--- 	('Match', 3, 5000, 6000),
--- 	('Match', 4, 7000, 8000),
--- 	('Match', 5, 9000, 1000),
--- 	('Match', 6, 2000, 3000),
--- 	('Match', 7, 4000, 5000),
--- 	('Match', 8, 6000, 7000),
--- 	('Match', 9, 8000, 2000);
+INSERT INTO schedule (type, number, team1, team2, team3, team4, team5, team6) VALUES
+    ('Match', 1, 7,31,55,33,28,48),
+    ('Match', 2, 14,21,18,39,58,16),
+    ('Match', 3, 51,34,19,1,44,6),
+    ('Match', 4, 59,43,27,45,42,15),
+    ('Match', 5, 10,52,35,53,49,11),
+    ('Match', 6, 2,37,26,22,32,38),
+    ('Match', 7, 9,30,46,8,40,12),
+    ('Match', 8, 23,54,57,56,36,41),
+    ('Match', 9, 3,24,50,60,29,5),
+    ('Match', 10, 47,13,20,4,17,25);
 
--- SELECT * FROM teams;
--- SELECT * FROM schedule;
+SELECT * FROM teams;
+SELECT * FROM schedule;

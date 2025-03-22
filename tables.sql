@@ -54,7 +54,7 @@ CREATE TABLE scores (
         ON UPDATE CASCADE ON DELETE RESTRICT,
         
     FOREIGN KEY (team)
-        REFERENCES teams(id)
+        REFERENCES teams(number)
         ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
