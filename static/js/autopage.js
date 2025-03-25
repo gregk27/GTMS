@@ -34,7 +34,7 @@ var postgameDuration = 0;
 
 fetch("/config/scoreboard").then(res => res.json()).then(cfg => {
     scoreboardDuration = cfg.duration * cfg.data.length * 1000;
-    scheduleDuration = cfg.duration * 2 * 1000;
+    scheduleDuration = cfg.duration * 0.5 * 1000;
 })
 fetch("/config/postgame").then(res => res.json()).then(cfg => {
     postgameDuration = cfg.duration;

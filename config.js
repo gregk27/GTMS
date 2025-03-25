@@ -29,7 +29,7 @@ module.exports = {
         ]
     },
     scoreboard: {
-        duration: 15,
+        duration: 60,
         rankCol: {
             name: "Score",
             width: 1,
