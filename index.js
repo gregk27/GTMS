@@ -95,6 +95,11 @@ server.on("saveMatch", (client, payload, auth) => {
   manager.saveMatch();
 })
 
+server.on("saveScore", (client, payload, auth) => {
+  if(auth != config.authString) return;
+  manager.saveScore(payload);
+})
+
 
 /**
  * Convert functions in a JSON object to strings for sending over API

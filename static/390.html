@@ -20,8 +20,15 @@
         <button onclick="showPost()">Show Postgame</button>
     </div>
     <br/><br/>
-    <div>
+    <div style="display:flex; flex-direction: column; row-gap: .25em; width:fit-content">
         <h2>Score Input</h2>
+        <label>Match <input id="match" type="number"/></label>
+        <label>Team <input id="team" type="number"/></label>
+        <label>Points <input id="score" type="number"/></label>
+        <label>Penalties <input id="penalties" type="number"/></label>
+        <label>Duckies <input id="duckies" type="number"/></label>
+        <label>Reputation <input id="karma" type="number"/></label>
+        <button onclick="saveScore()">Submit</button>
     </div>
 
     <iframe id="preview" src="/autopage"></iframe>

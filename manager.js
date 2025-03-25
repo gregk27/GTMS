@@ -285,8 +285,20 @@ function addScore(alliance, delta, dA, dB){
     server.emit("scoreChanged", currentMatch);
 }
 
+function saveScore(data){
+    try {
+        console.log(data);
+        const stmt = db.prepare("insert into scores (matchId, team, points, penalties, duckies, karma) VALUES (?, ?, ?, ?, ?, ?)")
+        stmt.bind(data.match, data.team, data.score, data.penalties, data.duckies, data.karma)
+        stmt.run()
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
+
 module.exports = {
-    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, startMatch, saveMatch, loadMatch, addScore
+    getSchedule, getCurrentMatch, getTeams, getCombindMatchData, getScoreboard, startMatch, saveMatch, loadMatch, addScore, saveScore
 }
 
 loadMatch();
