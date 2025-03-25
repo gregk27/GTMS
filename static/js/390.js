@@ -13,6 +13,11 @@ window.showPost = () => {
     socket.emit("broadcast", "matchSaved", {}, authString);
 }
 
+window.loadMatch = () => {
+    let id = parseInt(document.getElementById("match").value);
+    socket.emit("loadMatch", {id}, authString)
+}
+
 window.saveScore = () => {
     let match = document.getElementById("match");
     let team = document.getElementById("team");

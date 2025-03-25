@@ -39,7 +39,8 @@ function getSchedule(){
         LEFT JOIN teams t6 ON t6.number = team6
         WHERE id>?`);
     // Show current match if it hasn't started yet
-    stmt.bind(currentMatch.running ? currentMatch.id : currentMatch.id-1);
+    // FOR 390: Hiding current match always TOOD fixme
+    stmt.bind(currentMatch.id);
     return stmt.all();
 }
 
