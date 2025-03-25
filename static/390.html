@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Control Page</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='/css/control.css'>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src='/js/390.js'></script>
+    <script src='/js/qrcode.min.js'></script>
+</head>
+
+<body>
+    <div>
+        <h2>Display Control</h2>
+        <button onclick="showGame()">Show Game</button>
+        <br/><br/>
+        <button onclick="showPost()">Show Postgame</button>
+    </div>
+    <br/><br/>
+    <div>
+        <h2>Score Input</h2>
+    </div>
+
+    <iframe id="preview" src="/autopage"></iframe>
+</body>
+
+</html>
